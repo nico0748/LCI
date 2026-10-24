@@ -1,0 +1,129 @@
+{
+  "kind": "web",
+  "preview": { "tailwind": "local", "viewport": { "width": 800, "height": 600 } },
+  "mockApi": {
+    "routes": [
+      {
+        "match": { "method": "GET", "urlPattern": "^https://api\\.example\\.com/works/42/tags$" },
+        "latencyMs": [100, 300],
+        "failRate": 0,
+        "respond": { "byQuery": {}, "default": ["オリジナル", "風景"] }
+      },
+      {
+        "match": { "method": "PUT", "urlPattern": "^https://api\\.example\\.com/works/42/tags$" },
+        "latencyMs": [300, 500],
+        "failRate": 0,
+        "respond": { "byQuery": {}, "default": { "ok": true } }
+      }
+    ],
+    "unmatched": "block"
+  },
+  "layout": [
+    { "name": "input-button-inline", "assert": "sameRow", "selectors": ["#tag-input", "#add-tag"] },
+    { "name": "tags-below-input", "assert": "below", "selectors": ["#tags", "#tag-input"] }
+  ],
+  "scenarios": [
+    {
+      "name": "add-and-count",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "expectText": { "selector": "#tags", "contains": ["オリジナル", "風景"] } },
+        { "type": "#tag-input", "value": "夏" },
+        { "click": "#add-tag" },
+        { "expectText": { "selector": "#tags", "contains": ["オリジナル", "風景", "夏"] } },
+        { "expectText": { "selector": "#count", "contains": ["3/5"] } },
+        { "click": "#tags button.remove-tag[data-tag=\"風景\"]" },
+        { "expectNoText": { "selector": "#tags", "contains": ["風景"] } },
+        { "expectText": { "selector": "#count", "contains": ["2/5"] } }
+      ]
+    },
+    {
+      "name": "dedupe-normalized",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "type": "#tag-input", "value": "ＯＣ" },
+        { "click": "#add-tag" },
+        { "type": "#tag-input", "value": " oc " },
+        { "click": "#add-tag" },
+        { "type": "#tag-input", "value": "風景　" },
+        { "click": "#add-tag" },
+        { "expectText": { "selector": "#count", "contains": ["3/5"] } },
+        { "expectText": { "selector": "#error", "contains": ["すでに追加されています"] } }
+      ],
+      "tags": ["validation"],
+      "weight": 2
+    },
+    {
+      "name": "limit-and-empty",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "type": "#tag-input", "value": "   " },
+        { "click": "#add-tag" },
+        { "expectText": { "selector": "#count", "contains": ["2/5"] } },
+        { "type": "#tag-input", "value": "春" },
+        { "click": "#add-tag" },
+        { "type": "#tag-input", "value": "夏" },
+        { "click": "#add-tag" },
+        { "type": "#tag-input", "value": "秋" },
+        { "click": "#add-tag" },
+        { "type": "#tag-input", "value": "六つ目のタグ" },
+        { "click": "#add-tag" },
+        { "expectText": { "selector": "#count", "contains": ["5/5"] } },
+        { "expectNoText": { "selector": "#tags", "contains": ["六つ目のタグ"] } },
+        { "expectText": { "selector": "#error", "contains": ["5 個まで"] } }
+      ],
+      "tags": ["validation"]
+    },
+    {
+      "name": "save-only-when-changed",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#save" },
+        { "wait": 300 },
+        { "expectRequests": { "count": 1 } },
+        { "expectText": { "selector": "#status", "contains": ["変更はありません"] } },
+        { "click": "#tags button.remove-tag[data-tag=\"オリジナル\"]" },
+        { "type": "#tag-input", "value": "オリジナル" },
+        { "click": "#add-tag" },
+        { "click": "#save" },
+        { "wait": 300 },
+        { "expectRequests": { "count": 1 } },
+        { "type": "#tag-input", "value": "夏" },
+        { "click": "#add-tag" },
+        { "click": "#save" },
+        { "waitForRequestsSettled": 2000 },
+        { "expectRequests": { "count": 2 } },
+        { "expectText": { "selector": "#status", "contains": ["保存しました"] } },
+        { "click": "#save" },
+        { "wait": 300 },
+        { "expectRequests": { "count": 2 } }
+      ],
+      "tags": ["idempotency"],
+      "weight": 2
+    },
+    {
+      "name": "double-save",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "type": "#tag-input", "value": "夏" },
+        { "click": "#add-tag" },
+        { "click": "#save", "times": 3, "intervalMs": 40 },
+        { "waitForRequestsSettled": 2000 },
+        { "expectRequests": { "count": 2 } }
+      ],
+      "tags": ["idempotency"]
+    },
+    {
+      "name": "no-innerhtml-xss",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "type": "#tag-input", "value": "<img src=x onerror=window.__xss=1>" },
+        { "click": "#add-tag" },
+        { "expectNoText": { "selector": "#tags img", "contains": [""] } },
+        { "expectText": { "selector": "#tags", "contains": ["<img src=x"] } }
+      ],
+      "tags": ["xss"]
+    }
+  ],
+  "rubricHints": ["normalize-key", "set-compare", "save-if-changed", "disable-while-saving", "xss-safe-render"]
+}

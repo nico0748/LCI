@@ -1,0 +1,26 @@
+{
+  "name": "@lci/problem-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "問題バンクの検証（G1/G1b/G3/G5/重複）・統計・雛形生成・参照解セルフテスト CLI",
+  "scripts": {
+    "validate": "node --experimental-strip-types src/cli.ts validate",
+    "stats": "node --experimental-strip-types src/cli.ts stats",
+    "new": "node --experimental-strip-types src/cli.ts new",
+    "selftest": "node --experimental-strip-types scripts/selftest.ts",
+    "make-seeds": "node --experimental-strip-types scripts/make-seeds.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test src/**/*.test.ts",
+    "web-selftest": "node --experimental-strip-types scripts/web-selftest.ts"
+  },
+  "dependencies": {
+    "@lci/core": "workspace:*",
+    "yaml": "^2.8.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "@types/node": "^22"
+  }
+}

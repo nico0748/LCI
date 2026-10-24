@@ -1,0 +1,9 @@
+{
+  "kind": "unit",
+  "limits": { "timeMs": 3000, "wallMs": 10000, "memoryMb": 256 },
+  "harness": {
+    "python": { "files": ["tests/python/test_like_api.py"], "command": "python3 -I -m unittest discover -v -s . -p test_like_api.py", "resultParser": "unittest-verbose" },
+    "typescript": { "files": ["tests/typescript/like_api.test.ts"], "command": "node --experimental-strip-types --no-warnings --test --test-reporter=tap like_api.test.ts", "resultParser": "tap" }
+  },
+  "userEntry": { "python": "like_api.py", "typescript": "like_api.ts" }
+}

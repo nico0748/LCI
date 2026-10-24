@@ -1,0 +1,10 @@
+{
+  "kind": "unit",
+  "limits": { "timeMs": 4000, "wallMs": 8000, "memoryMb": 256, "outputKb": 256 },
+  "harness": {
+    "python": { "files": ["harness/python/test_lru.py"], "command": "python3 -I test_lru.py", "resultParser": "unittest-verbose" },
+    "typescript": { "files": ["harness/typescript/lru.test.ts"], "command": "node --experimental-strip-types --no-warnings --test --test-reporter=tap lru.test.ts", "resultParser": "tap" },
+    "go": { "files": ["harness/go/lru_test.go", "harness/go/go.mod"], "command": "go test -json -count=1 .", "resultParser": "go-test-json" }
+  },
+  "userEntry": { "python": "lru.py", "typescript": "lru.ts", "go": "lru.go" }
+}

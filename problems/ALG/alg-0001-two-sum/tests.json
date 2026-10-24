@@ -1,0 +1,16 @@
+{
+  "kind": "stdio",
+  "limits": { "timeMs": 2000, "wallMs": 5000, "memoryMb": 256, "outputKb": 64 },
+  "compare": { "mode": "token" },
+  "stopOn": { "consecutiveTle": 2 },
+  "cases": [
+    { "name": "sample-1", "visibility": "sample", "stdinFile": "tests/01.in", "expectedFile": "tests/01.out" },
+    { "name": "sample-2", "visibility": "sample", "stdinFile": "tests/02.in", "expectedFile": "tests/02.out" },
+    { "name": "sample-3-none", "visibility": "sample", "stdinFile": "tests/03.in", "expectedFile": "tests/03.out" },
+    { "name": "hidden-equal-values", "visibility": "hidden", "stdinFile": "tests/11.in", "expectedFile": "tests/11.out" },
+    { "name": "hidden-no-self-pair", "visibility": "hidden", "stdinFile": "tests/12.in", "expectedFile": "tests/12.out" },
+    { "name": "hidden-overflow", "visibility": "hidden", "stdinFile": "tests/13.in", "expectedFile": "tests/13.out" },
+    { "name": "hidden-max-none", "visibility": "hidden", "stdinFile": "tests/14.in", "expectedFile": "tests/14.out" },
+    { "name": "hidden-max-last", "visibility": "hidden", "stdinFile": "tests/15.in", "expectedFile": "tests/15.out" }
+  ]
+}

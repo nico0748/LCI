@@ -1,0 +1,367 @@
+{
+  "kind": "web",
+  "preview": {
+    "tailwind": "local",
+    "viewport": {
+      "width": 800,
+      "height": 600
+    }
+  },
+  "mockApi": {
+    "routes": [
+      {
+        "match": {
+          "method": "GET",
+          "urlPattern": "^https://api\\.example\\.com/suggest\\?q=ja$"
+        },
+        "latencyMs": [
+          1200,
+          1200
+        ],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {},
+          "default": [
+            "java",
+            "javascript",
+            "jakarta"
+          ]
+        }
+      },
+      {
+        "match": {
+          "method": "GET",
+          "urlPattern": "^https://api\\.example\\.com/suggest\\?q=(.*)$"
+        },
+        "latencyMs": [
+          200,
+          400
+        ],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {
+            "jav": [
+              "java",
+              "javascript"
+            ],
+            "py": [
+              "python",
+              "pytest",
+              "pydantic"
+            ],
+            "go": [
+              "go",
+              "golang",
+              "gopher"
+            ],
+            "ru": [
+              "ruby",
+              "rust"
+            ],
+            "rus": [
+              "rust",
+              "rustup"
+            ],
+            "rust": [
+              "rust",
+              "rustup",
+              "rust-analyzer"
+            ],
+            "xs": [
+              "<img src=x onerror=window.__xss=1>",
+              "xss-filter"
+            ]
+          },
+          "default": []
+        }
+      }
+    ],
+    "unmatched": "block"
+  },
+  "layout": [
+    {
+      "name": "suggestions-below-input",
+      "assert": "below",
+      "selectors": [
+        "#suggestions",
+        "#q"
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "min-length",
+      "steps": [
+        {
+          "type": "#q",
+          "value": "j"
+        },
+        {
+          "wait": 700
+        },
+        {
+          "expectRequests": {
+            "count": 0
+          }
+        },
+        {
+          "expectNoText": {
+            "selector": "#suggestions li",
+            "contains": [
+              ""
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "validation"
+      ]
+    },
+    {
+      "name": "debounce-typing",
+      "steps": [
+        {
+          "type": "#q",
+          "value": "r"
+        },
+        {
+          "wait": 60
+        },
+        {
+          "type": "#q",
+          "value": "ru"
+        },
+        {
+          "wait": 60
+        },
+        {
+          "type": "#q",
+          "value": "rus"
+        },
+        {
+          "wait": 60
+        },
+        {
+          "type": "#q",
+          "value": "rust"
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "expectRequests": {
+            "count": 1
+          }
+        },
+        {
+          "expectRequests": {
+            "count": 1,
+            "url": "q=rust"
+          }
+        },
+        {
+          "expectText": {
+            "selector": "#suggestions",
+            "contains": [
+              "rust-analyzer"
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "debounce"
+      ],
+      "weight": 2
+    },
+    {
+      "name": "stale-response",
+      "steps": [
+        {
+          "type": "#q",
+          "value": "ja"
+        },
+        {
+          "wait": 450
+        },
+        {
+          "type": "#q",
+          "value": "jav"
+        },
+        {
+          "waitForRequestsSettled": 4000
+        },
+        {
+          "expectText": {
+            "selector": "#suggestions",
+            "contains": [
+              "javascript"
+            ]
+          }
+        },
+        {
+          "expectNoText": {
+            "selector": "#suggestions",
+            "contains": [
+              "jakarta"
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "abort"
+      ],
+      "weight": 2
+    },
+    {
+      "name": "clear-on-short",
+      "steps": [
+        {
+          "type": "#q",
+          "value": "ja"
+        },
+        {
+          "wait": 450
+        },
+        {
+          "type": "#q",
+          "value": "j"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "expectNoText": {
+            "selector": "#suggestions li",
+            "contains": [
+              ""
+            ]
+          }
+        },
+        {
+          "type": "#q",
+          "value": "go"
+        },
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "expectText": {
+            "selector": "#suggestions",
+            "contains": [
+              "golang"
+            ]
+          }
+        },
+        {
+          "type": "#q",
+          "value": ""
+        },
+        {
+          "wait": 300
+        },
+        {
+          "expectNoText": {
+            "selector": "#suggestions li",
+            "contains": [
+              ""
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "abort"
+      ]
+    },
+    {
+      "name": "suggest-cache",
+      "steps": [
+        {
+          "type": "#q",
+          "value": "py"
+        },
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "type": "#q",
+          "value": "go"
+        },
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "type": "#q",
+          "value": "py"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "expectRequests": {
+            "count": 1,
+            "url": "q=py"
+          }
+        },
+        {
+          "expectText": {
+            "selector": "#suggestions",
+            "contains": [
+              "pydantic"
+            ]
+          }
+        },
+        {
+          "expectNoText": {
+            "selector": "#suggestions",
+            "contains": [
+              "golang"
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "cache"
+      ]
+    },
+    {
+      "name": "no-innerhtml-xss",
+      "steps": [
+        {
+          "type": "#q",
+          "value": "xs"
+        },
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "expectText": {
+            "selector": "#suggestions",
+            "contains": [
+              "<img src=x",
+              "xss-filter"
+            ]
+          }
+        },
+        {
+          "expectNoText": {
+            "selector": "#suggestions img",
+            "contains": [
+              ""
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "xss"
+      ]
+    }
+  ],
+  "rubricHints": [
+    "min-length",
+    "debounce",
+    "abort-or-ignore-stale",
+    "clear-inflight-on-short",
+    "suggest-cache",
+    "xss-safe-render"
+  ]
+}

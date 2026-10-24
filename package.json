@@ -10,7 +10,15 @@
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "problems:validate": "pnpm --filter @lci/problem-tools validate",
-    "mcp": "pnpm --filter @lci/mcp-server start"
+    "problems:stats": "pnpm --filter @lci/problem-tools stats",
+    "problems:selftest": "pnpm --filter @lci/problem-tools selftest",
+    "mcp": "pnpm --filter @lci/mcp-server start",
+    "runner:build": "docker compose -f docker/docker-compose.yml build",
+    "runner:warm": "node --experimental-strip-types --no-warnings packages/runner/src/cli.ts warm",
+    "runner:status": "node --experimental-strip-types --no-warnings packages/runner/src/cli.ts status",
+    "runner:bench": "node --experimental-strip-types --no-warnings packages/runner/src/cli.ts bench"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  }
 }

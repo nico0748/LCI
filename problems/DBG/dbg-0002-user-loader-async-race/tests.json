@@ -1,0 +1,9 @@
+{
+  "kind": "unit",
+  "limits": { "timeMs": 5000, "wallMs": 15000, "memoryMb": 256 },
+  "harness": {
+    "python": { "files": ["tests/python/test_loader.py"], "command": "python3 -I -m unittest discover -v -s . -p test_loader.py", "resultParser": "unittest-verbose" },
+    "typescript": { "files": ["tests/typescript/loader.test.ts"], "command": "node --experimental-strip-types --no-warnings --test --test-reporter=tap loader.test.ts", "resultParser": "tap" }
+  },
+  "userEntry": { "python": "loader.py", "typescript": "loader.ts" }
+}

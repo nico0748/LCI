@@ -1,0 +1,21 @@
+<!doctype html>
+<!--
+  LCI sandbox フレームのテンプレート。親（src/lib/capture/sandbox/host.ts）が fetch して
+  __LCI_ORIGIN__ / __LCI_CONFIG__ / __LCI_TAILWIND__ / __LCI_USER_HTML__ を埋め、iframe.srcdoc に入れる。
+  sandbox="allow-scripts" の iframe は opaque origin なので CSP の 'self' が効かず、配信元を明示する必要がある。
+  connect-src 'none' により実ネットワークへは出られない。Tailwind もローカル配信（FR-X-03-6/7）。
+-->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' __LCI_ORIGIN__; style-src 'unsafe-inline' __LCI_ORIGIN__; img-src data: blob:; font-src data:; media-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'; frame-src 'none'; object-src 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script id="lci-config" type="application/json">__LCI_CONFIG__</script>
+<script src="__LCI_ORIGIN__/sandbox/scenario-core.js"></script>
+<script src="__LCI_ORIGIN__/sandbox/shim.js"></script>
+<script src="__LCI_ORIGIN__/sandbox/scenario-runner.js"></script>
+__LCI_TAILWIND__
+</head>
+__LCI_USER_HTML__
+<script>window.__lci && window.__lci.done();</script>
+</html>

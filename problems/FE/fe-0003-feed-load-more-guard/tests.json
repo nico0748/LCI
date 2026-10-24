@@ -1,0 +1,102 @@
+{
+  "kind": "web",
+  "preview": { "tailwind": "local", "viewport": { "width": 800, "height": 600 } },
+  "mockApi": {
+    "routes": [
+      {
+        "match": { "method": "GET", "urlPattern": "^https://api\\.example\\.com/feed\\?cursor=([^&]*)$" },
+        "latencyMs": [300, 600],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {
+            "": {
+              "items": [
+                { "id": 101, "title": "朝焼けの港町" },
+                { "id": 102, "title": "<b>告知</b> 新しい画材を試しました" },
+                { "id": 103, "title": "猫と縁側" }
+              ],
+              "next_cursor": "c2"
+            },
+            "c2": {
+              "items": [
+                { "id": 104, "title": "雨上がりの交差点" },
+                { "id": 105, "title": "冬の星座" },
+                { "id": 106, "title": "喫茶店の午後" }
+              ],
+              "next_cursor": "c3"
+            },
+            "c3": {
+              "items": [
+                { "id": 106, "title": "喫茶店の午後" },
+                { "id": 107, "title": "夜行列車" },
+                { "id": 108, "title": "紫陽花の小径" }
+              ],
+              "next_cursor": null
+            }
+          },
+          "default": { "items": [], "next_cursor": null }
+        }
+      }
+    ],
+    "unmatched": "block"
+  },
+  "layout": [{ "name": "more-below-feed", "assert": "below", "selectors": ["#status", "#feed"] }],
+  "scenarios": [
+    {
+      "name": "initial-load",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "expectText": { "selector": "#feed", "contains": ["朝焼けの港町", "猫と縁側"] } },
+        { "expectRequests": { "count": 1, "url": "cursor=" } },
+        { "expectNoText": { "selector": "#feed b", "contains": [""] } },
+        { "expectText": { "selector": "#feed", "contains": ["<b>告知</b>"] } }
+      ],
+      "tags": ["xss"]
+    },
+    {
+      "name": "load-more-guard",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#more", "times": 5, "intervalMs": 30 },
+        { "waitForRequestsSettled": 3000 },
+        { "expectRequests": { "count": 1, "url": "cursor=c2" } },
+        { "expectText": { "selector": "#feed", "contains": ["雨上がりの交差点", "喫茶店の午後"] } },
+        { "expectRequests": { "count": 0, "url": "cursor=c3" } }
+      ],
+      "tags": ["rate_limit"],
+      "weight": 2
+    },
+    {
+      "name": "end-of-feed",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#more" },
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#more" },
+        { "waitForRequestsSettled": 2000 },
+        { "expectText": { "selector": "#feed", "contains": ["夜行列車", "紫陽花の小径"] } },
+        { "expectText": { "selector": "#status", "contains": ["これ以上ありません"] } },
+        { "click": "#more", "times": 3, "intervalMs": 30 },
+        { "wait": 800 },
+        { "expectRequests": { "count": 3 } },
+        { "expectRequests": { "count": 0, "url": "cursor=null" } }
+      ],
+      "tags": ["pagination"],
+      "weight": 2
+    },
+    {
+      "name": "dedupe-across-pages",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#more" },
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#more" },
+        { "waitForRequestsSettled": 2000 },
+        { "expectText": { "selector": "#feed > li:nth-child(8)", "contains": ["紫陽花の小径"] } },
+        { "expectNoText": { "selector": "#feed > li:nth-child(9)", "contains": [""] } }
+      ],
+      "tags": ["pagination"]
+    }
+  ],
+  "rubricHints": ["inflight-guard", "end-of-feed", "dedupe-by-id", "intersection-observer", "xss-safe-render"]
+}

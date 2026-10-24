@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Autocomplete</title>
+</head>
+<body class="p-4">
+  <div class="relative max-w-sm">
+    <input id="q" class="w-full border px-2 py-1" placeholder="タグを検索" autocomplete="off" role="combobox" aria-controls="suggestions" aria-expanded="false" />
+    <ul id="suggestions" class="mt-1 divide-y rounded border empty:hidden" role="listbox"></ul>
+  </div>
+
+  <script>
+    const API = "https://api.example.com/suggest";
+    const MIN_LENGTH = 2;
+    const DEBOUNCE_MS = 250;
+    const MAX_CACHE = 200;
+
+    const input = document.getElementById("q");
+    const list = document.getElementById("suggestions");
+    const cache = new Map(); // 語 → 候補
+    let current = "";
+    let timer = null;
+    let controller = null;
+
+    function render(items) {
+      list.replaceChildren();
+      for (const s of items) {
+        const li = document.createElement("li");
+        li.className = "cursor-pointer px-2 py-1 hover:bg-gray-100";
+        li.setAttribute("role", "option");
+        li.textContent = s; // innerHTML は使わない
+        li.addEventListener("click", () => {
+          input.value = s;
+          clear();
+        });
+        list.appendChild(li);
+      }
+      input.setAttribute("aria-expanded", String(items.length > 0));
+    }
+
+    function clear() {
+      clearTimeout(timer);
+      if (controller) controller.abort();
+      controller = null;
+      render([]);
+    }
+
+    function remember(q, items) {
+      cache.delete(q);
+      cache.set(q, items);
+      if (cache.size > MAX_CACHE) cache.delete(cache.keys().next().value);
+    }
+
+    async function fetchSuggestions(q) {
+      if (controller) controller.abort(); // 前の要求は中断
+      controller = new AbortController();
+      try {
+        const res = await fetch(`${API}?q=${encodeURIComponent(q)}`, { signal: controller.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const items = await res.json();
+        remember(q, items);
+        if (q === current) render(items); // 今の入力に対する応答だけ表示する
+      } catch (e) {
+        if (e.name !== "AbortError" && q === current) render([]);
+      }
+    }
+
+    input.addEventListener("input", () => {
+      current = input.value.trim();
+      clearTimeout(timer);
+      if (current.length < MIN_LENGTH) {
+        clear(); // 進行中の応答で候補が復活しないよう中断もする
+        return;
+      }
+      if (cache.has(current)) {
+        if (controller) controller.abort();
+        render(cache.get(current));
+        return;
+      }
+      const q = current;
+      timer = setTimeout(() => fetchSuggestions(q), DEBOUNCE_MS);
+    });
+  </script>
+</body>
+</html>

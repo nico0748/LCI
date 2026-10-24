@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Posts</title>
+</head>
+<body class="p-4">
+  <p id="error" class="mb-3 text-sm text-red-600" role="alert"></p>
+  <ul id="posts" class="space-y-3"></ul>
+
+  <script>
+    const API = "https://api.example.com";
+    const postsEl = document.getElementById("posts");
+    const errorEl = document.getElementById("error");
+    /**
+     * id → { view: {liked, likes}（表示中）, confirmed: {liked, likes}（サーバーで最後に成功した状態）,
+     *        inflight: boolean, pending: boolean（通信中に押された＝終わったら最新の状態を送る） }
+     */
+    const posts = new Map();
+
+    function paint(id) {
+      const p = posts.get(id);
+      const btn = document.getElementById(`like-${id}`);
+      btn.textContent = p.view.liked ? "♥ いいね済み" : "♡ いいね";
+      btn.setAttribute("aria-pressed", String(p.view.liked));
+      btn.className = "rounded border px-3 py-1 " + (p.view.liked ? "bg-pink-100 text-pink-700" : "bg-white");
+      document.getElementById(`count-${id}`).textContent = String(p.view.likes);
+    }
+
+    async function sync(id) {
+      const p = posts.get(id);
+      p.inflight = true;
+      p.pending = false;
+      const want = { ...p.view }; // この要求で送る状態
+      try {
+        const res = await fetch(`${API}/posts/${id}/like`, { method: want.liked ? "POST" : "DELETE" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`); // fetch は 503 でも reject しない
+        p.confirmed = want;
+      } catch (e) {
+        // 押す直前ではなく「最後に成功した状態」へ戻す
+        p.view = { ...p.confirmed };
+        p.pending = false;
+        errorEl.textContent = "いいねできませんでした。時間をおいてもう一度お試しください";
+      } finally {
+        p.inflight = false;
+      }
+      // 通信中にさらに押されていて、確定状態と違うなら最新の状態だけを送る
+      if (p.pending && p.view.liked !== p.confirmed.liked) sync(id);
+      else p.pending = false;
+      paint(id);
+    }
+
+    function toggle(id) {
+      const p = posts.get(id);
+      errorEl.textContent = "";
+      p.view = { liked: !p.view.liked, likes: p.view.likes + (p.view.liked ? -1 : 1) };
+      paint(id); // 楽観的更新: 結果を待たずに表示を変える
+      if (p.inflight) {
+        p.pending = true; // 終わったらまとめて送る
+        return;
+      }
+      sync(id);
+    }
+
+    async function load() {
+      try {
+        const res = await fetch(`${API}/posts`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const list = await res.json();
+        postsEl.replaceChildren();
+        for (const item of list) {
+          const state = { liked: !!item.liked, likes: Number(item.likes) || 0 };
+          posts.set(item.id, { view: { ...state }, confirmed: { ...state }, inflight: false, pending: false });
+          const li = document.createElement("li");
+          li.className = "flex items-center gap-3 rounded border px-3 py-2";
+          const title = document.createElement("span");
+          title.className = "flex-1";
+          title.textContent = item.title; // innerHTML は使わない
+          const btn = document.createElement("button");
+          btn.id = `like-${item.id}`;
+          btn.addEventListener("click", () => toggle(item.id));
+          const count = document.createElement("span");
+          count.id = `count-${item.id}`;
+          count.className = "w-8 text-right tabular-nums";
+          li.append(title, btn, count);
+          postsEl.appendChild(li);
+          paint(item.id);
+        }
+      } catch (e) {
+        errorEl.textContent = "投稿を読み込めませんでした";
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

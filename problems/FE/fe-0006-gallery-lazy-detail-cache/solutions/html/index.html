@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Gallery</title>
+</head>
+<body class="p-4">
+  <div class="flex gap-6">
+    <div id="grid" class="grid w-1/2 grid-cols-3 gap-2"></div>
+    <section id="detail" class="w-1/2 rounded border p-4 text-sm" aria-live="polite">作品を選んでください</section>
+  </div>
+
+  <script>
+    const API = "https://api.example.com/photos";
+    const MAX_CACHE = 100;
+    const grid = document.getElementById("grid");
+    const detail = document.getElementById("detail");
+    const cache = new Map(); // id → detail（挿入順を使って古いものから捨てる）
+    let selectedId = null;
+    let controller = null;
+
+    function remember(id, data) {
+      cache.delete(id);
+      cache.set(id, data);
+      if (cache.size > MAX_CACHE) cache.delete(cache.keys().next().value);
+    }
+
+    function showDetail(d) {
+      const h = document.createElement("h2");
+      h.className = "text-lg font-bold";
+      h.textContent = d.title;
+      const author = document.createElement("p");
+      author.className = "text-gray-600";
+      author.textContent = `作者: ${d.author}`;
+      const desc = document.createElement("p");
+      desc.className = "mt-2 whitespace-pre-wrap";
+      desc.textContent = d.description; // 利用者の文字列は textContent で
+      detail.replaceChildren(h, author, desc);
+    }
+
+    async function select(id) {
+      selectedId = id;
+      if (cache.has(id)) {
+        if (controller) controller.abort();
+        showDetail(cache.get(id)); // キャッシュにあれば問い合わせない
+        return;
+      }
+      if (controller) controller.abort(); // 前の作品の要求は中断
+      controller = new AbortController();
+      detail.textContent = "読み込み中…";
+      try {
+        const res = await fetch(`${API}/${id}`, { signal: controller.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        remember(id, data);
+        if (selectedId === id) showDetail(data); // 今選んでいる作品のときだけ表示
+      } catch (e) {
+        if (e.name === "AbortError") return;
+        if (selectedId === id) detail.textContent = "詳細を読み込めませんでした";
+      }
+    }
+
+    async function load() {
+      try {
+        const res = await fetch(API);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const list = await res.json();
+        for (const p of list) {
+          const btn = document.createElement("button");
+          btn.dataset.id = String(p.id);
+          btn.className = "overflow-hidden rounded border hover:ring-2";
+          btn.setAttribute("aria-label", p.title);
+          const img = document.createElement("img");
+          img.setAttribute("loading", "lazy"); // 画面外の画像は読み込まない（img.loading = "lazy" でも同じ）
+          img.width = 120;
+          img.height = 90;
+          img.alt = p.title;
+          img.src = p.thumb;
+          btn.appendChild(img);
+          btn.addEventListener("click", () => select(p.id));
+          grid.appendChild(btn);
+        }
+      } catch (e) {
+        grid.textContent = "一覧を読み込めませんでした";
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

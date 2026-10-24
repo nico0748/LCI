@@ -1,0 +1,38 @@
+# イメージのビルド専用 compose。コンテナの起動・再作成は @lci/runner（DockerBackend）が
+# `docker run --network none --read-only ...` で行うので、ここでは up しない。
+#   docker compose -f docker/docker-compose.yml build          # 全部
+#   docker compose -f docker/docker-compose.yml build python   # 1 言語
+# arm64（Apple Silicon）では各ベースイメージの arm64 版が自動で選ばれる。
+name: lci
+x-common: &common
+  network_mode: none
+  read_only: true
+  user: "1000:1000"
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges]
+  command: ["sleep", "infinity"]
+services:
+  c:
+    <<: *common
+    image: lci/c:v1
+    build: { context: ., dockerfile: c.Dockerfile }
+  rust:
+    <<: *common
+    image: lci/rust:v1
+    build: { context: ., dockerfile: rust.Dockerfile }
+  python:
+    <<: *common
+    image: lci/python:v1
+    build: { context: ., dockerfile: python.Dockerfile }
+  go:
+    <<: *common
+    image: lci/go:v1
+    build: { context: ., dockerfile: go.Dockerfile }
+  node:
+    <<: *common
+    image: lci/node:v1
+    build: { context: ., dockerfile: node.Dockerfile }
+  php:
+    <<: *common
+    image: lci/php:v1
+    build: { context: ., dockerfile: php.Dockerfile }

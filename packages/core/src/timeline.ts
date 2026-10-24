@@ -48,6 +48,13 @@ export async function reconstructFileAt(
   let base = initial;
   let version = 0;
   let startIdx = 0;
+  // t が最初のスナップショットより前（開始直後）なら、そのスナップショット＝スターターコードを表示する。
+  // 最初の edit より前に必ず snapshot が取られるので、編集の取りこぼしは起きない
+  const firstSnap = events.find((e): e is EventOf<"snapshot"> => e.type === "snapshot" && e.file === fileId);
+  if (firstSnap && firstSnap.t > t) {
+    const firstEdit = events.find((e) => e.type === "edit" && e.file === fileId);
+    if (!firstEdit || firstEdit.t >= firstSnap.t) return { text: await resolver.read(firstSnap.ref), version: firstSnap.version };
+  }
   for (let i = 0; i < events.length; i++) {
     const e = events[i]!;
     if (e.t > t) break;

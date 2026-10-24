@@ -1,0 +1,9 @@
+{
+  "kind": "unit",
+  "limits": { "timeMs": 3000, "wallMs": 10000, "memoryMb": 256 },
+  "harness": {
+    "python": { "files": ["tests/python/test_render.py"], "command": "python3 -I -m unittest discover -v -s . -p test_render.py", "resultParser": "unittest-verbose" },
+    "typescript": { "files": ["tests/typescript/render.test.ts"], "command": "node --experimental-strip-types --no-warnings --test --test-reporter=tap render.test.ts", "resultParser": "tap" }
+  },
+  "userEntry": { "python": "render.py", "typescript": "render.ts" }
+}
