@@ -1,0 +1,80 @@
+{
+  "kind": "stdio",
+  "limits": {
+    "timeMs": 2000,
+    "wallMs": 5000,
+    "memoryMb": 256,
+    "outputKb": 4096
+  },
+  "compare": {
+    "mode": "token"
+  },
+  "cases": [
+    {
+      "name": "sample-1",
+      "visibility": "sample",
+      "stdinFile": "tests/01.in",
+      "expectedFile": "tests/01.out"
+    },
+    {
+      "name": "sample-2-disjoint",
+      "visibility": "sample",
+      "stdinFile": "tests/02.in",
+      "expectedFile": "tests/02.out"
+    },
+    {
+      "name": "hidden-contained",
+      "visibility": "hidden",
+      "stdinFile": "tests/11.in",
+      "expectedFile": "tests/11.out"
+    },
+    {
+      "name": "hidden-touching-chain",
+      "visibility": "hidden",
+      "stdinFile": "tests/12.in",
+      "expectedFile": "tests/12.out"
+    },
+    {
+      "name": "hidden-single",
+      "visibility": "hidden",
+      "stdinFile": "tests/13.in",
+      "expectedFile": "tests/13.out"
+    },
+    {
+      "name": "hidden-duplicates",
+      "visibility": "hidden",
+      "stdinFile": "tests/14.in",
+      "expectedFile": "tests/14.out"
+    },
+    {
+      "name": "hidden-unsorted",
+      "visibility": "hidden",
+      "stdinFile": "tests/15.in",
+      "expectedFile": "tests/15.out"
+    },
+    {
+      "name": "hidden-small-random",
+      "visibility": "hidden",
+      "stdinFile": "tests/16.in",
+      "expectedFile": "tests/16.out"
+    },
+    {
+      "name": "hidden-large-random",
+      "visibility": "hidden",
+      "stdinFile": "tests/17.in",
+      "expectedFile": "tests/17.out"
+    },
+    {
+      "name": "hidden-large-chain-desc",
+      "visibility": "hidden",
+      "stdinFile": "tests/18.in",
+      "expectedFile": "tests/18.out"
+    },
+    {
+      "name": "hidden-large-all-contained",
+      "visibility": "hidden",
+      "stdinFile": "tests/19.in",
+      "expectedFile": "tests/19.out"
+    }
+  ]
+}

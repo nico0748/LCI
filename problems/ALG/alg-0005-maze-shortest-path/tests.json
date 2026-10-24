@@ -1,0 +1,98 @@
+{
+  "kind": "stdio",
+  "limits": {
+    "timeMs": 2000,
+    "wallMs": 5000,
+    "memoryMb": 256,
+    "outputKb": 64
+  },
+  "compare": {
+    "mode": "token"
+  },
+  "cases": [
+    {
+      "name": "sample-1",
+      "visibility": "sample",
+      "stdinFile": "tests/01.in",
+      "expectedFile": "tests/01.out"
+    },
+    {
+      "name": "sample-2-unreachable",
+      "visibility": "sample",
+      "stdinFile": "tests/02.in",
+      "expectedFile": "tests/02.out"
+    },
+    {
+      "name": "hidden-adjacent",
+      "visibility": "hidden",
+      "stdinFile": "tests/03.in",
+      "expectedFile": "tests/03.out"
+    },
+    {
+      "name": "hidden-single-column",
+      "visibility": "hidden",
+      "stdinFile": "tests/11.in",
+      "expectedFile": "tests/11.out"
+    },
+    {
+      "name": "hidden-blocked",
+      "visibility": "hidden",
+      "stdinFile": "tests/12.in",
+      "expectedFile": "tests/12.out"
+    },
+    {
+      "name": "hidden-dfs-trap-right",
+      "visibility": "hidden",
+      "stdinFile": "tests/13.in",
+      "expectedFile": "tests/13.out"
+    },
+    {
+      "name": "hidden-dfs-trap-down",
+      "visibility": "hidden",
+      "stdinFile": "tests/14.in",
+      "expectedFile": "tests/14.out"
+    },
+    {
+      "name": "hidden-random-1",
+      "visibility": "hidden",
+      "stdinFile": "tests/15.in",
+      "expectedFile": "tests/15.out"
+    },
+    {
+      "name": "hidden-random-2",
+      "visibility": "hidden",
+      "stdinFile": "tests/16.in",
+      "expectedFile": "tests/16.out"
+    },
+    {
+      "name": "hidden-random-3",
+      "visibility": "hidden",
+      "stdinFile": "tests/17.in",
+      "expectedFile": "tests/17.out"
+    },
+    {
+      "name": "hidden-large-open",
+      "visibility": "hidden",
+      "stdinFile": "tests/21.in",
+      "expectedFile": "tests/21.out"
+    },
+    {
+      "name": "hidden-large-serpentine",
+      "visibility": "hidden",
+      "stdinFile": "tests/22.in",
+      "expectedFile": "tests/22.out"
+    },
+    {
+      "name": "hidden-large-random",
+      "visibility": "hidden",
+      "stdinFile": "tests/23.in",
+      "expectedFile": "tests/23.out"
+    },
+    {
+      "name": "hidden-large-unreachable",
+      "visibility": "hidden",
+      "stdinFile": "tests/24.in",
+      "expectedFile": "tests/24.out"
+    }
+  ]
+}

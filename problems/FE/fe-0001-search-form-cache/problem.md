@@ -62,7 +62,7 @@ source:
   origin: "Pixiv ライブコーディング試験 2026-06-26（Nico の受験記録）"
   license: internal
 review:
-  reviewed_by: human
+  reviewed_by: llm
   reviewed_at: 2026-10-24
   known_issues: []
 ---

@@ -1,0 +1,9 @@
+{
+  "kind": "unit",
+  "limits": { "timeMs": 3000, "wallMs": 10000, "memoryMb": 256 },
+  "harness": {
+    "python": { "files": ["tests/python/test_billing.py"], "command": "python3 -I -m unittest discover -v -s . -p test_billing.py", "resultParser": "unittest-verbose" },
+    "typescript": { "files": ["tests/typescript/billing.test.ts"], "command": "node --experimental-strip-types --no-warnings --test --test-reporter=tap billing.test.ts", "resultParser": "tap" }
+  },
+  "userEntry": { "python": "billing.py", "typescript": "billing.ts" }
+}

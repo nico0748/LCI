@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Tags</title>
+</head>
+<body class="p-4">
+  <div class="flex gap-2">
+    <input id="tag-input" class="border px-2 py-1 flex-1" placeholder="タグを入力" />
+    <button id="add-tag" class="border px-3 py-1 rounded bg-gray-100">追加</button>
+  </div>
+  <ul id="tags" class="mt-3 flex flex-wrap gap-2"></ul>
+  <p class="mt-2 text-sm text-gray-600"><span id="count">0/5</span></p>
+  <p id="error" class="text-sm text-red-600" role="alert"></p>
+  <div class="mt-3 flex items-center gap-3">
+    <button id="save" class="border px-3 py-1 rounded bg-blue-600 text-white disabled:opacity-50">保存</button>
+    <span id="status" class="text-sm" aria-live="polite"></span>
+  </div>
+
+  <script>
+    const API = "https://api.example.com/works/42/tags";
+    const MAX = 5;
+    /** @type {{label: string, key: string}[]} */
+    let tags = [];
+    let savedSignature = null; // 最後に保存（読み込み）した状態。null は未読み込み
+    let saving = false;
+
+    const input = document.getElementById("tag-input");
+    const list = document.getElementById("tags");
+    const countEl = document.getElementById("count");
+    const errorEl = document.getElementById("error");
+    const saveBtn = document.getElementById("save");
+    const statusEl = document.getElementById("status");
+
+    // 表示用: 前後の空白を除いて NFKC。比較用: さらに小文字化
+    const toLabel = (s) => s.normalize("NFKC").trim();
+    const toKey = (s) => toLabel(s).toLowerCase();
+    // 並び順に依存しない「集合」としての署名
+    const signature = (arr) => JSON.stringify(arr.map((t) => t.key).sort());
+
+    function render() {
+      list.replaceChildren();
+      for (const t of tags) {
+        const li = document.createElement("li");
+        li.className = "flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1";
+        const label = document.createElement("span");
+        label.textContent = t.label; // innerHTML は使わない
+        const del = document.createElement("button");
+        del.className = "remove-tag text-gray-500";
+        del.dataset.tag = t.label;
+        del.setAttribute("aria-label", "削除");
+        del.textContent = "×";
+        del.addEventListener("click", () => removeTag(t.key));
+        li.append(label, del);
+        list.appendChild(li);
+      }
+      countEl.textContent = `${tags.length}/${MAX}`;
+    }
+
+    function addTag() {
+      const label = toLabel(input.value);
+      const key = label.toLowerCase();
+      statusEl.textContent = "";
+      if (!label) {
+        errorEl.textContent = "タグ名を入力してください";
+        return;
+      }
+      if (tags.some((t) => t.key === key)) {
+        errorEl.textContent = `「${label}」はすでに追加されています`;
+        return;
+      }
+      if (tags.length >= MAX) {
+        errorEl.textContent = `タグは ${MAX} 個までです`;
+        return;
+      }
+      tags.push({ label, key });
+      errorEl.textContent = "";
+      input.value = "";
+      render();
+    }
+
+    function removeTag(key) {
+      tags = tags.filter((t) => t.key !== key);
+      errorEl.textContent = "";
+      statusEl.textContent = "";
+      render();
+    }
+
+    async function save() {
+      if (saving || savedSignature === null) return;
+      const sig = signature(tags);
+      if (sig === savedSignature) {
+        statusEl.textContent = "変更はありません";
+        return; // 送らない
+      }
+      saving = true;
+      saveBtn.disabled = true;
+      statusEl.textContent = "保存中…";
+      try {
+        const res = await fetch(API, {
+          method: "PUT",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(tags.map((t) => t.label)),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        savedSignature = sig; // 成功してから基準を更新する
+        statusEl.textContent = "保存しました";
+      } catch (e) {
+        statusEl.textContent = "保存に失敗しました。もう一度お試しください";
+      } finally {
+        saving = false;
+        saveBtn.disabled = false;
+      }
+    }
+
+    async function load() {
+      try {
+        const res = await fetch(API);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        tags = [];
+        for (const raw of data) {
+          const label = toLabel(String(raw));
+          if (label && !tags.some((t) => t.key === label.toLowerCase())) tags.push({ label, key: label.toLowerCase() });
+        }
+        savedSignature = signature(tags);
+        render();
+      } catch (e) {
+        errorEl.textContent = "タグを読み込めませんでした";
+      }
+    }
+
+    document.getElementById("add-tag").addEventListener("click", addTag);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.isComposing) addTag(); // IME 変換確定の Enter では追加しない
+    });
+    saveBtn.addEventListener("click", save);
+    render();
+    load();
+  </script>
+</body>
+</html>

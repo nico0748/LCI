@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Feed</title>
+</head>
+<body class="p-4">
+  <ul id="feed" class="space-y-2"></ul>
+  <div class="mt-4 flex items-center gap-3">
+    <button id="more" class="border px-3 py-1 rounded bg-gray-100 disabled:opacity-50">もっと見る</button>
+    <span id="status" class="text-sm text-gray-600" aria-live="polite"></span>
+  </div>
+
+  <script>
+    const API = "https://api.example.com/feed";
+    const feed = document.getElementById("feed");
+    const more = document.getElementById("more");
+    const statusEl = document.getElementById("status");
+
+    let cursor = ""; // 次に要求する cursor（初回は空）
+    let loading = false;
+    let done = false;
+    const seen = new Set(); // 表示済みの id（ページの境目の重複を除く）
+
+    async function loadMore() {
+      if (loading || done) return; // 読み込み中・終端後は要求しない
+      loading = true; // await より前に立てる
+      more.disabled = true;
+      statusEl.textContent = "読み込み中…";
+      try {
+        const res = await fetch(`${API}?cursor=${encodeURIComponent(cursor)}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        for (const item of data.items ?? []) {
+          if (seen.has(item.id)) continue;
+          seen.add(item.id);
+          const li = document.createElement("li");
+          li.className = "rounded border px-3 py-2";
+          li.textContent = item.title; // innerHTML は使わない
+          feed.appendChild(li);
+        }
+        if (data.next_cursor == null) {
+          done = true;
+          statusEl.textContent = "これ以上ありません";
+          more.hidden = true;
+        } else {
+          cursor = data.next_cursor;
+          statusEl.textContent = "";
+        }
+      } catch (e) {
+        statusEl.textContent = "読み込みに失敗しました。もう一度お試しください"; // 同じ cursor で再試行できる
+      } finally {
+        loading = false;
+        if (!done) more.disabled = false;
+      }
+    }
+
+    more.addEventListener("click", loadMore);
+    // 無限スクロールにするなら: 番兵要素を IntersectionObserver で監視して loadMore() を呼ぶ（ガードは loadMore の中）
+    loadMore();
+  </script>
+</body>
+</html>

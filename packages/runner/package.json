@@ -1,0 +1,15 @@
+{
+  "name": "@lci/runner",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test src/**/*.test.ts"
+  },
+  "dependencies": { "@lci/core": "workspace:*", "zod": "^4.6.7" },
+  "devDependencies": { "typescript": "^5.9.0", "@types/node": "^22" }
+}

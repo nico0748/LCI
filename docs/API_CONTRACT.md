@@ -52,3 +52,11 @@
 - E: `packages/evaluator/**`, `packages/mcp-server/**`, `apps/web/src/app/api/sessions/[id]/finalize/**`, `.../evaluate/**`
 - P: `packages/problem-tools/**`, `problems/**`
 - `packages/core` は共有。フィールド追加は可、削除・改名は不可。
+
+## E の追加メモ（2026-10-24）
+
+- `@lci/core` への追加（追加のみ）: `Session.finalize?`（`finished_at_wall, elapsed_ms{remux,wav,stt,metrics,frames}, tools{ffmpeg,whisper}, frames, frame_source`）、`Evaluation.usage?`（API 評価のトークン使用量）。
+- `Evaluation` 内の時刻（`feedback.t/t_end`, `evidence.t/t0/t1`, `code_ref.at`, `mentioned_at`）は **セッション時計のミリ秒**。モデル（API・MCP とも）には経過秒で書かせ、`@lci/evaluator` の `draftToEvaluation` が ms に変換する（MCP の `save_evaluation` は "mm:ss" も受け付ける）。
+- `POST /finalize`: body `{ force?, skip_transcribe?, allow_cam_frames?, wait? }`。同一セッションの処理中は 202 `{status:"finalizing"}`、録画中は 409、`wait:false` で即 202。
+- `POST /evaluate`: 503 `{error:"no_api_key"}` / 404 / 409 `not_ready` / 502 `{error: "refusal"|"parse_failed"|"api_error"}`。
+- キーフレームは `derived/frames/<t>.jpg` と索引 `derived/frames/index.json`（`{source, frames:[{t, file, reason, source, media_s}]}`）。

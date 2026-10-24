@@ -1,0 +1,9 @@
+{
+  "kind": "unit",
+  "limits": { "timeMs": 3000, "wallMs": 10000, "memoryMb": 256 },
+  "harness": {
+    "python": { "files": ["tests/python/test_dedupe.py"], "command": "python3 -I -m unittest discover -v -s . -p test_dedupe.py", "resultParser": "unittest-verbose" },
+    "typescript": { "files": ["tests/typescript/dedupe.test.ts"], "command": "node --experimental-strip-types --no-warnings --test --test-reporter=tap dedupe.test.ts", "resultParser": "tap" }
+  },
+  "userEntry": { "python": "dedupe.py", "typescript": "dedupe.ts" }
+}

@@ -1,0 +1,352 @@
+{
+  "kind": "web",
+  "preview": {
+    "tailwind": "local",
+    "viewport": {
+      "width": 800,
+      "height": 600
+    }
+  },
+  "mockApi": {
+    "routes": [
+      {
+        "match": {
+          "method": "GET",
+          "urlPattern": "^https://api\\.example\\.com/photos$"
+        },
+        "latencyMs": [
+          100,
+          200
+        ],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {},
+          "default": [
+            {
+              "id": 1,
+              "title": "港の朝焼け",
+              "thumb": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90'%3E%3Crect width='120' height='90' fill='%23c7d2fe'/%3E%3C/svg%3E"
+            },
+            {
+              "id": 2,
+              "title": "路地裏の猫",
+              "thumb": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90'%3E%3Crect width='120' height='90' fill='%23fecaca'/%3E%3C/svg%3E"
+            },
+            {
+              "id": 3,
+              "title": "雨の交差点",
+              "thumb": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90'%3E%3Crect width='120' height='90' fill='%23bbf7d0'/%3E%3C/svg%3E"
+            },
+            {
+              "id": 4,
+              "title": "真夏の向日葵",
+              "thumb": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90'%3E%3Crect width='120' height='90' fill='%23fde68a'/%3E%3C/svg%3E"
+            },
+            {
+              "id": 5,
+              "title": "夜空と灯台",
+              "thumb": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90'%3E%3Crect width='120' height='90' fill='%23e9d5ff'/%3E%3C/svg%3E"
+            },
+            {
+              "id": 6,
+              "title": "冬の湖畔",
+              "thumb": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90'%3E%3Crect width='120' height='90' fill='%23bae6fd'/%3E%3C/svg%3E"
+            }
+          ]
+        }
+      },
+      {
+        "match": {
+          "method": "GET",
+          "urlPattern": "^https://api\\.example\\.com/photos/(1)$"
+        },
+        "latencyMs": [
+          1200,
+          1200
+        ],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {
+            "1": {
+              "id": 1,
+              "title": "港の朝焼け",
+              "author": "みなと",
+              "description": "始発の船が出る前の港を描きました。"
+            }
+          },
+          "default": {
+            "id": 1,
+            "title": "港の朝焼け",
+            "author": "みなと",
+            "description": "始発の船が出る前の港を描きました。"
+          }
+        }
+      },
+      {
+        "match": {
+          "method": "GET",
+          "urlPattern": "^https://api\\.example\\.com/photos/(\\d+)$"
+        },
+        "latencyMs": [
+          200,
+          400
+        ],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {
+            "1": {
+              "id": 1,
+              "title": "港の朝焼け",
+              "author": "みなと",
+              "description": "始発の船が出る前の港を描きました。"
+            },
+            "2": {
+              "id": 2,
+              "title": "路地裏の猫",
+              "author": "ねこやま",
+              "description": "縁側から路地をのぞく猫です。"
+            },
+            "3": {
+              "id": 3,
+              "title": "雨の交差点",
+              "author": "あめの",
+              "description": "信号待ちの傘を上から見下ろした構図です。"
+            },
+            "4": {
+              "id": 4,
+              "title": "真夏の向日葵",
+              "author": "ひまわり",
+              "description": "背丈より高い向日葵畑。"
+            },
+            "5": {
+              "id": 5,
+              "title": "夜空と灯台",
+              "author": "とうだい",
+              "description": "<img src=x onerror=window.__xss=1>岬の灯台と天の川。"
+            },
+            "6": {
+              "id": 6,
+              "title": "冬の湖畔",
+              "author": "ふゆこ",
+              "description": "凍った湖のほとりで描きました。"
+            }
+          },
+          "default": {
+            "id": 0,
+            "title": "不明",
+            "author": "-",
+            "description": ""
+          }
+        }
+      }
+    ],
+    "unmatched": "block"
+  },
+  "layout": [
+    {
+      "name": "lazy-thumb-exists",
+      "assert": "exists",
+      "selectors": [
+        "#grid img[loading=\"lazy\"]"
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "lazy-thumbs",
+      "steps": [
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "expectText": {
+            "selector": "#grid img[loading=\"lazy\"]",
+            "contains": [
+              ""
+            ]
+          }
+        },
+        {
+          "expectNoText": {
+            "selector": "#grid img:not([loading=\"lazy\"])",
+            "contains": [
+              ""
+            ]
+          }
+        },
+        {
+          "expectText": {
+            "selector": "#grid button[data-id=\"6\"]",
+            "contains": [
+              ""
+            ]
+          }
+        },
+        {
+          "expectRequests": {
+            "count": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "show-detail",
+      "steps": [
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "click": "#grid button[data-id=\"3\"]"
+        },
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "expectText": {
+            "selector": "#detail",
+            "contains": [
+              "雨の交差点",
+              "あめの",
+              "傘を上から"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "detail-cache",
+      "steps": [
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "click": "#grid button[data-id=\"3\"]"
+        },
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "click": "#grid button[data-id=\"4\"]"
+        },
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "click": "#grid button[data-id=\"3\"]"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "expectRequests": {
+            "count": 1,
+            "url": "photos/3"
+          }
+        },
+        {
+          "expectText": {
+            "selector": "#detail",
+            "contains": [
+              "雨の交差点"
+            ]
+          }
+        },
+        {
+          "expectNoText": {
+            "selector": "#detail",
+            "contains": [
+              "真夏の向日葵"
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "cache"
+      ],
+      "weight": 2
+    },
+    {
+      "name": "rapid-switch",
+      "steps": [
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "click": "#grid button[data-id=\"1\"]"
+        },
+        {
+          "wait": 100
+        },
+        {
+          "click": "#grid button[data-id=\"2\"]"
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "expectText": {
+            "selector": "#detail",
+            "contains": [
+              "路地裏の猫",
+              "ねこやま"
+            ]
+          }
+        },
+        {
+          "expectNoText": {
+            "selector": "#detail",
+            "contains": [
+              "港の朝焼け",
+              "みなと"
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "abort"
+      ],
+      "weight": 2
+    },
+    {
+      "name": "no-innerhtml-xss",
+      "steps": [
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "click": "#grid button[data-id=\"5\"]"
+        },
+        {
+          "waitForRequestsSettled": 2000
+        },
+        {
+          "expectText": {
+            "selector": "#detail",
+            "contains": [
+              "夜空と灯台",
+              "<img src=x"
+            ]
+          }
+        },
+        {
+          "expectNoText": {
+            "selector": "#detail img[onerror]",
+            "contains": [
+              ""
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "xss"
+      ]
+    }
+  ],
+  "rubricHints": [
+    "lazy-loading",
+    "detail-cache",
+    "abort-or-ignore-stale",
+    "cache-bound",
+    "xss-safe-render"
+  ]
+}

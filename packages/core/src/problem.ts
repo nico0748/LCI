@@ -151,6 +151,13 @@ export const StdioTests = z.object({
       floatRel: z.number().optional(),
     })
     .default({ mode: "token" }),
+  /** 打ち切り条件（02 FR-X-02-8）。runner が参照する。追加フィールド（R 担当、2026-10-24） */
+  stopOn: z
+    .object({
+      consecutiveTle: z.number().int().positive().default(2),
+      firstFail: z.boolean().default(false),
+    })
+    .default({ consecutiveTle: 2, firstFail: false }),
   cases: z.array(StdioCase).min(1),
 });
 

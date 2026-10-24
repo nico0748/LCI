@@ -1,0 +1,103 @@
+{
+  "kind": "web",
+  "preview": { "tailwind": "local", "viewport": { "width": 800, "height": 600 } },
+  "mockApi": {
+    "routes": [
+      {
+        "match": { "method": "GET", "urlPattern": "^https://api\\.example\\.com/posts$" },
+        "latencyMs": [100, 200],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {},
+          "default": [
+            { "id": 1, "title": "春の新作イラスト", "likes": 10, "liked": false },
+            { "id": 2, "title": "メンテナンス中の投稿", "likes": 3, "liked": false },
+            { "id": 3, "title": "<img src=x onerror=window.__xss=1>落書き", "likes": 7, "liked": true }
+          ]
+        }
+      },
+      {
+        "match": { "method": "*", "urlPattern": "^https://api\\.example\\.com/posts/2/like$" },
+        "latencyMs": [300, 400],
+        "failRate": 1,
+        "respond": { "byQuery": {}, "default": { "ok": false } }
+      },
+      {
+        "match": { "method": "*", "urlPattern": "^https://api\\.example\\.com/posts/(\\d+)/like$" },
+        "latencyMs": [300, 500],
+        "failRate": 0,
+        "respond": { "byQuery": {}, "default": { "ok": true } }
+      }
+    ],
+    "unmatched": "block"
+  },
+  "layout": [{ "name": "like-button-exists", "assert": "exists", "selectors": ["#like-1"] }],
+  "scenarios": [
+    {
+      "name": "initial-render",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "expectText": { "selector": "#count-1", "contains": ["10"] } },
+        { "expectText": { "selector": "#count-2", "contains": ["3"] } },
+        { "expectText": { "selector": "#count-3", "contains": ["7"] } },
+        { "expectText": { "selector": "#posts", "contains": ["春の新作イラスト", "<img src=x"] } },
+        { "expectNoText": { "selector": "#posts img", "contains": [""] } }
+      ],
+      "tags": ["xss"]
+    },
+    {
+      "name": "optimistic-immediate",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#like-1" },
+        { "wait": 50 },
+        { "expectText": { "selector": "#count-1", "contains": ["11"] } },
+        { "waitForRequestsSettled": 2000 },
+        { "expectText": { "selector": "#count-1", "contains": ["11"] } },
+        { "expectRequests": { "count": 1, "url": "posts/1/like" } },
+        { "click": "#like-3" },
+        { "wait": 50 },
+        { "expectText": { "selector": "#count-3", "contains": ["6"] } },
+        { "waitForRequestsSettled": 2000 },
+        { "expectText": { "selector": "#count-3", "contains": ["6"] } }
+      ],
+      "weight": 2
+    },
+    {
+      "name": "rollback-on-failure",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#like-2" },
+        { "wait": 50 },
+        { "expectText": { "selector": "#count-2", "contains": ["4"] } },
+        { "waitForRequestsSettled": 2000 },
+        { "expectText": { "selector": "#count-2", "contains": ["3"] } },
+        { "expectText": { "selector": "#error", "contains": ["いいねできませんでした"] } }
+      ],
+      "weight": 2
+    },
+    {
+      "name": "rapid-failure",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#like-2", "times": 2, "intervalMs": 40 },
+        { "waitForRequestsSettled": 3000 },
+        { "expectText": { "selector": "#count-2", "contains": ["3"] } },
+        { "expectText": { "selector": "#error", "contains": ["いいねできませんでした"] } }
+      ],
+      "tags": ["idempotency"]
+    },
+    {
+      "name": "rapid-success",
+      "steps": [
+        { "waitForRequestsSettled": 2000 },
+        { "click": "#like-1", "times": 3, "intervalMs": 40 },
+        { "waitForRequestsSettled": 3000 },
+        { "expectText": { "selector": "#count-1", "contains": ["11"] } },
+        { "expectNoText": { "selector": "#error", "contains": ["いいねできませんでした"] } }
+      ],
+      "tags": ["idempotency"]
+    }
+  ],
+  "rubricHints": ["optimistic-update", "check-res-ok", "rollback-to-confirmed", "rapid-toggle", "xss-safe-render"]
+}

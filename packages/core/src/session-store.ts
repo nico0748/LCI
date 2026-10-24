@@ -12,7 +12,13 @@ import { Evaluation } from "./evaluation.ts";
 export class SessionStore {
   private streams = new Map<string, WriteStream>();
 
-  constructor(public readonly root: string) {}
+  readonly root: string;
+
+  // パラメータプロパティ（constructor(public root)）は Node の --experimental-strip-types（strip-only）で
+  // ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX になり、@lci/core を import する全パッケージが落ちるため明示代入にしている
+  constructor(root: string) {
+    this.root = root;
+  }
 
   dir(id: string) {
     return path.join(this.root, "sessions", id);
@@ -34,6 +40,20 @@ export class SessionStore {
     const tmp = p + ".tmp";
     await fs.writeFile(tmp, JSON.stringify(parsed, null, 2));
     await fs.rename(tmp, p);
+  }
+
+  /** セッションを丸ごと削除する（同意画面で約束している「完全に削除」）。id にパス区切りを含むものは拒否 */
+  async remove(id: string): Promise<boolean> {
+    if (!/^[\w.-]+$/.test(id) || id === "." || id === "..") throw new Error(`invalid session id: ${id}`);
+    await this.closeEvents(id);
+    const d = this.dir(id);
+    try {
+      await fs.access(d);
+    } catch {
+      return false;
+    }
+    await fs.rm(d, { recursive: true, force: true });
+    return true;
   }
 
   async get(id: string): Promise<Session | null> {

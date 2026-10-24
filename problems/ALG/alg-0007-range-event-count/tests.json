@@ -1,0 +1,62 @@
+{
+  "kind": "stdio",
+  "limits": {
+    "timeMs": 2000,
+    "wallMs": 5000,
+    "memoryMb": 256,
+    "outputKb": 2048
+  },
+  "compare": {
+    "mode": "token"
+  },
+  "cases": [
+    {
+      "name": "sample-1",
+      "visibility": "sample",
+      "stdinFile": "tests/01.in",
+      "expectedFile": "tests/01.out"
+    },
+    {
+      "name": "sample-2-single",
+      "visibility": "sample",
+      "stdinFile": "tests/02.in",
+      "expectedFile": "tests/02.out"
+    },
+    {
+      "name": "hidden-duplicates-boundary",
+      "visibility": "hidden",
+      "stdinFile": "tests/11.in",
+      "expectedFile": "tests/11.out"
+    },
+    {
+      "name": "hidden-value-extremes",
+      "visibility": "hidden",
+      "stdinFile": "tests/12.in",
+      "expectedFile": "tests/12.out"
+    },
+    {
+      "name": "hidden-string-sort-trap",
+      "visibility": "hidden",
+      "stdinFile": "tests/13.in",
+      "expectedFile": "tests/13.out"
+    },
+    {
+      "name": "hidden-small-random",
+      "visibility": "hidden",
+      "stdinFile": "tests/14.in",
+      "expectedFile": "tests/14.out"
+    },
+    {
+      "name": "hidden-large-random",
+      "visibility": "hidden",
+      "stdinFile": "tests/21.in",
+      "expectedFile": "tests/21.out"
+    },
+    {
+      "name": "hidden-large-hot-spots",
+      "visibility": "hidden",
+      "stdinFile": "tests/22.in",
+      "expectedFile": "tests/22.out"
+    }
+  ]
+}

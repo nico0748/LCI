@@ -1,0 +1,9 @@
+{
+  "kind": "unit",
+  "limits": { "timeMs": 3000, "wallMs": 10000, "memoryMb": 256 },
+  "harness": {
+    "python": { "files": ["tests/python/test_query.py"], "command": "python3 -I -m unittest discover -v -s . -p test_query.py", "resultParser": "unittest-verbose" },
+    "typescript": { "files": ["tests/typescript/query.test.ts"], "command": "node --experimental-strip-types --experimental-sqlite --no-warnings --test --test-reporter=tap query.test.ts", "resultParser": "tap" }
+  },
+  "userEntry": { "python": "query.py", "typescript": "query.ts" }
+}

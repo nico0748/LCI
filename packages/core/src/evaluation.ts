@@ -135,6 +135,16 @@ export const Evaluation = z.object({
   summary: z.string(),
   uncertainties: z.array(z.string()).default([]),
   self_check: z.string().optional(),
+  /** API 呼び出しのトークン使用量（E が additive に追加。MCP 経由では付かない。FR-E-15 のコスト表示用） */
+  usage: z
+    .object({
+      input_tokens: z.number(),
+      output_tokens: z.number(),
+      cache_read_input_tokens: z.number().default(0),
+      cache_creation_input_tokens: z.number().default(0),
+      elapsed_ms: z.number().optional(),
+    })
+    .optional(),
 });
 export type Evaluation = z.infer<typeof Evaluation>;
 

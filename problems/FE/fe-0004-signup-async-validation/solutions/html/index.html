@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Signup</title>
+</head>
+<body class="p-4">
+  <form id="form" class="max-w-md space-y-4" novalidate>
+    <div>
+      <label for="username" class="block text-sm font-medium">ユーザー名</label>
+      <input id="username" class="mt-1 w-full border px-2 py-1" autocomplete="username" />
+      <p id="username-msg" class="mt-1 text-sm" aria-live="polite"></p>
+    </div>
+    <div>
+      <label for="email" class="block text-sm font-medium">メールアドレス</label>
+      <input id="email" type="email" class="mt-1 w-full border px-2 py-1" autocomplete="email" />
+      <p id="email-msg" class="mt-1 text-sm text-red-600" aria-live="polite"></p>
+    </div>
+    <button id="submit" type="submit" class="border px-4 py-1 rounded bg-blue-600 text-white disabled:opacity-50">登録</button>
+    <p id="result" class="text-sm" aria-live="polite"></p>
+  </form>
+
+  <script>
+    const API = "https://api.example.com";
+    const DEBOUNCE_MS = 300;
+    const NAME_RE = /^[a-z0-9_]{3,16}$/;
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const nameInput = document.getElementById("username");
+    const nameMsg = document.getElementById("username-msg");
+    const emailInput = document.getElementById("email");
+    const emailMsg = document.getElementById("email-msg");
+    const submitBtn = document.getElementById("submit");
+    const result = document.getElementById("result");
+
+    // 「どの値に対する、どの状態か」を一緒に持つ。値が変わったら必ず状態を戻す
+    let name = { value: "", state: "invalid" }; // invalid | checking | available | taken | error
+    let timer = null;
+    let controller = null;
+    let submitting = false;
+    let submitted = false;
+
+    function showName(state) {
+      const text = {
+        invalid: "形式が正しくありません（3〜16 文字の半角英小文字・数字・_）",
+        checking: "確認中…",
+        available: "使用できます",
+        taken: "このユーザー名は使われています",
+        error: "確認に失敗しました。時間をおいて入力し直してください",
+      }[state];
+      nameMsg.textContent = name.value === "" ? "" : text;
+      nameMsg.className = "mt-1 text-sm " + (state === "available" ? "text-green-700" : state === "checking" ? "text-gray-500" : "text-red-600");
+    }
+
+    async function checkAvailability(value) {
+      if (controller) controller.abort(); // 前の問い合わせは中断
+      controller = new AbortController();
+      try {
+        const res = await fetch(`${API}/users/available?name=${encodeURIComponent(value)}`, { signal: controller.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (name.value !== value) return; // 中断し損ねた古い応答は捨てる
+        name.state = data.available ? "available" : "taken";
+      } catch (e) {
+        if (e.name === "AbortError" || name.value !== value) return;
+        name.state = "error";
+      }
+      showName(name.state);
+    }
+
+    nameInput.addEventListener("input", () => {
+      const value = nameInput.value;
+      clearTimeout(timer);
+      if (controller) controller.abort();
+      result.textContent = "";
+      if (!NAME_RE.test(value)) {
+        name = { value, state: "invalid" };
+        showName("invalid");
+        return; // 形式が正しくなければ問い合わせない
+      }
+      name = { value, state: "checking" };
+      showName("checking");
+      timer = setTimeout(() => checkAvailability(value), DEBOUNCE_MS);
+    });
+
+    function validateEmail() {
+      const ok = EMAIL_RE.test(emailInput.value.trim());
+      emailMsg.textContent = ok || emailInput.value === "" ? "" : "メールアドレスの形式が正しくありません";
+      return ok;
+    }
+    emailInput.addEventListener("input", validateEmail);
+
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (submitting || submitted) return; // 二重送信を防ぐ
+      const emailOk = validateEmail();
+      if (!emailOk && emailInput.value === "") emailMsg.textContent = "メールアドレスの形式が正しくありません";
+      if (name.state === "checking") {
+        result.textContent = "ユーザー名を確認しています。確認が終わってから登録してください";
+        return;
+      }
+      if (name.state !== "available" || !emailOk) {
+        if (name.value === "") nameMsg.textContent = "形式が正しくありません（3〜16 文字の半角英小文字・数字・_）";
+        result.textContent = "入力内容を確認してください";
+        return;
+      }
+      submitting = true;
+      submitBtn.disabled = true;
+      result.textContent = "登録中…";
+      try {
+        const res = await fetch(`${API}/signup`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ username: name.value, email: emailInput.value.trim() }),
+        });
+        if (res.status === 409) {
+          name.state = "taken"; // 確認後に他の人が取った（サーバー側の最終チェック）
+          showName("taken");
+          result.textContent = "このユーザー名は使われています";
+          return;
+        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        submitted = true;
+        result.textContent = "登録しました";
+      } catch (err) {
+        result.textContent = "登録に失敗しました。もう一度お試しください";
+      } finally {
+        submitting = false;
+        submitBtn.disabled = submitted;
+      }
+    });
+  </script>
+</body>
+</html>

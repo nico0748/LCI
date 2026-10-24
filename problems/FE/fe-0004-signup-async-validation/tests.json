@@ -1,0 +1,445 @@
+{
+  "kind": "web",
+  "preview": {
+    "tailwind": "local",
+    "viewport": {
+      "width": 800,
+      "height": 600
+    }
+  },
+  "mockApi": {
+    "routes": [
+      {
+        "match": {
+          "method": "GET",
+          "urlPattern": "^https://api\\.example\\.com/users/available\\?name=slow_name$"
+        },
+        "latencyMs": [
+          1500,
+          1500
+        ],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {},
+          "default": {
+            "available": true
+          }
+        }
+      },
+      {
+        "match": {
+          "method": "GET",
+          "urlPattern": "^https://api\\.example\\.com/users/available\\?name=([^&]*)$"
+        },
+        "latencyMs": [
+          400,
+          700
+        ],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {
+            "taken_name": {
+              "available": false
+            },
+            "admin": {
+              "available": false
+            }
+          },
+          "default": {
+            "available": true
+          }
+        }
+      },
+      {
+        "match": {
+          "method": "POST",
+          "urlPattern": "^https://api\\.example\\.com/signup$"
+        },
+        "latencyMs": [
+          300,
+          500
+        ],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {},
+          "default": {
+            "id": 101
+          }
+        }
+      }
+    ],
+    "unmatched": "block"
+  },
+  "layout": [
+    {
+      "name": "email-below-username",
+      "assert": "below",
+      "selectors": [
+        "#email",
+        "#username"
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "format-check-no-request",
+      "steps": [
+        {
+          "type": "#username",
+          "value": "ab"
+        },
+        {
+          "wait": 800
+        },
+        {
+          "expectText": {
+            "selector": "#username-msg",
+            "contains": [
+              "形式が正しくありません"
+            ]
+          }
+        },
+        {
+          "type": "#username",
+          "value": "Nico!"
+        },
+        {
+          "wait": 800
+        },
+        {
+          "expectText": {
+            "selector": "#username-msg",
+            "contains": [
+              "形式が正しくありません"
+            ]
+          }
+        },
+        {
+          "expectRequests": {
+            "count": 0
+          }
+        }
+      ],
+      "tags": [
+        "validation"
+      ]
+    },
+    {
+      "name": "debounce-typing",
+      "steps": [
+        {
+          "type": "#username",
+          "value": "n"
+        },
+        {
+          "wait": 60
+        },
+        {
+          "type": "#username",
+          "value": "ni"
+        },
+        {
+          "wait": 60
+        },
+        {
+          "type": "#username",
+          "value": "nic"
+        },
+        {
+          "wait": 60
+        },
+        {
+          "type": "#username",
+          "value": "nico"
+        },
+        {
+          "wait": 60
+        },
+        {
+          "type": "#username",
+          "value": "nico_"
+        },
+        {
+          "wait": 60
+        },
+        {
+          "type": "#username",
+          "value": "nico_d"
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "expectRequests": {
+            "count": 1,
+            "url": "available"
+          }
+        },
+        {
+          "expectRequests": {
+            "count": 1,
+            "url": "name=nico_d"
+          }
+        },
+        {
+          "expectText": {
+            "selector": "#username-msg",
+            "contains": [
+              "使用できます"
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "debounce"
+      ],
+      "weight": 2
+    },
+    {
+      "name": "stale-response",
+      "steps": [
+        {
+          "type": "#username",
+          "value": "slow_name"
+        },
+        {
+          "wait": 450
+        },
+        {
+          "type": "#username",
+          "value": "taken_name"
+        },
+        {
+          "waitForRequestsSettled": 4000
+        },
+        {
+          "expectText": {
+            "selector": "#username-msg",
+            "contains": [
+              "使われています"
+            ]
+          }
+        },
+        {
+          "expectNoText": {
+            "selector": "#username-msg",
+            "contains": [
+              "使用できます"
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "abort"
+      ],
+      "weight": 2
+    },
+    {
+      "name": "submit-waits-for-check",
+      "steps": [
+        {
+          "type": "#username",
+          "value": "nico_d"
+        },
+        {
+          "type": "#email",
+          "value": "nico@example.com"
+        },
+        {
+          "click": "#submit"
+        },
+        {
+          "wait": 100
+        },
+        {
+          "expectRequests": {
+            "count": 0,
+            "url": "signup"
+          }
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "click": "#submit"
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "expectRequests": {
+            "count": 1,
+            "url": "signup"
+          }
+        },
+        {
+          "expectText": {
+            "selector": "#result",
+            "contains": [
+              "登録しました"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "blocked-when-invalid",
+      "steps": [
+        {
+          "type": "#username",
+          "value": "taken_name"
+        },
+        {
+          "type": "#email",
+          "value": "nico@"
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "click": "#submit"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "expectRequests": {
+            "count": 0,
+            "url": "signup"
+          }
+        },
+        {
+          "expectText": {
+            "selector": "#username-msg",
+            "contains": [
+              "使われています"
+            ]
+          }
+        },
+        {
+          "expectText": {
+            "selector": "#email-msg",
+            "contains": [
+              "メールアドレスの形式が正しくありません"
+            ]
+          }
+        }
+      ],
+      "tags": [
+        "validation"
+      ]
+    },
+    {
+      "name": "stale-availability",
+      "steps": [
+        {
+          "type": "#username",
+          "value": "nico_d"
+        },
+        {
+          "type": "#email",
+          "value": "nico@example.com"
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "expectText": {
+            "selector": "#username-msg",
+            "contains": [
+              "使用できます"
+            ]
+          }
+        },
+        {
+          "type": "#username",
+          "value": "ab"
+        },
+        {
+          "click": "#submit"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "expectRequests": {
+            "count": 0,
+            "url": "signup"
+          }
+        },
+        {
+          "type": "#username",
+          "value": "admin"
+        },
+        {
+          "click": "#submit"
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "click": "#submit"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "expectRequests": {
+            "count": 0,
+            "url": "signup"
+          }
+        }
+      ],
+      "tags": [
+        "validation"
+      ],
+      "weight": 2
+    },
+    {
+      "name": "double-submit",
+      "steps": [
+        {
+          "type": "#username",
+          "value": "nico_d"
+        },
+        {
+          "type": "#email",
+          "value": "nico@example.com"
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "click": "#submit",
+          "times": 3,
+          "intervalMs": 40
+        },
+        {
+          "waitForRequestsSettled": 3000
+        },
+        {
+          "expectRequests": {
+            "count": 1,
+            "url": "signup"
+          }
+        },
+        {
+          "expectText": {
+            "selector": "#result",
+            "contains": [
+              "登録しました"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "rubricHints": [
+    "local-format-check",
+    "debounce",
+    "abort-or-ignore-stale",
+    "reset-on-input",
+    "server-side-recheck",
+    "double-submit"
+  ]
+}

@@ -55,6 +55,19 @@ export const Session = z.object({
   warnings: z.array(z.object({ t: z.number(), code: z.string(), detail: z.string().optional() })).default([]),
   files: z.array(SessionFile).default([]),
   evaluations: z.array(z.string()).default([]).describe("derived/evaluation-*.json の相対パス"),
+  /**
+   * 終了処理（@lci/evaluator finalizeSession）の記録。E が additive に追加したフィールド。
+   * 再実行時に「どのステップに何秒かかったか」「ffmpeg / whisper が使えたか」を UI と CLI で見せるため。
+   */
+  finalize: z
+    .object({
+      finished_at_wall: z.string().optional(),
+      elapsed_ms: z.record(z.string(), z.number()).default({}),
+      tools: z.object({ ffmpeg: z.boolean(), whisper: z.boolean() }).optional(),
+      frames: z.number().default(0),
+      frame_source: z.enum(["screen", "cam"]).optional(),
+    })
+    .optional(),
 });
 export type Session = z.infer<typeof Session>;
 
@@ -115,6 +128,11 @@ export const Event = z.discriminatedUnion("type", [
   }),
   z.object({ ...base, type: z.literal("followup_shown"), text: z.string() }),
   z.object({ ...base, type: z.literal("marker"), label: z.string() }),
+  /**
+   * W1 追加（追加のみ）: 録画トラックの ended、チャンク送信失敗など
+   * 「セッションは止めないが後で気づきたい」事象。code は track_ended / upload_failed / … の自由文字列。
+   */
+  z.object({ ...base, type: z.literal("warning"), code: z.string(), detail: z.string().optional() }),
 ]);
 export type Event = z.infer<typeof Event>;
 export type EventOf<T extends Event["type"]> = Extract<Event, { type: T }>;
@@ -158,6 +176,8 @@ export const Diagnostic = z.object({
   severity: z.enum(["error", "warning", "info"]),
   message: z.string(),
 });
+/** 追加 export（R 担当、2026-10-24）: runner が型として使う */
+export type Diagnostic = z.infer<typeof Diagnostic>;
 
 export const CaseResult = z.object({
   name: z.string(),
@@ -171,6 +191,7 @@ export const CaseResult = z.object({
   message: z.string().optional(),
   tags: z.array(z.string()).default([]),
 });
+export type CaseResult = z.infer<typeof CaseResult>;
 
 export const RunResult = z.object({
   run_id: z.string(),
