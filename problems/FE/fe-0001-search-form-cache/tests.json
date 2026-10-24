@@ -1,0 +1,80 @@
+{
+  "kind": "web",
+  "preview": { "tailwind": "local", "viewport": { "width": 800, "height": 600 } },
+  "mockApi": {
+    "routes": [
+      {
+        "match": { "method": "GET", "urlPattern": "^https://api\\.example\\.com/search\\?q=(.*)$" },
+        "latencyMs": [300, 800],
+        "failRate": 0,
+        "respond": {
+          "byQuery": {
+            "": [],
+            "lorem": [{ "id": 1, "title": "Lorem ipsum" }, { "id": 2, "title": "Dolor" }],
+            "sit": [{ "id": 3, "title": "Sit amet" }]
+          },
+          "default": [{ "id": 4, "title": "Consectetur adipiscing elit" }]
+        }
+      }
+    ],
+    "unmatched": "block"
+  },
+  "layout": [
+    { "name": "input-button-inline", "assert": "sameRow", "selectors": ["input", "button"] },
+    { "name": "results-below", "assert": "below", "selectors": ["div:not(:has(input))", "input"] }
+  ],
+  "scenarios": [
+    {
+      "name": "basic-render",
+      "steps": [
+        { "type": "input", "value": "lorem" },
+        { "click": "button" },
+        { "waitForRequestsSettled": 2000 },
+        { "expectText": { "selector": "body", "contains": ["Lorem ipsum", "Dolor"] } }
+      ]
+    },
+    {
+      "name": "empty-query-skips-request",
+      "steps": [
+        { "type": "input", "value": "" },
+        { "click": "button" },
+        { "wait": 500 },
+        { "expectRequests": { "count": 0 } }
+      ]
+    },
+    {
+      "name": "same-query-cached",
+      "steps": [
+        { "type": "input", "value": "sit" },
+        { "click": "button" },
+        { "waitForRequestsSettled": 2000 },
+        { "click": "button" },
+        { "wait": 500 },
+        { "expectRequests": { "count": 1, "url": "q=sit" } }
+      ],
+      "tags": ["dedupe"]
+    },
+    {
+      "name": "rapid-clicks-abort-or-dedupe",
+      "steps": [
+        { "type": "input", "value": "lorem" },
+        { "click": "button", "times": 5, "intervalMs": 50 },
+        { "waitForRequestsSettled": 3000 },
+        { "expectRequests": { "completedMax": 1, "allowAborted": true } }
+      ],
+      "tags": ["abort", "debounce"],
+      "weight": 2
+    },
+    {
+      "name": "no-innerhtml-xss",
+      "steps": [
+        { "type": "input", "value": "<img src=x onerror=window.__xss=1>" },
+        { "click": "button" },
+        { "waitForRequestsSettled": 2000 },
+        { "expectNoText": { "selector": "img", "contains": [""] } }
+      ],
+      "tags": ["xss"]
+    }
+  ],
+  "rubricHints": ["empty-skip", "dedupe", "abort", "ttl", "lru", "xss-safe-render"]
+}

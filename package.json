@@ -1,0 +1,16 @@
+{
+  "name": "lci",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Live Coding Interview trainer — 説明しながらコーディングする面接の練習アプリ",
+  "packageManager": "pnpm@10.28.0",
+  "scripts": {
+    "dev": "pnpm --filter @lci/web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "problems:validate": "pnpm --filter @lci/problem-tools validate",
+    "mcp": "pnpm --filter @lci/mcp-server start"
+  },
+  "engines": { "node": ">=22" }
+}

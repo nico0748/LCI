@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>Search</title>
+</head>
+<body class="p-4">
+  <div class="flex gap-2">
+    <input id="q" class="border px-2 py-1 flex-1" placeholder="検索ワード" />
+    <button id="go" class="border px-3 py-1 rounded bg-gray-100">検索</button>
+  </div>
+  <div id="results" class="mt-4 space-y-1"></div>
+
+  <script>
+    const API = "https://api.example.com/search";
+    const TTL_MS = 60 * 1000;
+    const MAX_ENTRIES = 50;
+    // query -> { data, ts }
+    const cache = new Map();
+    let controller = null;
+
+    const input = document.getElementById("q");
+    const button = document.getElementById("go");
+    const results = document.getElementById("results");
+
+    function render(items) {
+      results.replaceChildren();
+      for (const item of items) {
+        const el = document.createElement("div");
+        el.textContent = item.title; // innerHTML を避ける
+        results.appendChild(el);
+      }
+    }
+
+    function getCached(query) {
+      const hit = cache.get(query);
+      if (!hit) return null;
+      if (Date.now() - hit.ts > TTL_MS) {
+        cache.delete(query);
+        return null;
+      }
+      // LRU: 触ったものを末尾へ
+      cache.delete(query);
+      cache.set(query, hit);
+      return hit.data;
+    }
+
+    function setCached(query, data) {
+      cache.set(query, { data, ts: Date.now() });
+      if (cache.size > MAX_ENTRIES) {
+        const oldest = cache.keys().next().value;
+        cache.delete(oldest);
+      }
+    }
+
+    async function search() {
+      const query = input.value.trim();
+      if (!query) {
+        render([]);
+        return; // 空クエリは送らない
+      }
+      const cached = getCached(query);
+      if (cached) {
+        render(cached);
+        return;
+      }
+      if (controller) controller.abort(); // 古いリクエストは捨てる
+      controller = new AbortController();
+      try {
+        const res = await fetch(`${API}?q=${encodeURIComponent(query)}`, { signal: controller.signal });
+        const data = await res.json();
+        setCached(query, data);
+        render(data);
+      } catch (e) {
+        if (e.name === "AbortError") return;
+        results.textContent = "取得に失敗しました";
+      }
+    }
+
+    button.addEventListener("click", search);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") search();
+    });
+  </script>
+</body>
+</html>

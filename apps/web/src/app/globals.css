@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/*
+  デザイン原則（要件書 04 §7）: 落ち着いた配色、セッション中は視線を奪わない。
+  配色トークンは :root に置き、dark は prefers-color-scheme と data-theme の両方で切り替える。
+*/
+:root {
+  --bg: #f7f7f5;
+  --bg-elev: #ffffff;
+  --fg: #1c1c1a;
+  --fg-muted: #6b6b66;
+  --border: #e3e3df;
+  --accent: #2f6fed;
+  --accent-fg: #ffffff;
+  --warn: #c7730a;
+  --danger: #c43d3d;
+  --ok: #2d8a4e;
+  --rec: #d6453d;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141415;
+    --bg-elev: #1d1d1f;
+    --fg: #e8e8e4;
+    --fg-muted: #9a9a94;
+    --border: #2c2c2f;
+    --accent: #6f9bff;
+    --accent-fg: #0b0b0c;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141415;
+  --bg-elev: #1d1d1f;
+  --fg: #e8e8e4;
+  --fg-muted: #9a9a94;
+  --border: #2c2c2f;
+  --accent: #6f9bff;
+  --accent-fg: #0b0b0c;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-ok: var(--ok);
+  --color-rec: var(--rec);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+html { font-family: var(--font-sans); }
+body { background: var(--bg); color: var(--fg); }
