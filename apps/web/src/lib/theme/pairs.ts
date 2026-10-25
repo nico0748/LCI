@@ -72,6 +72,7 @@ export const CONTRAST_PAIRS: ContrastPair[] = [
   ui("accent", "bg-surface", "選択インジケータ・チェック"),
   ui("accent", "bg-hover", "選択インジケータ（hover 行）"),
   ui("accent", "bg-selected", "選択行の左 2px"),
+  ui("accent", "bg-hl-line", "デモの変更行の左 3px"),
   ui("fg-disabled", "bg-surface", "無効（参考: 1.4.3 対象外）"),
   ui("accent", "bg-disabled", "マイクのレベルメータ（点灯 / 消灯）"),
   ui("fg-muted", "bg-surface", "レベルメータの基準線"),

@@ -5,15 +5,23 @@
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
-  "exports": { ".": "./src/index.ts", "./browser": "./src/browser.ts" },
+  "exports": {
+    ".": "./src/index.ts",
+    "./browser": "./src/browser.ts"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test src/**/*.test.ts"
+    "test": "node --experimental-strip-types --no-warnings --test \"src/**/*.test.ts\"",
+    "tts": "node --experimental-strip-types --no-warnings src/cli.ts synth",
+    "voices": "node --experimental-strip-types --no-warnings src/cli.ts voices"
   },
   "dependencies": {
     "@lci/core": "workspace:*",
     "@lci/runner": "workspace:*",
     "zod": "^4.6.7"
   },
-  "devDependencies": { "typescript": "^5.9.0", "@types/node": "^22" }
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "@types/node": "^22"
+  }
 }

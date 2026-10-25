@@ -13,7 +13,19 @@ export interface CompiledStep {
   t1: number;
   say?: { t0: number; t1: number; text: string; audio_key?: string };
   typing?: { t0: number; t1: number };
-  run?: { t: number; shown_until: number; mode: "sample" | "stdin" | "judge"; result: RunSnapshot };
+  /**
+   * t = 実行開始（「実行中…」を出す）、shown_until = 結果を出す時刻（以後、次の実行まで結果を出したまま）。
+   * stdin / expect_output は追加（demo-backend）: mode=stdin の入力と、予告した出力（draft.steps[].run と同じ値）
+   */
+  run?: {
+    t: number;
+    shown_until: number;
+    mode: "sample" | "stdin" | "judge";
+    result: RunSnapshot;
+    stdin?: string;
+    expect_output?: string;
+  };
+  /** ステップ終了時点のコードに対する範囲（Monaco の 1 始まり） */
   highlight?: { range: [number, number, number, number] };
   covers: string[];
 }
@@ -51,6 +63,36 @@ export interface DemoSummary {
   estimate_ms: number;
   audio_status: AudioStatus;
   audio_bytes: number | null;
+  /** 追加（demo-backend）: 保存されている版の数（最新 10 件まで） */
+  revisions_count?: number;
+  /** 追加（demo-backend）: 作成後に starter が変わった（FR-D-44「作り直しを推奨」） */
+  problem_updated?: boolean;
+  /** 追加（demo-backend）: 検証に使ったランナー。fake は開発用（隔離なし） */
+  runner_backend?: "docker" | "fake";
+}
+
+/** 追加（demo-backend）: 版の一覧の 1 行（GET /api/demos/<id>?reveal=1 の revisions） */
+export interface DemoRevisionInfo {
+  revision: number;
+  created_at: string;
+  title: string;
+  final_verdict: RunSnapshot["verdict"];
+  passed: number;
+  total: number;
+  estimate_ms: number;
+  note?: string;
+}
+
+/** 追加（demo-backend）: GET /api/demos/<id>/audio の進捗 */
+export interface AudioJobStatus {
+  status: AudioStatus;
+  revision: number;
+  done: number;
+  total: number;
+  engine?: string;
+  voice?: string;
+  error?: string;
+  updated_at?: string;
 }
 
 /** GET /api/demos/<demo_id>?reveal=1 */
@@ -63,4 +105,8 @@ export interface DemoDetail {
   audio_progress?: { done: number; total: number };
   /** 音声区間の URL の雛形。{key} を AudioManifest.segments[].key で置き換える */
   audio_url_template: string;
+  /** 追加（demo-backend）: このデモの版（新しい順）。?revision=N で別の版を取れる */
+  revisions?: DemoRevisionInfo[];
+  /** 追加（demo-backend）: 音声が無い・作れないときの理由（字幕のみで再生する案内用） */
+  audio_unavailable_reason?: string;
 }

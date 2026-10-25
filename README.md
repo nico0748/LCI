@@ -38,6 +38,19 @@ pnpm dev              # http://localhost:3000
 
 画面右上で 自動/ライト/ダーク を切り替えられる。デザインの方針と部品は [docs/design/DESIGN_SYSTEM.md](docs/design/DESIGN_SYSTEM.md)、`/design` がスタイルガイド
 
+## 模範解答デモを作る（Claude Desktop / Claude Code）
+
+問題ごとに「どの順で、何を話しながら書くか」を見せる模範解答デモ（ナレーション＋タイプ演出＋実行、動画ではない）を、MCP 経由で Claude に作らせる。
+
+1. MCP サーバ `lci` を登録する（[packages/mcp-server/README.md](packages/mcp-server/README.md)）
+2. Claude Desktop ならプロンプト `author_demo` を選んで `problem_id`（例 `alg-0001`）と `language`（例 `python`）を入れる。Claude Code なら `/mcp__lci__author_demo alg-0001 python`
+3. Claude が `get_problem_for_demo` → `validate_demo_script`（直して再検証）→ `save_demo_script` と進め、`/problems/<id>/demo?lang=…&demo=…` の URL を返す。アプリでその URL を開くと再生できる
+
+- 台本の各 run と最終コードは保存時に **Docker で実際に実行して** 結果を記録する（Docker が要る。再生には要らない）。web 問題（fe-xxxx）は v1.1 まで作れない
+- 音声は macOS の `say` と ffmpeg が要る（`brew install ffmpeg`）。無ければ字幕だけで再生する。声は `LCI_TTS_VOICE`（既定 `Kyoko`）、速さは `LCI_TTS_RATE`。日本語の声の一覧は `pnpm --filter @lci/demo voices`
+- 録画中はデモの作成・再生 API が止まる（録画のディスクと CPU を奪わないため）
+- 台本の書き方は `lci://guides/demo-authoring`（`packages/demo/src/guide.ts`）、決定事項は [docs/requirements/demo/00_decisions.md](docs/requirements/demo/00_decisions.md)
+
 ## リポジトリ構成
 
 ```
@@ -46,6 +59,7 @@ packages/core          スキーマ（問題・セッション・評価）、タ
 packages/runner        Docker ウォームコンテナ実行と stdio/unit 判定
 packages/evaluator     finalize（ffmpeg・whisper・指標・キーフレーム）と Claude 評価
 packages/mcp-server    Claude Desktop / Claude Code 向け MCP サーバ
+packages/demo          模範解答デモ（台本の検証・保存・再生用の組み立て・say による音声）
 packages/problem-tools 問題の検証・統計・雛形生成・参照解セルフテスト
 problems/              問題バンク（problems/<カテゴリ>/<id>-<slug>/）、_catalog/ に 500 問の分類と種
 docker/                言語別 Dockerfile
@@ -54,16 +68,40 @@ data/                  セッションデータ（git 管理外）
 
 ## 問題バンクの現状
 
-- 分類と目標数は 9 カテゴリ合計 500 問（`problems/_catalog/targets.json`）、種リスト 500 件（`seeds.json`）
+- 分類と目標数は 10 カテゴリ合計 500 問（`problems/_catalog/targets.json`）、種リスト 500 件（`seeds.json`）
+- 最大カテゴリは **CP（競技プログラミング形式、150 問）**。paiza C〜A・AtCoder ABC-C 相当の標準入出力問題で、6 言語（c/rust/python/go/typescript/php）すべてに対応する。cp-0001〜cp-0040 は id・slug・題名を種表に固定済み（`docs/requirements/05_cp_problems.md` §5）
 - 実装済みは 27 問（FE 7 / ALG 7 / BE 4 / SEC 4 / DATA 3 / DBG 2）。すべて参照解がテストを通り、スターターは落ちることを確認済み
 - **全問 `reviewed_by: llm`（人手レビュー前）**。読んで問題ないと判断したら `review.reviewed_by: human` に変える。`pnpm problems:validate` が未レビューを警告で出す
 - DATA カテゴリは M3 の試験内容が未入手のため「業務データ処理」の仮定で作っている
 
 ```sh
-pnpm problems:validate   # スキーマ・言語宣言・文字数などのゲート
+pnpm problems:validate   # スキーマ・言語宣言・文字数・CP ゲート（6 言語・sample が問題文にあるか・hidden 10 件以上・gen.py・6 MB 以下）
 pnpm problems:stats      # 目標 500 問に対する進捗
-pnpm problems:selftest   # 参照解とスターターを実際に実行して検証（ローカルの python3/node 等を使用）
-pnpm --filter @lci/problem-tools new FE my-slug   # 種から雛形を作る
+pnpm problems:selftest   # 参照解とスターターを実際に実行して検証（ローカルの gcc/rustc/python3/go/node/php を使用）
+pnpm --filter @lci/problem-tools new FE my-slug          # 種から雛形を作る（採番は自動）
+pnpm --filter @lci/problem-tools new --id cp-0003        # id を指定して作る（並列作業で採番が衝突しない。カテゴリは id、slug は種から決まる）
+```
+
+`problems:selftest` のオプション（`pnpm problems:selftest --only cp-0001,cp-0002` のように渡す）:
+
+| オプション | 内容 |
+|---|---|
+| `--only <id,...>` | 対象を絞る。カンマ区切り・複数回指定・接頭辞（`cp-00`、`CP/cp-0003-...` のディレクトリ名も可）。何にも当たらなければ exit 2 |
+| `--lang <lang>` | 言語を絞る |
+| `--naive` | `gen/naive.*` が hidden-max-* の少なくとも 1 件で TLE することを確かめる（間に合ってしまえば失敗） |
+| `--timing` | 参照解が制限の 50% を超えたら警告ではなく FAIL にする（CP の DoD） |
+| `--verbose` / `--keep` | 失敗ケースの詳細を出す / 作業ディレクトリを残す |
+
+時間はケースごとに測り、`timeMs ×` 言語倍率（c/rust/go ×1、typescript ×2、python/php ×3）を超えたら FAIL、50% を超えたら警告。
+コンパイル・実行コマンドは判定 runner（`packages/runner`）と同じものを使う。表の「最大ms / 制限ms / 比」が最も遅いケースの値。
+
+CP 問題のテストは `gen/gen.py` で生成する（`tests/*.in|*.out` は `.gitattributes` で diff を出さない）。作業の完了条件（DoD）:
+
+```sh
+IDS=cp-0003
+pnpm problems:validate
+python3 problems/CP/cp-0003-*/gen/gen.py --check   # 生成物が最新か・余分なファイルが無いか・brute との突き合わせ
+pnpm problems:selftest --only $IDS --naive --timing
 ```
 
 ## テスト

@@ -8,6 +8,7 @@ import { loadBrowseData } from "../browse-data.ts";
 import { AXIS_LABEL, JUDGE_LABEL, buildRecords, formatDay, styleLabel } from "../browse-model.ts";
 import { Dot, OverallText } from "../browse-ui.tsx";
 import { StartForm } from "./StartForm.tsx";
+import { DemoEntryLink } from "@/components/demo/DemoEntryLink";
 
 export const dynamic = "force-dynamic";
 
@@ -188,6 +189,7 @@ function PreviousRecord({ rec }: { rec: ReturnType<ReturnType<typeof buildRecord
       <LinkButton href={`/sessions/${rec.lastEvaluatedSessionId ?? rec.lastSessionId}`} variant="tertiary" size="xs" className="self-start">
         前回のレビューを開く
       </LinkButton>
+      <DemoEntryLink problemId={rec.problemId} />
     </section>
   );
 }

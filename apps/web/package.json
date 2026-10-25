@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "check:contrast": "node --experimental-strip-types --no-warnings scripts/check-contrast.mjs",
     "sandbox:tailwind": "cp node_modules/@tailwindcss/browser/dist/index.global.js public/sandbox/tailwind.js",
-    "test": "node --experimental-strip-types --test \"src/lib/**/*.test.ts\" \"src/components/ui/**/*.test.ts\" \"src/components/layout/**/*.test.ts\" \"src/components/review/**/*.test.ts\" \"src/components/session/**/*.test.ts\" \"src/app/**/*.test.ts\"",
+    "test": "node --experimental-strip-types --test \"src/lib/**/*.test.ts\" \"src/components/ui/**/*.test.ts\" \"src/components/layout/**/*.test.ts\" \"src/components/review/**/*.test.ts\" \"src/components/session/**/*.test.ts\" \"src/components/demo/**/*.test.ts\" \"src/app/**/*.test.ts\"",
     "monaco:local": "rm -rf public/monaco && mkdir -p public/monaco && cp -R node_modules/monaco-editor/min/vs public/monaco/vs",
     "postinstall": "pnpm run monaco:local"
   },

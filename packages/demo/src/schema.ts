@@ -49,6 +49,11 @@ export const RunAction = z.object({
   stdin: z.string().max(4_000).optional(),
   /** 意図的に WA を見せる演出（寄り道）は expect に WA などを書く */
   expect: z.union([Verdict, z.literal("any")]).default("AC"),
+  /**
+   * 追加（demo-backend）: mode=stdin で予告した出力。書くとトークン比較で AC / WA を判定する
+   * （書かなければ正常終了で AC）。「〜が出るはずです」と予告してから実行する手本（R5）を検証できるようにする
+   */
+  expect_output: z.string().max(1_000).optional(),
 });
 export type RunAction = z.infer<typeof RunAction>;
 
@@ -108,6 +113,10 @@ export const RunSnapshot = z.object({
         verdict: Verdict,
         stdout_head: z.string().max(1_024).optional(),
         expected_head: z.string().max(1_024).optional(),
+        /** 追加（demo-backend）: サンプルケースの入力の先頭（プレイヤーの「入力」欄用。hidden は入れない） */
+        stdin_head: z.string().max(1_024).optional(),
+        /** 追加（demo-backend）: WA の差分・RE の理由など（runner の CaseResult.message の先頭） */
+        message: z.string().max(400).optional(),
       }),
     )
     .max(20),
@@ -123,7 +132,13 @@ export const DemoScript = z.object({
   revision: z.number().int().min(1),
   problem: z.object({ id: z.string(), dir: z.string(), title: z.string(), judge_kind: z.enum(["stdio", "unit", "web"]) }),
   language: Language,
-  file: z.object({ path: z.string(), base: z.enum(["starter", "empty"]), base_sha256: z.string() }),
+  file: z.object({
+    path: z.string(),
+    base: z.enum(["starter", "empty"]),
+    base_sha256: z.string(),
+    /** 追加（demo-backend）: 基底テキスト（starter の全文、empty なら ""）。台本だけで再コンパイルできるようにする */
+    base_text: z.string().max(LIMITS.fileBytes).optional(),
+  }),
   created_at: z.string(),
   author: z.object({
     route: z.enum(["mcp", "in_app_api"]),
@@ -149,6 +164,8 @@ export const DemoScript = z.object({
   }),
   /** sha256(正規化 draft + base)。音声キャッシュの鍵 */
   digest: z.string(),
+  /** 追加（demo-backend）: save_demo_script の note（作り直しの理由など） */
+  note: z.string().max(500).optional(),
 });
 export type DemoScript = z.infer<typeof DemoScript>;
 
