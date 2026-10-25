@@ -28,8 +28,17 @@ export const Targets = z.object({
 });
 export type Targets = z.infer<typeof Targets>;
 
+/** 種の company_style。paiza / atcoder は CP（05_cp_problems.md §4.5）用 */
+export const SeedStyle = z.enum(["pixiv", "m3", "generic", "paiza", "atcoder"]);
+export type SeedStyle = z.infer<typeof SeedStyle>;
+
 export const Seed = z.object({
   id: z.string().regex(/^[a-z]+-\d{4}$/),
+  /** 固定枠で slug まで決めてある種だけ持つ（CP の第 1 バッチなど）。`new --id` がディレクトリ名に使う */
+  slug: z
+    .string()
+    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/)
+    .optional(),
   category: Category,
   difficulty: Difficulty,
   time_limit: z.union([z.literal(15), z.literal(20), z.literal(30), z.literal(45)]),
@@ -37,7 +46,7 @@ export const Seed = z.object({
   one_line: z.string().min(1),
   nfr: z.array(z.string()),
   languages_planned: z.array(z.string()).min(1),
-  company_style: z.enum(["pixiv", "m3", "generic"]),
+  company_style: SeedStyle,
   status: z.enum(["seed", "core", "generated"]),
 });
 export type Seed = z.infer<typeof Seed>;

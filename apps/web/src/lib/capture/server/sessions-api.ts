@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { Event, Language, Recorder, RunResult, SessionFile, newSessionId, type Event as EventT, type Session } from "@lci/core";
 import { problem, store } from "@/lib/server";
+import { initialSessionFiles } from "./session-files.ts";
 
 /**
  * セッション API の書き込み系（W1: 作成・イベント・スナップショット・メディア・開始・終了・実行結果）。
@@ -45,11 +46,8 @@ export async function POST_sessions(req: Request) {
   if (!p) return bad("問題が見つかりません", 404);
   if (!p.meta.languages.includes(language)) return bad(`この問題は ${language} に対応していません`);
 
-  const files = p.meta.starter_files.map((f, i) => SessionFile.parse({ file_id: `f${i + 1}`, path: f.path, language: f.language }));
-  if (files.length === 0) {
-    // スターターが無い問題は言語既定の 1 ファイルを用意する
-    files.push(SessionFile.parse({ file_id: "f1", path: defaultFileName(language), language }));
-  }
+  // 選んだ言語の starter だけを開く（無ければ言語既定の 1 ファイル）。他言語のファイルが混ざると Run/判定の entry がずれる
+  const files = initialSessionFiles(p.meta.starter_files, language).map((f) => SessionFile.parse(f));
   const session: Session = {
     schema_version: "1.0",
     session_id: newSessionId(p.meta.slug),
@@ -65,22 +63,6 @@ export async function POST_sessions(req: Request) {
   };
   await store().create(session);
   return json(session, { status: 201 });
-}
-
-export function defaultFileName(language: Language): string {
-  const map: Record<Language, string> = {
-    c: "main.c",
-    rust: "main.rs",
-    python: "main.py",
-    go: "main.go",
-    typescript: "main.ts",
-    javascript: "main.js",
-    html: "index.html",
-    php: "main.php",
-    sql: "query.sql",
-    markdown: "notes.md",
-  };
-  return map[language];
 }
 
 // ---- POST /api/sessions/[id]/events ---------------------------------------

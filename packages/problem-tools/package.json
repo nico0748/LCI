@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@lci/core": "workspace:*",
+    "@lci/runner": "workspace:*",
     "yaml": "^2.8.0",
     "zod": "^4.6.7"
   },
