@@ -3618,7 +3618,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0002",
@@ -3638,7 +3638,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0003",
@@ -3658,7 +3658,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0004",
@@ -3678,7 +3678,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0005",
@@ -3698,7 +3698,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0006",
@@ -3718,7 +3718,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0007",
@@ -3738,7 +3738,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0008",
@@ -3758,7 +3758,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0009",
@@ -3778,7 +3778,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0010",
@@ -3798,7 +3798,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0011",
@@ -3818,7 +3818,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0012",
@@ -3838,7 +3838,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0013",
@@ -3858,7 +3858,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0014",
@@ -3878,7 +3878,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0015",
@@ -3898,7 +3898,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0016",
@@ -3918,7 +3918,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0017",
@@ -3938,7 +3938,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0018",
@@ -3958,7 +3958,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0019",
@@ -3978,7 +3978,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0020",
@@ -3998,7 +3998,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0021",
@@ -4018,7 +4018,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0022",
@@ -4038,7 +4038,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0023",
@@ -4058,7 +4058,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0024",
@@ -4078,7 +4078,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0025",
@@ -4098,7 +4098,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0026",
@@ -4118,7 +4118,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0027",
@@ -4138,7 +4138,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0028",
@@ -4158,7 +4158,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0029",
@@ -4178,7 +4178,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0030",
@@ -4198,7 +4198,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0031",
@@ -4218,7 +4218,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0032",
@@ -4238,7 +4238,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0033",
@@ -4258,7 +4258,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0034",
@@ -4278,7 +4278,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0035",
@@ -4298,7 +4298,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0036",
@@ -4318,7 +4318,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0037",
@@ -4338,7 +4338,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0038",
@@ -4358,7 +4358,7 @@
    "php"
   ],
   "company_style": "paiza",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0039",
@@ -4378,7 +4378,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0040",
@@ -4398,7 +4398,7 @@
    "php"
   ],
   "company_style": "atcoder",
-  "status": "seed"
+  "status": "core"
  },
  {
   "id": "cp-0041",

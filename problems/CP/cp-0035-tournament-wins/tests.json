@@ -1,0 +1,21 @@
+{
+  "kind": "stdio",
+  "limits": {"timeMs": 2000, "wallMs": 5000, "memoryMb": 256, "outputKb": 1024},
+  "compare": {"mode": "token"},
+  "stopOn": {"consecutiveTle": 2},
+  "cases": [
+    {"name": "sample-1", "visibility": "sample", "stdinFile": "tests/01.in", "expectedFile": "tests/01.out"},
+    {"name": "sample-2", "visibility": "sample", "stdinFile": "tests/02.in", "expectedFile": "tests/02.out"},
+    {"name": "hidden-min-k0", "visibility": "hidden", "stdinFile": "tests/11.in", "expectedFile": "tests/11.out"},
+    {"name": "hidden-edge-k1", "visibility": "hidden", "stdinFile": "tests/12.in", "expectedFile": "tests/12.out"},
+    {"name": "hidden-trap-tie-by-number", "visibility": "hidden", "stdinFile": "tests/13.in", "expectedFile": "tests/13.out"},
+    {"name": "hidden-trap-all-equal", "visibility": "hidden", "stdinFile": "tests/14.in", "expectedFile": "tests/14.out"},
+    {"name": "hidden-trap-bracket-order", "visibility": "hidden", "stdinFile": "tests/15.in", "expectedFile": "tests/15.out"},
+    {"name": "hidden-rand-1", "visibility": "hidden", "stdinFile": "tests/16.in", "expectedFile": "tests/16.out"},
+    {"name": "hidden-rand-2", "visibility": "hidden", "stdinFile": "tests/17.in", "expectedFile": "tests/17.out"},
+    {"name": "hidden-rand-3", "visibility": "hidden", "stdinFile": "tests/18.in", "expectedFile": "tests/18.out"},
+    {"name": "hidden-mid-1", "visibility": "hidden", "stdinFile": "tests/19.in", "expectedFile": "tests/19.out"},
+    {"name": "hidden-max-random", "visibility": "hidden", "stdinFile": "tests/20.in", "expectedFile": "tests/20.out"},
+    {"name": "hidden-max-many-ties", "visibility": "hidden", "stdinFile": "tests/21.in", "expectedFile": "tests/21.out"}
+  ]
+}
