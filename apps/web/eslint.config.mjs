@@ -9,7 +9,11 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    // LCI_DIST_DIR で切り替えた並行ビルドの出力
+    ".next-*/**",
     "out/**",
+    // public/monaco（postinstall でコピー）と public/sandbox の配布物
+    "public/**",
     "build/**",
     "next-env.d.ts",
   ]),

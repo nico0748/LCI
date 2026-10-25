@@ -22,9 +22,3 @@ export function playChime(volume = 0.06): void {
     /* 音は補助。失敗しても何もしない */
   }
 }
-
-export function formatRemaining(ms: number): string {
-  const s = Math.max(0, Math.ceil(ms / 1000));
-  const m = Math.floor(s / 60);
-  return `${String(m).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
-}

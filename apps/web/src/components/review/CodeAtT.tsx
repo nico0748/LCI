@@ -4,17 +4,22 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { fmtT, type Language, type Session } from "@lci/core/browser";
 import type { OnMount } from "@monaco-editor/react";
-import { loadMonacoReact } from "@/lib/monaco";
 import type { editor as MonacoEditor } from "monaco-editor";
+import { Button, LoadingText, StatusBadge, cx, tabClass, tabListClass, useTabs } from "@/components/ui";
+import { LCI_MONACO_OPTIONS, loadMonacoReact, useMonacoTheme } from "@/lib/monaco";
 
 /**
  * 時刻 t のコード。`/api/sessions/[id]/snapshot-at` で再構成した全文を読み取り専用 Monaco に出す。
  * - スクラブ中は 150ms デバウンス、連続再生中は 700ms ごとに追従する（デバウンスだけだと再生中に一度も更新されない）
  * - Monaco が読み込めない（オフライン等）場合は <pre> にフォールバックする
- * - ピンの code_ref を選んだときは `pinned.at` 時点を表示し、行をハイライトする
+ * - 指摘の code_ref を選んだときは `pinned.at` 時点を表示し、行を --bg-hl-line でハイライトする（黄は使わない、X3）
+ * 高さは親が決める（ワークスペースの列いっぱい / モバイルはタブのパネル）。
  */
 
-const MonacoEditorLazy = dynamic(() => loadMonacoReact().then((m) => m.default), { ssr: false, loading: () => <div className="h-full grid place-items-center text-xs text-fg-muted">エディタを読み込み中…</div> });
+const MonacoEditorLazy = dynamic(() => loadMonacoReact().then((m) => m.default), {
+  ssr: false,
+  loading: () => <LoadingText className="p-3">エディタを読み込み中…</LoadingText>,
+});
 
 const MONACO_LANG: Record<Language, string> = {
   c: "c",
@@ -35,6 +40,8 @@ export interface CodeHighlight {
   at: number;
 }
 
+const HL_CSS = `.lci-review-hl-line{background:var(--bg-hl-line)} .lci-review-hl-gutter{background:var(--accent);width:3px !important;margin-left:3px}`;
+
 export function CodeAtT({
   sessionId,
   files,
@@ -43,6 +50,7 @@ export function CodeAtT({
   t,
   highlight,
   onClearHighlight,
+  className,
 }: {
   sessionId: string;
   files: Session["files"];
@@ -51,45 +59,31 @@ export function CodeAtT({
   t: number;
   highlight: CodeHighlight | null;
   onClearHighlight: () => void;
+  className?: string;
 }) {
-  const [text, setText] = useState("");
-  const [version, setVersion] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [snap, setSnap] = useState<{ text: string; version: number; key: string } | null>(null);
+  const [pendingKey, setPendingKey] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fallback, setFallback] = useState(false);
-  const [dark, setDark] = useState(false);
+  const theme = useMonacoTheme();
   const editorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null);
   const decorations = useRef<MonacoEditor.IEditorDecorationsCollection | null>(null);
   const lastFetch = useRef(0);
   const reqSeq = useRef(0);
   const abortRef = useRef<AbortController | null>(null);
 
-  const shownT = highlight?.file === file ? highlight.at : t;
+  const pinned = !!highlight && highlight.file === file;
+  const shownT = pinned ? highlight.at : t;
   const lang = files.find((f) => f.file_id === file)?.language;
-
-  // ダーク判定（Monaco のテーマ連動, 04 §7.2）
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const update = () => {
-      const attr = document.documentElement.getAttribute("data-theme");
-      setDark(attr === "dark" || (attr !== "light" && mq.matches));
-    };
-    update();
-    mq.addEventListener("change", update);
-    const mo = new MutationObserver(update);
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => {
-      mq.removeEventListener("change", update);
-      mo.disconnect();
-    };
-  }, []);
+  const text = snap?.text ?? "";
+  const reqKey = file ? `${file}@${Math.round(shownT)}` : null;
+  const loading = pendingKey != null && pendingKey !== snap?.key;
 
   // Monaco のローダ失敗を検知してフォールバック
   useEffect(() => {
     let cancelled = false;
     loadMonacoReact()
       .then((m) => m.loader.init())
-      .then(() => undefined)
       .catch(() => {
         if (!cancelled) setFallback(true);
       });
@@ -104,104 +98,111 @@ export function CodeAtT({
 
   // スナップショット取得（デバウンス＋スロットル）
   useEffect(() => {
-    if (!file) return;
+    if (!file || !reqKey) return;
     const doFetch = async () => {
       const seq = ++reqSeq.current;
       abortRef.current?.abort();
       const ac = new AbortController();
       abortRef.current = ac;
       lastFetch.current = Date.now();
-      setLoading(true);
+      setPendingKey(reqKey);
       try {
         const res = await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/snapshot-at?file=${encodeURIComponent(file)}&t=${Math.round(shownT)}`, { signal: ac.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = (await res.json()) as { text: string; version: number };
         if (seq !== reqSeq.current) return;
-        setText(data.text);
-        setVersion(data.version);
+        setSnap({ text: data.text, version: data.version, key: reqKey });
         setError(null);
       } catch (e) {
         if ((e as Error).name === "AbortError") return;
-        setError((e as Error).message);
-      } finally {
-        if (seq === reqSeq.current) setLoading(false);
+        if (seq === reqSeq.current) {
+          setError((e as Error).message);
+          setPendingKey(null);
+        }
       }
     };
     const since = Date.now() - lastFetch.current;
-    if (since > 700) {
-      void doFetch();
-      return;
-    }
-    const timer = setTimeout(doFetch, 150);
+    const timer = setTimeout(doFetch, since > 700 ? 0 : 150);
     return () => clearTimeout(timer);
-  }, [sessionId, file, shownT]);
+  }, [sessionId, file, shownT, reqKey]);
 
   // 行ハイライト
   useEffect(() => {
     const ed = editorRef.current;
     if (!ed) return;
     const ranges =
-      highlight && highlight.file === file
+      pinned && highlight
         ? [
             {
               range: { startLineNumber: highlight.lines[0], startColumn: 1, endLineNumber: highlight.lines[1], endColumn: 1 },
-              options: { isWholeLine: true, className: "lci-hl-line", linesDecorationsClassName: "lci-hl-gutter" },
+              options: { isWholeLine: true, className: "lci-review-hl-line", linesDecorationsClassName: "lci-review-hl-gutter" },
             },
           ]
         : [];
     if (!decorations.current) decorations.current = ed.createDecorationsCollection(ranges);
     else decorations.current.set(ranges);
-    if (ranges.length) ed.revealLinesInCenter(highlight!.lines[0], highlight!.lines[1]);
-  }, [highlight, file, text]);
+    if (ranges.length && highlight) ed.revealLinesInCenter(highlight.lines[0], highlight.lines[1]);
+  }, [highlight, pinned, text]);
 
   const onMount: OnMount = (ed) => {
     editorRef.current = ed;
   };
 
+  const fileIndex = Math.max(0, files.findIndex((f) => f.file_id === file));
+  const tabs = useTabs({ count: files.length, selectedIndex: fileIndex, onSelectedIndexChange: (i) => onFileChange(files[i]!.file_id) });
   const lineCount = text ? text.split("\n").length : 0;
 
   return (
-    <div className="rounded-lg border border-border bg-bg-elev flex flex-col min-h-0 h-[52vh] xl:h-[calc(100vh-380px)] xl:min-h-[420px]">
-      <style>{`.lci-hl-line{background:color-mix(in srgb, var(--warn) 18%, transparent)} .lci-hl-gutter{background:var(--warn);width:3px !important;margin-left:3px}`}</style>
-      <div className="flex items-center gap-2 px-2 py-1.5 border-b border-border text-xs">
+    <div className={cx("flex min-h-0 flex-col overflow-hidden rounded-8 border border-border bg-surface", className)}>
+      <style>{HL_CSS}</style>
+      <div className="flex min-h-10 flex-wrap items-center gap-x-3 gap-y-1 border-b border-border px-3 py-1">
         {files.length > 1 ? (
-          <select value={file ?? ""} onChange={(e) => onFileChange(e.target.value)} className="rounded border border-border bg-bg px-1.5 py-0.5 font-mono" aria-label="ファイル">
-            {files.map((f) => (
-              <option key={f.file_id} value={f.file_id}>
+          <div {...tabs.getListProps("ファイル")} className={cx(tabListClass, "-mb-px border-b-0")}>
+            {files.map((f, i) => (
+              <button key={f.file_id} {...tabs.getTabProps(i)} aria-controls={undefined} className={cx(tabClass, "text-mono-13N-150")}>
                 {f.path}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
         ) : (
-          <span className="font-mono">{files[0]?.path ?? file ?? "—"}</span>
+          <h3 className="text-mono-13N-150 text-fg">{files[0]?.path ?? file ?? "—"}</h3>
         )}
-        <span className="text-fg-muted">
-          {fmtT(shownT)} 時点 · v{version} · {lineCount} 行{loading ? " · 読み込み中" : ""}
+        <span className="text-dns-13N-130 text-fg-muted tabular-nums" aria-live="off">
+          {fmtT(shownT)} 時点 · v{snap?.version ?? 0} · {lineCount} 行{loading ? " · 読み込み中…" : ""}
         </span>
-        {highlight && highlight.file === file && (
-          <button type="button" onClick={onClearHighlight} className="ml-auto rounded border border-warn/60 text-warn px-1.5 py-0.5 hover:bg-warn/10">
-            ピンの時点を表示中 · 解除
-          </button>
+        {pinned && highlight && (
+          <span className="ml-auto flex items-center gap-1.5">
+            <StatusBadge tone="info" glyph={false}>
+              指摘の時点 {fmtT(highlight.at)} · {highlight.lines[0]}–{highlight.lines[1]} 行
+            </StatusBadge>
+            <Button size="2xs" variant="tertiary" onClick={onClearHighlight}>
+              再生位置に戻す
+            </Button>
+          </span>
         )}
-        {error && <span className="ml-auto text-danger">{error}</span>}
+        {error && (
+          <StatusBadge tone="danger" className="ml-auto">
+            この時点のコードを再構成できませんでした（{error}）
+          </StatusBadge>
+        )}
       </div>
-      <div className="flex-1 min-h-0 relative">
+      <div className="relative min-h-0 flex-1" role="region" aria-label={`${fmtT(shownT)} 時点のコード（読み取り専用）`}>
         {!file ? (
-          <div className="h-full grid place-items-center text-sm text-fg-muted">ファイルがありません</div>
+          <p className="p-4 text-dns-14N-130 text-fg-muted">このセッションにはファイルがありません。</p>
         ) : fallback ? (
-          <PreView text={text} highlight={highlight && highlight.file === file ? highlight.lines : null} />
+          <PreView text={text} highlight={pinned && highlight ? highlight.lines : null} />
         ) : (
           <MonacoEditorLazy
             height="100%"
             language={lang ? MONACO_LANG[lang] : "plaintext"}
             value={text}
-            theme={dark ? "vs-dark" : "vs"}
+            theme={theme}
             onMount={onMount}
             options={{
+              ...LCI_MONACO_OPTIONS,
               readOnly: true,
               domReadOnly: true,
               minimap: { enabled: false },
-              fontSize: 13,
               lineNumbers: "on",
               scrollBeyondLastLine: false,
               wordWrap: "off",
@@ -211,6 +212,7 @@ export function CodeAtT({
               selectionHighlight: false,
               contextmenu: false,
               automaticLayout: true,
+              ariaLabel: "時刻 t のコード（読み取り専用）",
             }}
           />
         )}
@@ -219,23 +221,25 @@ export function CodeAtT({
   );
 }
 
-/** Monaco 無しの簡易表示。行番号つき、ハイライト行は背景色 */
+/** Monaco 無しの簡易表示。行番号つき、ハイライト行は --bg-hl-line */
 function PreView({ text, highlight }: { text: string; highlight: [number, number] | null }) {
   const lines = text.split("\n");
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!highlight) return;
-    ref.current?.querySelector<HTMLElement>(`[data-line="${highlight[0]}"]`)?.scrollIntoView({ block: "center" });
+    const box = ref.current;
+    const row = box?.querySelector<HTMLElement>(`[data-line="${highlight[0]}"]`);
+    if (box && row) box.scrollTop = row.offsetTop - box.clientHeight / 2;
   }, [highlight, text]);
   return (
-    <div ref={ref} className="h-full overflow-auto font-mono text-[13px] leading-5">
+    <div ref={ref} className="h-full overflow-auto bg-surface text-mono-13N-150" tabIndex={0}>
       {lines.map((l, i) => {
         const n = i + 1;
         const hl = highlight && n >= highlight[0] && n <= highlight[1];
         return (
-          <div key={n} data-line={n} className={`flex ${hl ? "bg-warn/15" : ""}`}>
-            <span className="w-12 shrink-0 text-right pr-3 text-fg-muted select-none border-r border-border">{n}</span>
-            <pre className="pl-3 whitespace-pre">{l}</pre>
+          <div key={n} data-line={n} className={cx("flex", hl && "bg-hl-line shadow-[inset_3px_0_0_var(--accent)]")}>
+            <span className={cx("w-12 shrink-0 select-none border-r border-border-subtle pr-3 text-right", hl ? "text-fg-body" : "text-fg-muted")}>{n}</span>
+            <pre className="pl-3 whitespace-pre text-fg-body">{l}</pre>
           </div>
         );
       })}

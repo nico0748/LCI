@@ -58,17 +58,10 @@ export function normalizeEvalTimes(ev: Evaluation, durationMs: number): Evaluati
   };
 }
 
-/** evidence が無い、または confidence が低い項目は「推測」（03 §5.1） */
-export function isSpeculative(item: { speculative?: boolean; confidence?: number; evidence?: unknown[] }): boolean {
-  if (item.speculative) return true;
-  if (item.confidence != null && item.confidence < 0.6) return true;
-  if (item.evidence && item.evidence.length === 0) return true;
-  return false;
-}
-
-export function feedbackPins(ev: Evaluation | null | undefined): Pin[] {
+/** 指摘のピン。n は時刻順の番号（一覧・次の練習と共通） */
+export function feedbackPins(ev: Evaluation | null | undefined, numbers?: Map<string, number>): Pin[] {
   if (!ev) return [];
-  return ev.feedback.map((f) => ({ id: f.id, t: f.t, kind: "feedback", severity: f.severity, label: f.title }));
+  return ev.feedback.map((f) => ({ id: f.id, t: f.t, tEnd: f.t_end != null && f.t_end > f.t ? f.t_end : undefined, kind: "feedback", severity: f.severity, label: f.title, n: numbers?.get(f.id) }));
 }
 
 export function eventPins(events: Event[]): Pin[] {
@@ -92,22 +85,4 @@ export function prevPin(pins: Pin[], t: number): Pin | undefined {
   const s = sortPins(pins);
   for (let i = s.length - 1; i >= 0; i--) if (s[i]!.t < t - 1) return s[i];
   return undefined;
-}
-
-export function severityColor(sev: Pin["severity"] | undefined): string {
-  switch (sev) {
-    case "major":
-      return "var(--danger)";
-    case "minor":
-      return "var(--warn)";
-    case "positive":
-      return "var(--ok)";
-    default:
-      return "var(--fg-muted)";
-  }
-}
-
-export function verdictColor(v: string | undefined): string {
-  if (!v) return "var(--fg-muted)";
-  return v === "AC" || v === "PASS" ? "var(--ok)" : "var(--danger)";
 }

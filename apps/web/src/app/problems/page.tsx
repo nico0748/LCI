@@ -1,47 +1,40 @@
-import Link from "next/link";
-import { toSummary } from "@lci/core";
-import { problems } from "@/lib/server";
-import { ProblemBrowser, type BrowserFilters } from "./ProblemBrowser";
+import { PageContainer } from "@/components/layout/PageContainer.tsx";
+import { Kbd, PageHeader } from "@/components/ui";
+import { loadBrowseData } from "./browse-data.ts";
+import { buildRecords, formatDay, parseFilters } from "./browse-model.ts";
+import { ProblemBrowser, type RecordView } from "./ProblemBrowser.tsx";
 
 export const dynamic = "force-dynamic";
 
 /**
- * S1 問題選択。問題文はここでは見せない（04 §6.1: 初見で要件を読む練習にならない）。
- * フィルタは URL に保持して再現できるようにする（FR-U-02）。
+ * S1 問題一覧（02 §2.2 / §3.2）。問題文はここでは見せない（04 §6.1: 初見で要件を読む練習にならない）。
+ * フィルタは URL に保持して再現できるようにする（FR-U-02）。自分の記録（挑戦回数・最新の総合）を列に出す。
  */
 export default async function ProblemsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const sp = await searchParams;
-  const one = (k: string) => {
+  const initial = parseFilters((k) => {
     const v = sp[k];
     return (Array.isArray(v) ? v[0] : v) ?? "";
-  };
-  const initial: BrowserFilters = {
-    q: one("q"),
-    category: one("category"),
-    difficulty: one("difficulty"),
-    time_limit: one("time_limit"),
-    language: one("language"),
-    tier: one("tier"),
-    nfr: one("nfr"),
-  };
-  const ps = (await problems()).map(toSummary);
+  });
+  const { problems, sessions } = await loadBrowseData();
+  // 日付の整形はサーバで済ませる（クライアントとタイムゾーンがずれても表示が揺れないように）
+  const records: Record<string, RecordView> = {};
+  for (const [id, r] of buildRecords(sessions)) {
+    records[id] = { ...r, lastDay: formatDay(r.lastAt) };
+  }
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-8 space-y-6">
-      <header className="flex items-baseline justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight">問題を選ぶ</h1>
-          <p className="text-sm text-fg-muted mt-1">
-            <kbd className="font-mono text-xs border border-border rounded px-1">/</kbd> 検索 ·{" "}
-            <kbd className="font-mono text-xs border border-border rounded px-1">j</kbd>/<kbd className="font-mono text-xs border border-border rounded px-1">k</kbd> 移動 ·{" "}
-            <kbd className="font-mono text-xs border border-border rounded px-1">Enter</kbd> 開く
-          </p>
-        </div>
-        <nav className="text-sm flex gap-4">
-          <Link href="/" className="text-fg-muted hover:text-fg">ホーム</Link>
-          <Link href="/sessions" className="text-fg-muted hover:text-fg">履歴</Link>
-        </nav>
-      </header>
-      <ProblemBrowser problems={ps} initial={initial} />
-    </main>
+    <PageContainer as="main">
+      <PageHeader
+        title="問題を選ぶ"
+        description="絞り込んで、比べて、1 本選ぶ。問題文は開始前の画面で確かめられます。"
+        meta={
+          <span className="hidden items-center gap-1.5 desktop:inline-flex">
+            <Kbd>/</Kbd> 検索 <span aria-hidden="true">·</span> <Kbd>j</Kbd>
+            <Kbd>k</Kbd> 移動 <span aria-hidden="true">·</span> <Kbd>Enter</Kbd> 開く
+          </span>
+        }
+      />
+      <ProblemBrowser problems={problems} records={records} initial={initial} />
+    </PageContainer>
   );
 }
