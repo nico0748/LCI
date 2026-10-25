@@ -1,0 +1,4 @@
+# 生成されたテストデータ（gen/gen.py の出力）は diff を出さず、GitHub の言語統計・差分表示でも生成物として畳む
+# （05_cp_problems.md §8 T8。中身の確認は gen.py --check で行う）
+problems/**/tests/*.in -diff linguist-generated
+problems/**/tests/*.out -diff linguist-generated

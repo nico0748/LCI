@@ -15,6 +15,7 @@ import {
   promptHash,
   verifyEvaluation,
 } from "@lci/evaluator";
+import { registerDemoTools } from "./demo-tools.ts";
 import {
   editLog,
   framesBetween,
@@ -31,7 +32,8 @@ import {
 /**
  * LCI の MCP サーバ（stdio）。Claude Desktop / Claude Code から練習セッションを読んで評価し、save_evaluation で保存する。
  * アプリ内評価（@lci/evaluator.evaluateSession）と同じルーブリック・同じ出力スキーマ（EvaluationDraft、時刻は経過秒）を使う（FR-E-07）。
- * 依存は @lci/core と @lci/evaluator のみ（Next.js に依存しない）。
+ * 模範解答デモの台本ツール（get_problem_for_demo / validate_demo_script / save_demo_script …）は demo-tools.ts（@lci/demo）。
+ * 依存は @lci/core・@lci/evaluator・@lci/demo のみ（Next.js に依存しない。00 D17）。
  */
 
 export interface ServerConfig {
@@ -39,6 +41,8 @@ export interface ServerConfig {
   problemsRoot: string;
   /** get_video_frames で Web カメラ映像を返してよいか（既定 false。03 §6.2 / FR-E-09） */
   allowCamera?: boolean;
+  /** save_demo_script の後に音声合成の子プロセスを起動するか（既定 true。LCI_DEMO_SPAWN_AUDIO=0 で止める） */
+  spawnAudio?: boolean;
 }
 
 export const REPO_ROOT = path.resolve(import.meta.dirname, "../../..");
@@ -48,6 +52,7 @@ export function configFromEnv(env: NodeJS.ProcessEnv = process.env): ServerConfi
     dataRoot: env.LCI_DATA_ROOT ?? path.join(REPO_ROOT, "data"),
     problemsRoot: env.LCI_PROBLEMS_ROOT ?? path.join(REPO_ROOT, "problems"),
     allowCamera: env.LCI_MCP_ALLOW_CAMERA === "1",
+    spawnAudio: env.LCI_DEMO_SPAWN_AUDIO !== "0",
   };
 }
 
@@ -362,6 +367,9 @@ export function createServer(cfg: ServerConfig): McpServer {
       messages: [{ role: "user", content: { type: "text", text: buildMcpEvaluatePrompt(session_id, { includeVideo: include_video === "true" }) } }],
     }),
   );
+
+  // ---- 模範解答デモ（02 §6） ----------------------------------------------------
+  registerDemoTools(server, { dataRoot: cfg.dataRoot, problemsRoot: cfg.problemsRoot, spawnAudio: cfg.spawnAudio });
 
   return server;
 }

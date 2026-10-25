@@ -107,7 +107,7 @@ export function findProblem(ps: Problem[], id: string): Problem | undefined {
 }
 
 export function countByCategory(ps: Problem[]): Record<Category, number> {
-  const out = { FE: 0, BE: 0, DATA: 0, ALG: 0, SQL: 0, SEC: 0, DBG: 0, SYS: 0, LOW: 0 } as Record<Category, number>;
+  const out = { FE: 0, BE: 0, DATA: 0, ALG: 0, CP: 0, SQL: 0, SEC: 0, DBG: 0, SYS: 0, LOW: 0 } as Record<Category, number>;
   for (const p of ps) out[p.meta.category]++;
   return out;
 }

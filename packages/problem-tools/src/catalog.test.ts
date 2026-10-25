@@ -11,7 +11,7 @@ import { readSeeds, readTargets, CATEGORIES, DIFFICULTIES, type Seed } from "./s
 
 const ROOT = problemsRoot();
 
-test("targets.json: 9 カテゴリの合計が 500、難易度内訳の和がカテゴリ目標に一致", async () => {
+test("targets.json: 10 カテゴリの合計が 500、難易度内訳の和がカテゴリ目標に一致", async () => {
   const t = await readTargets(ROOT);
   assert.equal(t.total, 500);
   let sum = 0;
@@ -64,4 +64,20 @@ test("seeds.json: 実在する問題と id・カテゴリ・タイトルが一�
     assert.equal(s.difficulty, m.difficulty, `${m.id} の難易度`);
     assert.equal(s.status, m.tier === "core" ? "core" : "generated", `${m.id} の status`);
   }
+});
+
+test("seeds.json: CP の固定枠 cp-0001〜cp-0040 は slug と 6 言語を持ち、L1/L2/L3 = 10/15/15（05 §5）", async () => {
+  const seeds = await readSeeds(ROOT);
+  assert.ok(seeds);
+  const fixed = seeds.filter((s) => s.category === "CP" && Number(s.id.slice(3)) <= 40);
+  assert.equal(fixed.length, 40);
+  for (const s of fixed) {
+    assert.ok(s.slug, `${s.id} に slug が無い`);
+    assert.deepEqual(s.languages_planned, ["c", "rust", "python", "go", "typescript", "php"], s.id);
+    assert.ok(s.company_style === "paiza" || s.company_style === "atcoder", s.id);
+  }
+  const count = (lv: string) => fixed.filter((s) => s.difficulty === lv).length;
+  assert.deepEqual([count("L1"), count("L2"), count("L3"), count("L4")], [10, 15, 15, 0]);
+  const slugs = new Set(fixed.map((s) => s.slug));
+  assert.equal(slugs.size, 40, "slug が重複している");
 });

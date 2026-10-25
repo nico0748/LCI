@@ -84,15 +84,22 @@ export function compileCommand(lang: RunnerLanguage, entry: string): string[] | 
   }
 }
 
-export function runCommand(lang: RunnerLanguage, entry: string, memoryMb: number): string[] {
+/**
+ * 実行段階の argv。
+ * mode は Run（候補者が手元で試す 1 回の実行）か judge（採点）か。違いは Python の -u だけで、
+ * Run では TLE で打ち切ったときも途中までの print を残したいので -u（バッファしない）を付け、
+ * judge では付けない。-u のまま 1 行ずつ print すると、パイプ越しの書き込みが行ごとの write になって
+ * 2×10^5 行で 10 倍遅くなり（05_cp_problems.md §4.3 の実測）、正しい解答が本番より不利に TLE しうるため。
+ */
+export function runCommand(lang: RunnerLanguage, entry: string, memoryMb: number, mode: "run" | "judge" = "run"): string[] {
   switch (lang) {
     case "c":
     case "rust":
     case "go":
       return ["./main"];
     case "python":
-      // -I: cwd をインポートパスに入れない（作業ディレクトリ経由の汚染防止）。-u: 出力をバッファしない
-      return ["python3", "-I", "-u", entry];
+      // -I: cwd をインポートパスに入れない（作業ディレクトリ経由の汚染防止）。-u: 出力をバッファしない（Run のみ）
+      return mode === "run" ? ["python3", "-I", "-u", entry] : ["python3", "-I", entry];
     case "typescript":
       // Node 22.6+ の strip-types。ヒープ上限で MLE を "heap out of memory" として検出する
       return ["node", "--experimental-strip-types", "--no-warnings", `--max-old-space-size=${memoryMb}`, entry];

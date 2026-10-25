@@ -7,7 +7,8 @@ import { z } from "zod";
  * 要件書 04 §3 と 02 §問題テスト定義スキーマ を統合したもの。
  */
 
-export const Category = z.enum(["FE", "BE", "DATA", "ALG", "SQL", "SEC", "DBG", "SYS", "LOW"]);
+// CP（競技プログラミング形式）は 05_cp_problems.md §2.1 で新設。ALG の隣に置き、一覧の並びでも隣接させる
+export const Category = z.enum(["FE", "BE", "DATA", "ALG", "CP", "SQL", "SEC", "DBG", "SYS", "LOW"]);
 export type Category = z.infer<typeof Category>;
 
 export const CATEGORY_LABEL: Record<Category, string> = {
@@ -15,6 +16,7 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   BE: "バックエンド・API",
   DATA: "業務データ処理",
   ALG: "アルゴリズム・データ構造",
+  CP: "競技プログラミング形式",
   SQL: "SQL",
   SEC: "セキュリティ意識実装",
   DBG: "デバッグ・リファクタリング",

@@ -16,6 +16,7 @@ import type { Axis } from "@lci/core/browser";
  * - フェーズは色を使わず、無彩色の帯に文字（X3）
  * - スクラブ領域は role="slider"（←→ 5 秒、Shift で 1 秒、Home/End、Space で再生/停止）。ピンは role="toolbar"（←→ で移動、Enter で選択）
  * - 幅が狭い（モバイルの sticky プレイヤー）ときは レーン名・面接官・フェーズを省き、ファイルを 1 本に合算する
+ * - 任意の帯のレーン（bands。模範解答デモの章）を渡すと、フェーズの代わりに出す（狭い幅でも省かない）
  * 描画はコンテナの実測幅で px を決める（viewBox の伸縮はマーカーを歪めるため）。
  */
 
@@ -34,7 +35,14 @@ const PHASE_LABEL: Record<Metrics["phase_estimate"][number]["phase"], string> = 
 const SEQ_FILL = ["", "var(--viz-seq-1)", "var(--viz-seq-2)", "var(--viz-seq-3)", "var(--viz-seq-4)"] as const;
 const EVAL_FILL = { major: "var(--eval-major)", minor: "var(--eval-minor)", good: "var(--eval-good)" } as const;
 
-type LaneKind = "pins" | "followup" | "phase" | "speech" | "file" | "run";
+type LaneKind = "pins" | "followup" | "phase" | "band" | "speech" | "file" | "run";
+
+/** 任意の帯のレーン（無彩色＋文字、X3）。current は選択色の地にする */
+export interface TimelineBands {
+  /** レーン名（例「章」） */
+  label: string;
+  items: { id: string; t0: number; t1: number; label: string; short?: string; current?: boolean }[];
+}
 interface LaneDef {
   key: string;
   kind: LaneKind;
@@ -65,6 +73,7 @@ export function CodeTimeline({
   onSelectPin,
   onOpenTable,
   onTogglePlay,
+  bands,
 }: {
   events: Event[];
   files: Session["files"];
@@ -81,9 +90,12 @@ export function CodeTimeline({
   feedbackAxis: Map<string, Axis>;
   onSeek: (t: number) => void;
   onSelectPin: (id: string) => void;
-  onOpenTable: () => void;
+  /** 「表で見る」。渡さなければリンクを出さない */
+  onOpenTable?: () => void;
   /** スライダー上の Space（ページをスクロールさせず、再生/停止にする） */
   onTogglePlay: () => void;
+  /** 任意の帯のレーン（渡すとフェーズのレーンの代わりに出す） */
+  bands?: TimelineBands;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [outerW, setOuterW] = useState(0);
@@ -136,7 +148,8 @@ export function CodeTimeline({
   };
   if (pins.length) push("pins", "pins", "指摘", H.pins);
   if (!compact && followups.length) push("followup", "followup", "面接官", H.followup);
-  if (!compact && phases.length) push("phase", "phase", "フェーズ", H.phase);
+  if (bands?.items.length) push("band", "band", bands.label, H.phase);
+  else if (!compact && phases.length) push("phase", "phase", "フェーズ", H.phase);
   push("speech", "speech", "発話", H.speech);
   for (const l of fileLanes) push(`f:${l.file}`, "file", compact ? "編集" : nameOf(l.file), H.file, l);
   if (runs.length) push("run", "run", "実行", H.run);
@@ -178,6 +191,10 @@ export function CodeTimeline({
         if (sil) return [<strong key="t">{`沈黙 ${sil.dur_s.toFixed(0)} 秒`}</strong>, `${fmtT(sil.t0)}–${fmtT(sil.t1)} · ${sil.editing ? "編集あり" : "編集なし"}`];
         const seg = speech.find((s) => tt >= s.t_start && tt < s.t_end);
         return seg ? [<strong key="t">{fmtRange(seg.t_start, seg.t_end)}</strong>, seg.text] : [head, "発話なし"];
+      }
+      case "band": {
+        const b = bands?.items.find((it) => tt >= it.t0 && tt < it.t1);
+        return b ? [<strong key="t">{b.label}</strong>, `${fmtRange(b.t0, b.t1)}（${fmtDuration(b.t1 - b.t0)}）`] : [head];
       }
       case "phase": {
         const ph = phases.find((p) => tt >= p.t0 && tt < p.t1);
@@ -322,9 +339,11 @@ export function CodeTimeline({
             </span>
           )}
         </span>
-        <button type="button" onClick={onOpenTable} className="ml-auto rounded-4 px-1 text-dns-13N-130 text-link underline underline-offset-[3px] focus-text">
-          表で見る
-        </button>
+        {onOpenTable && (
+          <button type="button" onClick={onOpenTable} className="ml-auto rounded-4 px-1 text-dns-13N-130 text-link underline underline-offset-[3px] focus-text">
+            表で見る
+          </button>
+        )}
       </div>
 
       <div ref={wrapRef} className="relative select-none" style={{ height }}>
@@ -383,6 +402,26 @@ export function CodeTimeline({
                       {fits && (
                         <text x={x0 + 6} y={l.y + l.h / 2} dominantBaseline="central" fill={idle ? "var(--fg-muted)" : "var(--fg-body)"} style={{ font: "400 13px/1 var(--font-sans)" }}>
                           {label}
+                        </text>
+                      )}
+                    </g>
+                  );
+                })}
+
+              {/* 任意の帯（章など）。無彩色の帯に文字、入りきらなければ短い名前 */}
+              {laneOf("band") &&
+                bands!.items.map((b) => {
+                  const l = laneOf("band")!;
+                  const x0 = x(b.t0) + 1;
+                  const w = Math.max(1, x(b.t1) - x(b.t0) - 2);
+                  const text = w >= b.label.length * 13 + 8 ? b.label : b.short && w >= b.short.length * 13 + 6 ? b.short : null;
+                  return (
+                    <g key={`bd${b.id}`}>
+                      <rect x={x0} y={l.y + 2} width={w} height={l.h - 5} rx={2} fill={b.current ? "var(--bg-selected)" : "var(--bg-hover)"} />
+                      {b.current && <rect x={x0} y={l.y + l.h - 5} width={w} height={2} fill="var(--accent)" />}
+                      {text && (
+                        <text x={x0 + (text === b.label ? 6 : 3)} y={l.y + l.h / 2 - 0.5} dominantBaseline="central" fill={b.current ? "var(--fg)" : "var(--fg-body)"} style={{ font: "400 13px/1 var(--font-sans)" }}>
+                          {text}
                         </text>
                       )}
                     </g>

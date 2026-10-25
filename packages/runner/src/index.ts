@@ -6,5 +6,5 @@ export { runOnce, judgeProblem, classifyExec, worstVerdict } from "./judge.ts";
 export { compareOutput } from "./compare.ts";
 export * from "./diagnostics.ts";
 export * from "./unit-parsers.ts";
-export { imageName, containerName, TIME_MULTIPLIER, DEFAULT_LIMITS, DEFAULT_ENTRY, IMAGE_SHORT, compileCommand, runCommand, pickEntry } from "./languages.ts";
+export { imageName, containerName, TIME_MULTIPLIER, DEFAULT_LIMITS, DEFAULT_ENTRY, IMAGE_SHORT, compileCommand, runCommand, pickEntry, usesVirtualMemLimit } from "./languages.ts";
 export { LCI_ASSERT_H, LCI_ASSERT_PHP } from "./templates.ts";

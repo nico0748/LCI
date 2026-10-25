@@ -3,16 +3,17 @@ import path from "node:path";
 import { ZodError } from "zod";
 import { extractTerms, listProblemDirs, loadProblemDir, type Category, type Problem } from "@lci/core";
 import { titleSimilarity } from "./levenshtein.ts";
+import { CP_LANGUAGES } from "./cp-templates.ts";
 
 /**
- * Docker なしで実行できる品質ゲート（04 §4.3 の G1 / G1b / G3 / G5 ＋ 重複警告）。
+ * Docker なしで実行できる品質ゲート（04 §4.3 の G1 / G1b / G3 / G5 ＋ 重複警告 ＋ CP の形式。05 §4・§8 T5）。
  * G2（参照解の実行）は scripts/selftest.ts、G4（埋め込み類似度）・G6（相互レビュー）・G7（semgrep）は対象外。
  */
 
 export type Level = "error" | "warn";
 export interface Issue {
   level: Level;
-  /** G1 / G1b / G3 / G5 / DUP / TESTS */
+  /** G1 / G1b / G3 / G5 / DUP / TESTS / CP */
   gate: string;
   /** 問題 id。読み込めなかった場合はディレクトリ名 */
   problem: string;
@@ -37,6 +38,14 @@ export const STATEMENT_MIN = 80;
 export const STATEMENT_MAX = 600;
 export const TALKING_POINT_MIN_CHARS = 8;
 export const TITLE_DUP_THRESHOLD = 0.85;
+
+/** CP の形式（05_cp_problems.md §4.3 のケース構成とサイズ上限、第 1 バッチ） */
+export const CP_MIN_SAMPLES = 2;
+export const CP_MIN_HIDDEN = 10;
+export const CP_TESTS_MAX_BYTES = 6_000_000;
+export const CP_L1_TESTS_MAX_BYTES = 200_000;
+export const CP_IN_MAX_BYTES = 2_500_000;
+export const CP_OUT_MAX_BYTES = 1_000_000;
 
 /** id の接頭辞（fe-0001 の fe）はカテゴリ ID の小文字 */
 export function idPrefix(category: Category): string {
@@ -246,6 +255,126 @@ async function gateTests(root: string, entry: Entry, push: Push): Promise<void> 
   }
 }
 
+/** 入出力例の比較用: 改行コードと行末の空白、末尾の改行だけをそろえる（runner の exact 比較と同じ正規化） */
+function normSample(s: string): string {
+  return s.replace(/\r\n?/g, "\n").replace(/[ \t]+$/gm, "").replace(/\n+$/, "");
+}
+
+/** Markdown のフェンス（```）で囲まれたブロックの中身。リスト内で字下げされたフェンスは、その字下げを外す */
+export function fencedBlocks(md: string): string[] {
+  const out: string[] = [];
+  let buf: string[] | null = null;
+  let indent = 0;
+  for (const line of md.replace(/\r\n?/g, "\n").split("\n")) {
+    const fence = /^(\s*)```/.exec(line);
+    if (fence) {
+      if (buf) {
+        out.push(buf.join("\n"));
+        buf = null;
+      } else {
+        buf = [];
+        indent = fence[1]!.length;
+      }
+      continue;
+    }
+    if (buf) buf.push(line.slice(Math.min(indent, /^\s*/.exec(line)![0].length)));
+  }
+  return out;
+}
+
+/** `…` のインラインコード（1 行の出力例は「出力例: `7`」と書いてよい） */
+function inlineCodes(md: string): string[] {
+  return [...md.matchAll(/`([^`\n]+)`/g)].map((m) => m[1]!);
+}
+
+async function dirFiles(d: string): Promise<{ rel: string; size: number }[]> {
+  const out: { rel: string; size: number }[] = [];
+  const walk = async (sub: string) => {
+    let names: string[];
+    try {
+      names = await fs.readdir(path.join(d, sub));
+    } catch {
+      return;
+    }
+    for (const n of names) {
+      const rel = sub ? `${sub}/${n}` : n;
+      const st = await fs.stat(path.join(d, rel));
+      if (st.isDirectory()) await walk(rel);
+      else out.push({ rel, size: st.size });
+    }
+  };
+  await walk("");
+  return out;
+}
+
+const kb = (n: number) => `${Math.round(n / 1000).toLocaleString("en-US")} KB`;
+
+/**
+ * CP: 競技プログラミング形式の問題の形（05 §4・§7.1・§8 T5）。
+ * 6 言語と starter、sample 2 件以上（入出力が問題文の例と一致）、hidden 10 件以上と hidden-max-*、gen/gen.py、サイズ上限。
+ */
+async function gateCP(root: string, entry: Entry, push: Push): Promise<void> {
+  const p = entry.problem!;
+  if (p.meta.category !== "CP") return;
+  const dir = path.join(root, entry.dir);
+  const missing = CP_LANGUAGES.filter((l) => !p.meta.languages.includes(l));
+  if (missing.length) push("error", "CP", `languages に ${missing.join(", ")} が無い（CP は ${CP_LANGUAGES.join("/")} の 6 言語すべて）`);
+  for (const l of CP_LANGUAGES) {
+    const st = p.meta.starter_files.filter((f) => f.language === l);
+    if (st.length === 0) push("error", "CP", `starter_files に ${l} が無い（CP は 6 言語とも共通テンプレートの starter を置く）`);
+    else if (st.some((f) => !f.content?.trim())) push("error", "CP", `starter_files の ${l} が空`);
+  }
+  if (!(await exists(path.join(dir, "gen", "gen.py")))) push("error", "CP", "gen/gen.py が無い（テストは決定的な生成器で作り、--check で再現できるようにする）");
+  const t = p.tests;
+  if (t.kind !== "stdio") {
+    push("error", "CP", `CP は stdio 判定のみ（kind: ${t.kind}）`);
+    return;
+  }
+  const samples = t.cases.filter((c) => c.visibility === "sample");
+  const hidden = t.cases.filter((c) => c.visibility === "hidden");
+  if (samples.length < CP_MIN_SAMPLES) push("error", "CP", `sample が ${samples.length} 件（${CP_MIN_SAMPLES} 件以上）`);
+  if (hidden.length < CP_MIN_HIDDEN) push("error", "CP", `hidden が ${hidden.length} 件（${CP_MIN_HIDDEN} 件以上）`);
+  const maxCases = hidden.filter((c) => c.name.startsWith("hidden-max")).length;
+  if (maxCases === 0) push("error", "CP", "hidden-max-* のケースが無い（最大規模のケースを 1 件以上。--naive の TLE 検査もこれを使う）");
+  else if (maxCases === 1) push("warn", "CP", "hidden-max-* が 1 件だけ（素朴解に最悪となる形を 2 件以上が目安。05 §7.1）");
+
+  // 入出力例: 候補者が読むのは問題文と制約だけなので、その 2 つに tests と同じものが載っていること
+  const shown = `${p.body.statement}\n\n${p.body.constraints}`;
+  const blocks = new Set(fencedBlocks(shown).map(normSample));
+  const inline = new Set(inlineCodes(shown).map(normSample));
+  const read = async (text: string | undefined, file: string | undefined): Promise<string | null> => {
+    if (text !== undefined) return text;
+    if (!file) return null;
+    return fs.readFile(path.join(dir, file), "utf8").catch(() => null);
+  };
+  for (const c of samples) {
+    const stdin = await read(c.stdin, c.stdinFile);
+    const expected = await read(c.expected, c.expectedFile);
+    if (stdin !== null && !blocks.has(normSample(stdin))) push("error", "CP", `${c.name} の入力が問題文・制約のコードブロックに無い（入力例は \`\`\` で囲み、tests と 1 文字も違わないように書く）`);
+    if (expected !== null && !blocks.has(normSample(expected)) && !inline.has(normSample(expected))) {
+      push("error", "CP", `${c.name} の期待出力が問題文・制約の出力例に無い（\`\`\` のブロックか、1 行なら \`…\` で書く）`);
+    }
+  }
+
+  // サイズ（第 1 バッチの上限。tests/ だけを数え、gen/ は含めない）
+  const files = await dirFiles(path.join(dir, "tests"));
+  const total = files.reduce((a, f) => a + f.size, 0);
+  if (total > CP_TESTS_MAX_BYTES) push("error", "CP", `tests/ が ${kb(total)}（上限 ${kb(CP_TESTS_MAX_BYTES)}）`);
+  if (p.meta.difficulty === "L1" && total > CP_L1_TESTS_MAX_BYTES) push("error", "CP", `L1 の tests/ が ${kb(total)}（L1 の上限 ${kb(CP_L1_TESTS_MAX_BYTES)}。L1 は TLE を狙わない）`);
+  for (const f of files) {
+    if (f.rel.endsWith(".in") && f.size > CP_IN_MAX_BYTES) push("error", "CP", `tests/${f.rel} が ${kb(f.size)}（.in の上限 ${kb(CP_IN_MAX_BYTES)}）`);
+    if (f.rel.endsWith(".out") && f.size > CP_OUT_MAX_BYTES) push("error", "CP", `tests/${f.rel} が ${kb(f.size)}（.out の上限 ${kb(CP_OUT_MAX_BYTES)}）`);
+  }
+  // 出力上限: 正しい解答が OLE にならないよう、outputKb は期待出力の 2 倍以上（05 §4.3）
+  for (const c of t.cases) {
+    const expected = await read(c.expected, c.expectedFile);
+    if (expected === null) continue;
+    const outputKb = c.limits?.outputKb ?? t.limits.outputKb ?? 1024;
+    const bytes = Buffer.byteLength(expected);
+    if (bytes * 2 > outputKb * 1024) push("error", "CP", `${c.name}: 期待出力 ${kb(bytes)} に対して limits.outputKb ${outputKb} が小さい（期待出力の 2 倍以上にする）`);
+  }
+}
+
 /** DUP: 正規化したタイトルの Levenshtein 類似度が閾値以上なら警告 */
 function gateDuplicates(entries: Entry[]): void {
   const loaded = entries.filter((e) => e.problem);
@@ -281,6 +410,7 @@ export async function validateProblems(root: string): Promise<ValidationResult> 
     gateG3(entry, push);
     gateG5(entry, push);
     await gateTests(root, entry, push);
+    await gateCP(root, entry, push);
   }
   gateDuplicates(entries);
   let errors = 0;
