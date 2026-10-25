@@ -15,7 +15,7 @@ function inline(text: string, keyBase: string): ReactNode[] {
   while ((m = re.exec(text))) {
     if (m.index > last) out.push(text.slice(last, m.index));
     const tok = m[0];
-    if (tok.startsWith("`")) out.push(<code key={`${keyBase}-c${i++}`} className="font-mono text-[0.92em] rounded bg-bg px-1 py-0.5 border border-border">{tok.slice(1, -1)}</code>);
+    if (tok.startsWith("`")) out.push(<code key={`${keyBase}-c${i++}`} className="rounded-4 border border-border-subtle bg-sunken px-1 py-0.5 font-mono text-[0.92em] text-fg-body">{tok.slice(1, -1)}</code>);
     else out.push(<strong key={`${keyBase}-b${i++}`}>{tok.slice(2, -2)}</strong>);
     last = m.index + tok.length;
   }
@@ -42,7 +42,7 @@ export function Markdown({ text, className }: { text: string; className?: string
       while (i < lines.length && !/^```\s*$/.test(lines[i]!)) buf.push(lines[i++]!);
       i++;
       blocks.push(
-        <pre key={k++} className="font-mono text-[13px] leading-relaxed rounded-md border border-border bg-bg p-3 overflow-x-auto whitespace-pre">
+        <pre key={k++} className="overflow-x-auto whitespace-pre rounded-6 border border-border bg-sunken p-3 text-mono-13N-150 text-fg-body">
           <code>{buf.join("\n")}</code>
         </pre>,
       );
@@ -51,7 +51,7 @@ export function Markdown({ text, className }: { text: string; className?: string
     const h = /^(#{1,6})\s+(.*)$/.exec(line);
     if (h) {
       const level = h[1]!.length;
-      const cls = level <= 2 ? "text-base font-semibold mt-4" : "text-sm font-semibold mt-3";
+      const cls = level <= 2 ? "mt-4 text-dns-16B-130 text-fg" : "mt-3 text-dns-14B-130 text-fg";
       blocks.push(
         <p key={k++} role="heading" aria-level={Math.min(6, level + 2)} className={cls}>
           {inline(h[2]!, `h${k}`)}
@@ -88,7 +88,7 @@ export function Markdown({ text, className }: { text: string; className?: string
       const buf: string[] = [];
       while (i < lines.length && /^\s*>\s?/.test(lines[i]!)) buf.push(lines[i++]!.replace(/^\s*>\s?/, ""));
       blocks.push(
-        <blockquote key={k++} className="border-l-2 border-border pl-3 text-fg-muted">
+        <blockquote key={k++} className="border-l-2 border-border-strong pl-3 text-fg-muted">
           {inline(buf.join(" "), `q${k}`)}
         </blockquote>,
       );
@@ -103,5 +103,5 @@ export function Markdown({ text, className }: { text: string; className?: string
     }
     blocks.push(<p key={k++}>{inline(buf.join(" "), `p${k}`)}</p>);
   }
-  return <div className={`text-sm leading-relaxed space-y-2 ${className ?? ""}`}>{blocks}</div>;
+  return <div className={`flex flex-col gap-2 text-std-14N-170 ${className ?? ""}`}>{blocks}</div>;
 }

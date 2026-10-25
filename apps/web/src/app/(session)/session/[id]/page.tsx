@@ -1,10 +1,29 @@
-import Link from "next/link";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { notFound } from "next/navigation";
+import { PROBLEMS_ROOT } from "@/lib/paths";
 import { problem, store } from "@/lib/server";
+import { PageContainer } from "@/components/layout/PageContainer";
+import { EmptyState, LinkButton } from "@/components/ui";
 import { InterviewScreenClient as InterviewScreen } from "@/components/session/client";
 import type { InterviewData } from "@/components/session/types";
 
 export const dynamic = "force-dynamic";
+
+/** 公開サンプルの標準入力（stdin か stdinFile）。問題フォルダの外は読まない */
+async function sampleStdin(dir: string, c: { stdin?: string; stdinFile?: string } | undefined): Promise<string> {
+  if (!c) return "";
+  if (c.stdin !== undefined) return c.stdin;
+  if (!c.stdinFile) return "";
+  const base = path.resolve(PROBLEMS_ROOT, dir);
+  const file = path.resolve(base, c.stdinFile);
+  if (!file.startsWith(base + path.sep)) return "";
+  try {
+    return await readFile(file, "utf8");
+  } catch {
+    return "";
+  }
+}
 
 /** S3 面接セッション画面 */
 export default async function SessionPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
@@ -14,10 +33,18 @@ export default async function SessionPage({ params, searchParams }: { params: Pr
   if (!session) notFound();
   if (session.status !== "preparing" && session.status !== "recording") {
     return (
-      <main className="mx-auto max-w-xl px-4 py-10 space-y-3">
-        <h1 className="text-lg font-semibold">このセッションは終了しています</h1>
-        <Link href={`/sessions/${encodeURIComponent(id)}`} className="text-accent text-sm">振り返りを開く →</Link>
-      </main>
+      <PageContainer as="main" width="reading">
+        <h1 className="sr-only">このセッションは終了しています</h1>
+        <EmptyState
+          title="このセッションは終了しています"
+          description="終了したセッションは再開できません。録画と記録は振り返り画面で確認できます。"
+          action={
+            <LinkButton href={`/sessions/${encodeURIComponent(id)}`} variant="primary">
+              振り返りを開く
+            </LinkButton>
+          }
+        />
+      </PageContainer>
     );
   }
   const p = await problem(session.problem.id);
@@ -51,7 +78,8 @@ export default async function SessionPage({ params, searchParams }: { params: Pr
       tests.kind === "web"
         ? { preview: { tailwind: tests.preview.tailwind }, mockApi: tests.mockApi ?? null, layout: tests.layout, scenarios: tests.scenarios.map((s) => ({ name: s.name, steps: s.steps, tags: s.tags, weight: s.weight })) }
         : null,
-    sampleStdin: tests.kind === "stdio" ? (tests.cases.find((c) => c.visibility === "sample")?.stdin ?? "") : "",
+    sampleStdin: tests.kind === "stdio" ? await sampleStdin(p.dir, tests.cases.find((c) => c.visibility === "sample")) : "",
+    runnerOff: sp.runner === "off" && (tests.kind === "stdio" || tests.kind === "unit"),
   };
   return <InterviewScreen data={data} recordingEnabled={sp.norec !== "1"} />;
 }

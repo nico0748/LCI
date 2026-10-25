@@ -1,8 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { tToMedia, mediaToT, sessionDuration, indexAtOrBefore, fmtTFine } from "./time.ts";
-import { bucketEdits, densityOpacity, editWeight, xToT, tToX, maxBucketChars } from "./density.ts";
-import { radarPoints, axisAngle, scoreRadius, gridPolygons, labelPosition, pointsAttr } from "./radar.ts";
+import { bucketEdits, editWeight, xToT, tToX, maxBucketChars, mergeLanes } from "./density.ts";
 import { sparkPath, sparkPoints } from "./sparkline.ts";
 import type { Event, EventOf } from "@lci/core/browser";
 
@@ -98,12 +97,15 @@ test("editWeight は削除＋挿入、空でも 1", () => {
   assert.equal(editWeight(edit(0, "f", "", 0)), 1);
 });
 
-test("densityOpacity は log スケールで 0.15..1", () => {
-  assert.equal(densityOpacity(0, 100), 0);
-  assert.equal(densityOpacity(100, 100), 1);
-  const mid = densityOpacity(10, 100);
-  assert.ok(mid > 0.15 && mid < 1);
-  assert.ok(densityOpacity(1, 1_000_000) >= 0.15);
+test("mergeLanes は全ファイルのバケットを合算する", () => {
+  const lanes = bucketEdits([edit(100, "f1", "abc"), edit(150, "f2", "de"), edit(9000, "f2", "x")], 10_000, 4, ["f1", "f2"]);
+  const m = mergeLanes(lanes)!;
+  assert.equal(m.buckets.length, 4);
+  assert.equal(m.buckets[0]!.chars, 5);
+  assert.equal(m.buckets[0]!.edits, 2);
+  assert.equal(m.buckets[3]!.chars, 1);
+  assert.equal(m.total, 6);
+  assert.equal(mergeLanes([]), null);
 });
 
 test("xToT / tToX は相互に逆写像で範囲内に収まる", () => {
@@ -112,43 +114,6 @@ test("xToT / tToX は相互に逆写像で範囲内に収まる", () => {
   assert.equal(xToT(-5, 100, 10_000), 0);
   assert.equal(xToT(500, 100, 10_000), 10_000);
   assert.equal(xToT(10, 0, 10_000), 0);
-});
-
-// ---- radar ---------------------------------------------------------------
-
-test("radarPoints: 軸 0 は真上、満点は半径 r", () => {
-  const pts = radarPoints([5, 5, 5, 5, 5, 5, 5, 5], 100, 100, 50);
-  assert.equal(pts.length, 8);
-  assert.ok(Math.abs(pts[0]!.x - 100) < 1e-9);
-  assert.ok(Math.abs(pts[0]!.y - 50) < 1e-9);
-  // 軸 2（90°）は真右
-  assert.ok(Math.abs(pts[2]!.x - 150) < 1e-9);
-  assert.ok(Math.abs(pts[2]!.y - 100) < 1e-9);
-});
-
-test("scoreRadius は 0..5 を 0..r に、範囲外は丸める", () => {
-  assert.equal(scoreRadius(0, 50), 0);
-  assert.equal(scoreRadius(2.5, 50), 25);
-  assert.equal(scoreRadius(9, 50), 50);
-  assert.equal(scoreRadius(-1, 50), 0);
-});
-
-test("axisAngle は等間隔で時計回り", () => {
-  const n = 8;
-  for (let i = 1; i < n; i++) assert.ok(Math.abs(axisAngle(i, n) - axisAngle(i - 1, n) - Math.PI / 4) < 1e-12);
-});
-
-test("gridPolygons は levels 本の多角形を返し、pointsAttr は 'x,y' 列", () => {
-  const g = gridPolygons(8, 0, 0, 40, 5);
-  assert.equal(g.length, 5);
-  assert.equal(g[0]!.split(" ").length, 8);
-  assert.equal(pointsAttr([{ x: 1.234, y: 5.678 }]), "1.23,5.68");
-});
-
-test("labelPosition: 右側は start、左側は end、上下は middle", () => {
-  assert.equal(labelPosition(0, 8, 0, 0, 40, 4).anchor, "middle");
-  assert.equal(labelPosition(2, 8, 0, 0, 40, 4).anchor, "start");
-  assert.equal(labelPosition(6, 8, 0, 0, 40, 4).anchor, "end");
 });
 
 // ---- sparkline -----------------------------------------------------------

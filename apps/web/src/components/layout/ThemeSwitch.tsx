@@ -28,7 +28,7 @@ export function ThemeSwitch({ className }: { className?: string }) {
           <label
             key={opt.value}
             className={cx(
-              "relative inline-flex h-6 cursor-pointer items-center rounded-4 px-2 text-dns-13N-130",
+              "relative inline-flex h-6 cursor-pointer items-center whitespace-nowrap rounded-4 px-1.5 text-dns-13N-130 desktop:px-2",
               "has-[:checked]:bg-selected has-[:checked]:text-fg has-[:checked]:font-bold",
               "text-fg-muted can-hover:text-fg",
               "has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-1 has-[:focus-visible]:outline-focus-outer",

@@ -35,10 +35,11 @@ export function AppHeader() {
         本文へ移動
       </a>
       <header className="border-b border-border bg-surface">
-        <div className="mx-auto flex h-14 max-w-[1200px] items-center gap-3 px-4 desktop:gap-6 desktop:px-6">
+        <div className="mx-auto flex h-14 max-w-[1200px] items-center gap-2 px-4 desktop:gap-6 desktop:px-6">
           <Link href="/" className="flex items-center gap-2 rounded-4 text-fg no-underline">
             <LogoMark />
-            <span className="text-oln-16B-100">LCI</span>
+            {/* 390px 幅ではナビとテーマ切替を 1 行に収めるため、ロゴ文字は desktop からだけ見せる */}
+            <span className="sr-only text-oln-16B-100 desktop:not-sr-only">LCI</span>
             <span className="hidden text-dns-13N-130 text-fg-muted desktop:inline">ライブコーディング面接トレーナー</span>
           </Link>
           <nav aria-label="メイン" className="min-w-0 flex-1">
@@ -51,8 +52,8 @@ export function AppHeader() {
                       href={item.href}
                       aria-current={current ? "page" : undefined}
                       className={cx(
-                        "relative inline-flex h-14 items-center px-2 text-dns-14N-130 no-underline desktop:px-3",
-                        "after:absolute after:inset-x-2 after:bottom-0 after:h-0.5",
+                        "relative inline-flex h-14 items-center whitespace-nowrap px-1.5 text-dns-14N-130 no-underline desktop:px-3",
+                        "after:absolute after:inset-x-1.5 after:bottom-0 desktop:after:inset-x-2 after:h-0.5",
                         current ? "text-fg after:bg-accent" : "text-fg-muted can-hover:text-fg can-hover:underline underline-offset-[3px]",
                         "focus-ring-inset",
                       )}

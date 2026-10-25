@@ -26,7 +26,11 @@ export interface Pin {
   id: string;
   t: number;
   kind: "feedback" | "run" | "followup";
+  /** 範囲を持つ指摘の終端 */
+  tEnd?: number;
   severity?: "major" | "minor" | "positive";
   label: string;
   verdict?: string;
+  /** 指摘の番号（時刻順、1 から） */
+  n?: number;
 }

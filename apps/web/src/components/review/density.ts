@@ -3,7 +3,7 @@ import type { Event, EventOf } from "@lci/core/browser";
 /**
  * コードタイムラインのレーン計算。
  * 編集イベントをファイル別・時間バケット別に集計し、「どの時間帯にどのファイルをどれだけ触っていたか」を
- * 濃淡ブロックとして描くための値を返す。重みは変更文字数（削除＋挿入）。
+ * 4 段の編集量（timeline-layout.ts の editLevel）で塗るための値を返す。重みは変更文字数（削除＋挿入）。
  */
 
 export interface LaneBucket {
@@ -61,11 +61,22 @@ export function bucketEdits(events: Event[], duration: number, n: number, files?
   return [...laneOf.values()];
 }
 
-/** 濃淡（0..1）。文字数は裾が長いので log スケールで潰す */
-export function densityOpacity(chars: number, maxChars: number): number {
-  if (chars <= 0 || maxChars <= 0) return 0;
-  const v = Math.log1p(chars) / Math.log1p(maxChars);
-  return Math.min(1, Math.max(0.15, v));
+/** 全ファイルを 1 本に合算する（モバイルの細いタイムライン用） */
+export function mergeLanes(lanes: FileLane[], label = "*"): FileLane | null {
+  if (!lanes.length) return null;
+  const n = lanes[0]!.buckets.length;
+  const buckets = lanes[0]!.buckets.map((b) => ({ t0: b.t0, t1: b.t1, chars: 0, edits: 0 }));
+  let total = 0;
+  for (const l of lanes) {
+    for (let i = 0; i < n; i++) {
+      const b = l.buckets[i];
+      if (!b) continue;
+      buckets[i]!.chars += b.chars;
+      buckets[i]!.edits += b.edits;
+    }
+    total += l.total;
+  }
+  return { file: label, buckets, total };
 }
 
 export function maxBucketChars(lanes: FileLane[]): number {

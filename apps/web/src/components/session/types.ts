@@ -29,7 +29,18 @@ export interface InterviewData {
   webTests: WebTestsLike | null;
   /** stdio の公開サンプル入力（実行パネルの stdin 初期値） */
   sampleStdin: string;
+  /** S2 で実行環境（Docker）が無いと分かっている（stdio / unit のみ。S3 で再確認して有効にできる） */
+  runnerOff: boolean;
 }
+
+/** 同意済みの印（FR-C-63） */
+export const CONSENT_KEY = "lci-consent-v1";
+/** S2 で選んだデバイス */
+export const DEVICE_KEY = "lci-devices";
+/** 残り 1 分の音（FR-U-22）。"0" で鳴らさない */
+export const CHIME_KEY = "lci-chime";
+/** S2 の「開始」から来た印（sessionStorage）。あれば S3 は開始ボタンを出さずに始める（X9） */
+export const AUTOSTART_KEY = (sessionId: string) => `lci-autostart:${sessionId}`;
 
 export const MONACO_LANGUAGE: Record<Language, string> = {
   c: "c",
