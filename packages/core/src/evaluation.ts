@@ -22,12 +22,12 @@ export type Axis = z.infer<typeof Axis>;
 export const AXES: { id: Axis; label: string; weight: number; description: string }[] = [
   { id: "R1_requirements", label: "要件確認", weight: 0.15, description: "問題文の要件・制約を自分の言葉で言い換え、曖昧点を質問または仮定として宣言したか" },
   { id: "R2_plan", label: "方針宣言", weight: 0.15, description: "実装前に全体方針を宣言し、宣言と実装が一致しているか。やらないことを明言したか" },
-  { id: "R3_tradeoffs", label: "トレードオフ", weight: 0.10, description: "選択肢を比較し、採用理由と捨てたものを説明したか" },
+  { id: "R3_tradeoffs", label: "トレードオフ", weight: 0.15, description: "選択肢を比較し、採用理由と捨てたものを説明したか" },
   { id: "R4_correctness", label: "実装正確性", weight: 0.20, description: "要件を満たす動くコードか。テスト結果と要件チェックに基づく" },
   { id: "R5_testing", label: "テスト意識", weight: 0.10, description: "区切りごとに実行し、エッジケース（空入力・連打など）を予告して検証したか" },
   { id: "R6_time", label: "時間配分", weight: 0.10, description: "設計・実装・検証の配分が制限時間に対して妥当か。優先順位付けができたか" },
   { id: "R7_sync", label: "説明と実装の同期", weight: 0.10, description: "説明が実装に先行し、無発話で書き続ける区間が少ないか" },
-  { id: "R8_attitude", label: "対話態度・復帰力", weight: 0.10, description: "詰まったときに状況を言語化し、方針転換を宣言して復帰できたか" },
+  { id: "R8_attitude", label: "対話態度・復帰力", weight: 0.05, description: "詰まったときに状況を言語化し、方針転換を宣言して復帰できたか" },
 ];
 
 export const Metrics = z.object({
@@ -150,7 +150,8 @@ export type Evaluation = z.infer<typeof Evaluation>;
 
 /** 重み付き総合点。表示は控えめに（要件書 03 §3 FR-E-09） */
 export function weightedOverall(scores: Record<Axis, { score: number }>): number {
-  let sum = 0;
-  for (const a of AXES) sum += scores[a.id].score * a.weight;
-  return Math.round(sum * 10) / 10;
+  // 重みを百分率の整数で積算する（0.15 などの浮動小数を足すと 3.05 が 3.0499… になり四捨五入がずれる）
+  let sumPct = 0;
+  for (const a of AXES) sumPct += scores[a.id].score * Math.round(a.weight * 100);
+  return Math.round(sumPct / 10) / 10;
 }
