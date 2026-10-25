@@ -16,6 +16,9 @@ importers:
       '@lci/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@lci/demo':
+        specifier: workspace:*
+        version: link:../../packages/demo
       '@lci/evaluator':
         specifier: workspace:*
         version: link:../../packages/evaluator
@@ -85,6 +88,25 @@ importers:
         specifier: ^5.9.0
         version: 5.9.3
 
+  packages/demo:
+    dependencies:
+      '@lci/core':
+        specifier: workspace:*
+        version: link:../core
+      '@lci/runner':
+        specifier: workspace:*
+        version: link:../runner
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
+    devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.20.5
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
+
   packages/evaluator:
     dependencies:
       '@anthropic-ai/sdk':
@@ -109,6 +131,9 @@ importers:
       '@lci/core':
         specifier: workspace:*
         version: link:../core
+      '@lci/demo':
+        specifier: workspace:*
+        version: link:../demo
       '@lci/evaluator':
         specifier: workspace:*
         version: link:../evaluator
