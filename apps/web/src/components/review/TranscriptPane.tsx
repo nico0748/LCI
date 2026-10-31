@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { fmtT, type Session, type Transcript } from "@lci/core/browser";
 import { Switch, cx } from "@/components/ui";
 import { indexAtOrBefore } from "./time";
@@ -10,6 +10,7 @@ import { indexAtOrBefore } from "./time";
  * 根拠として選ばれた範囲は --bg-hl-line（黄は使わない、X3）。
  * 無音セグメントは行として読ませず、長さに応じた細い棒にする。15 秒超は「沈黙 140 秒」と文字でも出す。
  * 追従はリスト内だけをスクロールする（ページ全体は動かさない）。マウスを置いている間は追従を止める。
+ * 見出し・件数の語・本文の描き方は引数で変えられる（模範解答デモの「字幕の全文」で使う）。
  */
 export function TranscriptPane({
   transcript,
@@ -19,6 +20,9 @@ export function TranscriptPane({
   onSeek,
   highlight,
   className,
+  title = "文字起こし",
+  countLabel = "発話",
+  renderText,
 }: {
   transcript: Transcript | null;
   stt: Session["stt"];
@@ -27,6 +31,12 @@ export function TranscriptPane({
   onSeek: (t: number) => void;
   highlight: { t0: number; t1: number } | null;
   className?: string;
+  /** 見出し（既定「文字起こし」） */
+  title?: string;
+  /** 件数の語（既定「発話」） */
+  countLabel?: string;
+  /** 本文の描き方（既定は文字列のまま） */
+  renderText?: (text: string) => ReactNode;
 }) {
   const listRef = useRef<HTMLOListElement>(null);
   const [follow, setFollow] = useState(true);
@@ -58,7 +68,7 @@ export function TranscriptPane({
     const skipped = stt?.status === "skipped" || stt?.status === "failed";
     return (
       <div className={frame}>
-        <h3 className="border-b border-border px-3 py-2 text-dns-14B-130 text-fg">文字起こし</h3>
+        <h3 className="border-b border-border px-3 py-2 text-dns-14B-130 text-fg">{title}</h3>
         <div className="flex flex-col gap-2 overflow-auto p-3 text-std-14N-170 text-fg-muted">
           {skipped ? (
             <>
@@ -84,7 +94,7 @@ export function TranscriptPane({
     <div className={frame}>
       <div className="flex min-h-10 items-center justify-between gap-2 border-b border-border px-3 py-1">
         <h3 className="text-dns-14B-130 text-fg">
-          文字起こし <span className="text-dns-13N-130 font-normal text-fg-muted tabular-nums">{spoken} 発話</span>
+          {title} <span className="text-dns-13N-130 font-normal text-fg-muted tabular-nums">{spoken} {countLabel}</span>
         </h3>
         <Switch checked={follow} onCheckedChange={setFollow} className="text-dns-13N-130 text-fg-muted">
           再生に追従
@@ -93,7 +103,7 @@ export function TranscriptPane({
       <ol
         ref={listRef}
         className="relative min-h-0 flex-1 overflow-y-auto px-1.5 py-1"
-        aria-label="発話の一覧（押すとその時刻へ移動）"
+        aria-label={`${countLabel}の一覧（押すとその時刻へ移動）`}
         onPointerEnter={(e) => e.pointerType === "mouse" && setHovering(true)}
         onPointerLeave={() => setHovering(false)}
       >
@@ -138,7 +148,7 @@ export function TranscriptPane({
               >
                 <span className={cx("w-11 shrink-0 pt-[3px] text-mono-12N-120", inHl ? "text-fg-body" : "text-fg-muted")}>{fmtT(s.t_start)}</span>
                 <span className={cx("min-w-0 text-std-14N-170", s.is_filler && !inHl ? "text-fg-muted" : "text-fg-body")}>
-                  {s.text}
+                  {renderText ? renderText(s.text) : s.text}
                   {inHl && <span className="sr-only">（選んだ根拠の範囲）</span>}
                 </span>
               </button>

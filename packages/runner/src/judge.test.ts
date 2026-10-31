@@ -5,6 +5,7 @@ import path from "node:path";
 import { loadProblemDir, RunResult, type Problem } from "@lci/core";
 import { FakeBackend } from "./backend-fake.ts";
 import { judgeProblem, runOnce, worstVerdict } from "./judge.ts";
+import { runCommand } from "./languages.ts";
 import { createRunner } from "./runner.ts";
 import type { RunnerLanguage, SourceFile } from "./types.ts";
 
@@ -74,7 +75,7 @@ for (const lang of ["python", "typescript", "c", "go", "rust", "php"] as const) 
     assert.equal(r.verdict, "AC", JSON.stringify({ compile: r.compile, stderr: r.stderr, cases: r.cases.filter((c) => c.verdict !== "AC") }, null, 1));
     assert.equal(r.mode, "judge");
     assert.equal(r.t, 1234);
-    assert.equal(r.cases.length, 8);
+    assert.equal(r.cases.length, p.tests.kind === "stdio" ? p.tests.cases.length : -1);
   });
 }
 
@@ -206,4 +207,25 @@ test("worstVerdict ordering", () => {
   assert.equal(worstVerdict(["AC", "AC"]), "AC");
   assert.equal(worstVerdict(["RE", "WA"]), "RE");
   assert.equal(worstVerdict([]), "AC");
+});
+
+test("python: Run は -u（途中出力を残す）、judge は -u なし（行ごとの print を不利にしない）", async (t) => {
+  assert.deepEqual(runCommand("python", "main.py", 256, "run"), ["python3", "-I", "-u", "main.py"]);
+  assert.deepEqual(runCommand("python", "main.py", 256, "judge"), ["python3", "-I", "main.py"]);
+  // 既定は従来どおり Run（呼び出し側が mode を渡し忘れても挙動が変わらない）
+  assert.deepEqual(runCommand("python", "main.py", 256), ["python3", "-I", "-u", "main.py"]);
+  // Python 以外は mode で変わらない
+  for (const lang of ["c", "rust", "go", "typescript", "php"] as const) assert.deepEqual(runCommand(lang, "main.x", 256, "judge"), runCommand(lang, "main.x", 256, "run"), lang);
+
+  if (!(await has("python3"))) return t.skip("python3 がありません");
+  // -u のときだけ stdout が write_through になる。実際に judge 経路で -u が外れていることを確かめる
+  const src = "import sys\nprint(sys.stdout.write_through)\n";
+  const run = await runOnce(backend, { language: "python", files: [{ path: "main.py", content: src }] });
+  assert.equal(run.stdout, "True\n");
+  const p = await loadProblemDir(ROOT, "ALG/alg-0001-two-sum");
+  const one: Problem = structuredClone(p);
+  if (one.tests.kind !== "stdio") throw new Error("unreachable");
+  one.tests.cases = [{ name: "flag", visibility: "sample", stdin: "", expected: "False\n" }];
+  const judged = await judgeProblem(backend, one, { language: "python", files: [{ path: "main.py", content: src }], problemsRoot: ROOT });
+  assert.equal(judged.verdict, "AC", JSON.stringify(judged.cases));
 });

@@ -262,23 +262,6 @@
  {
   "id": "fe-0017",
   "category": "FE",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "オフライン優先の TODO 同期",
-  "one_line": "ローカルで編集し、再接続時の競合を更新時刻で解決する",
-  "nfr": [
-   "idempotency",
-   "cache"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0018",
-  "category": "FE",
   "difficulty": "L3",
   "time_limit": 30,
   "title": "依存するリクエストの並列化と中断",
@@ -293,13 +276,31 @@
   "status": "seed"
  },
  {
-  "id": "fe-0019",
+  "id": "fe-0018",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "ブックマーク削除の取り消し",
-  "one_line": "削除を 5 秒遅らせて「元に戻す」を可能にし、離脱時は確定させる",
-  "nfr": [],
+  "title": "フィルタ条件の URL 同期",
+  "one_line": "複数フィルタを URLSearchParams に保持し、戻る/進むで状態を再現",
+  "nfr": [
+   "cache"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0019",
+  "category": "FE",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "アコーディオン型 FAQ",
+  "one_line": "開閉状態を aria-expanded で表現しキーボード操作に対応",
+  "nfr": [
+   "a11y"
+  ],
   "languages_planned": [
    "html"
   ],
@@ -309,12 +310,13 @@
  {
   "id": "fe-0020",
   "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "アコーディオン型 FAQ",
-  "one_line": "開閉状態を aria-expanded で表現しキーボード操作に対応",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "オフライン優先の TODO 同期",
+  "one_line": "ローカルで編集し、再接続時の競合を更新時刻で解決する",
   "nfr": [
-   "a11y"
+   "idempotency",
+   "cache"
   ],
   "languages_planned": [
    "html"
@@ -343,10 +345,11 @@
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "フィルタ条件の URL 同期",
-  "one_line": "複数フィルタを URLSearchParams に保持し、戻る/進むで状態を再現",
+  "title": "投稿フォームのタグ候補",
+  "one_line": "入力中のタグ候補を debounce して取得し、選択済みは候補から除く",
   "nfr": [
-   "cache"
+   "debounce",
+   "abort"
   ],
   "languages_planned": [
    "html"
@@ -359,11 +362,10 @@
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "投稿フォームのタグ候補",
-  "one_line": "入力中のタグ候補を debounce して取得し、選択済みは候補から除く",
+  "title": "ランキングの期間切替",
+  "one_line": "日/週/月ごとに結果をキャッシュし、TTL を過ぎたら取り直す",
   "nfr": [
-   "debounce",
-   "abort"
+   "cache"
   ],
   "languages_planned": [
    "html"
@@ -408,10 +410,10 @@
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "ランキングの期間切替",
-  "one_line": "日/週/月ごとに結果をキャッシュし、TTL を過ぎたら取り直す",
+  "title": "コメント一覧の「さらに読み込む」",
+  "one_line": "カーソルで追記し、新着コメントによる重複を id で排除",
   "nfr": [
-   "cache"
+   "pagination"
   ],
   "languages_planned": [
    "html"
@@ -439,12 +441,13 @@
  {
   "id": "fe-0028",
   "category": "FE",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "共同編集のカーソル表示",
-  "one_line": "他人のカーソル位置を WebSocket で受け、間引きと補間をする",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "都道府県と市区町村の連動セレクト",
+  "one_line": "親を変えたら子の古いリクエストを中断し選択をリセット",
   "nfr": [
-   "rate_limit"
+   "abort",
+   "cache"
   ],
   "languages_planned": [
    "html"
@@ -455,13 +458,11 @@
  {
   "id": "fe-0029",
   "category": "FE",
-  "difficulty": "L2",
+  "difficulty": "L1",
   "time_limit": 20,
-  "title": "コメント一覧の「さらに読み込む」",
-  "one_line": "カーソルで追記し、新着コメントによる重複を id で排除",
-  "nfr": [
-   "pagination"
-  ],
+  "title": "コピーボタンとフィードバック表示",
+  "one_line": "Clipboard API の失敗時フォールバックと「コピーしました」の自動消去",
+  "nfr": [],
   "languages_planned": [
    "html"
   ],
@@ -487,113 +488,6 @@
  {
   "id": "fe-0031",
   "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "コピーボタンとフィードバック表示",
-  "one_line": "Clipboard API の失敗時フォールバックと「コピーしました」の自動消去",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0032",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "分割アップロードの進捗表示",
-  "one_line": "XHR の progress で進捗を出し、キャンセルで中断",
-  "nfr": [
-   "abort"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0033",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "都道府県と市区町村の連動セレクト",
-  "one_line": "親を変えたら子の古いリクエストを中断し選択をリセット",
-  "nfr": [
-   "abort",
-   "cache"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0034",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "画像を縮小してからアップロード",
-  "one_line": "canvas で長辺 2048px に縮小し、品質とサイズの釣り合いを説明",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0035",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "検索結果のハイライト表示",
-  "one_line": "一致箇所を mark 要素で囲みつつ、HTML エスケープを崩さない",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0036",
-  "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "ダークモード切替（OS 設定追従）",
-  "one_line": "prefers-color-scheme と手動設定の優先順位を localStorage で管理",
-  "nfr": [
-   "a11y"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0037",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "チャット欄の自動スクロールと既読送信",
-  "one_line": "最下部にいる時だけ自動スクロールし、既読位置の送信を間引く",
-  "nfr": [
-   "rate_limit"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0038",
-  "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
   "title": "予約カレンダーの空き枠表示",
@@ -609,14 +503,14 @@
   "status": "seed"
  },
  {
-  "id": "fe-0039",
+  "id": "fe-0032",
   "category": "FE",
   "difficulty": "L4",
   "time_limit": 45,
-  "title": "画像のトリミングエディタ",
-  "one_line": "ドラッグとキーボードで範囲を選び、高 DPI と出力サイズ上限に対応",
+  "title": "大規模フォームの入力遅延の改善",
+  "one_line": "300 項目のフォームで重い原因を突き止め、再描画範囲を絞る",
   "nfr": [
-   "a11y"
+   "debounce"
   ],
   "languages_planned": [
    "html"
@@ -625,23 +519,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0040",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "条件付き必須項目のあるフォーム",
-  "one_line": "選択肢によって必須が変わる項目の検証とエラー表示の解除",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0041",
+  "id": "fe-0033",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -658,14 +536,14 @@
   "status": "seed"
  },
  {
-  "id": "fe-0042",
+  "id": "fe-0034",
   "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "残り時間カウントダウン表示",
-  "one_line": "setInterval のずれを Date.now の差分で補正し 0 で停止",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "チャット欄の自動スクロールと既読送信",
+  "one_line": "最下部にいる時だけ自動スクロールし、既読位置の送信を間引く",
   "nfr": [
-   "timezone"
+   "rate_limit"
   ],
   "languages_planned": [
    "html"
@@ -674,7 +552,71 @@
   "status": "seed"
  },
  {
-  "id": "fe-0043",
+  "id": "fe-0035",
+  "category": "FE",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "画像アップロード前のプレビュー",
+  "one_line": "createObjectURL と revokeObjectURL、拡張子とサイズの事前チェック",
+  "nfr": [
+   "validation"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0036",
+  "category": "FE",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "プロフィール編集の差分保存",
+  "one_line": "変更した項目だけ PATCH し、未変更なら送らない",
+  "nfr": [
+   "validation"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0037",
+  "category": "FE",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "条件付き必須項目のあるフォーム",
+  "one_line": "選択肢によって必須が変わる項目の検証とエラー表示の解除",
+  "nfr": [
+   "validation"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0038",
+  "category": "FE",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "最近見た作品の履歴",
+  "one_line": "最大 20 件・重複は先頭へ・localStorage が壊れていても落ちない",
+  "nfr": [
+   "cache"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0039",
   "category": "FE",
   "difficulty": "L3",
   "time_limit": 30,
@@ -691,58 +633,12 @@
   "status": "seed"
  },
  {
-  "id": "fe-0044",
+  "id": "fe-0040",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "下書き一覧の一括削除",
-  "one_line": "選択件数を表示し、部分失敗時にどれが失敗したかを示す",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0045",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "プロフィール編集の差分保存",
-  "one_line": "変更した項目だけ PATCH し、未変更なら送らない",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0046",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "階層つき通知設定のトグル",
-  "one_line": "親を OFF にしたら子を無効化しつつ値は保持し、差分だけ保存",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0047",
-  "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "チェックボックスの全選択と一部選択",
-  "one_line": "indeterminate 状態を親チェックボックスに反映",
+  "title": "キーボード操作できるドロップダウンメニュー",
+  "one_line": "矢印キーで移動・Esc と外側クリックで閉じる",
   "nfr": [
    "a11y"
   ],
@@ -753,15 +649,13 @@
   "status": "seed"
  },
  {
-  "id": "fe-0048",
+  "id": "fe-0041",
   "category": "FE",
-  "difficulty": "L2",
+  "difficulty": "L1",
   "time_limit": 20,
-  "title": "最近見た作品の履歴",
-  "one_line": "最大 20 件・重複は先頭へ・localStorage が壊れていても落ちない",
-  "nfr": [
-   "cache"
-  ],
+  "title": "トースト通知キュー",
+  "one_line": "同時表示 3 件まで・古いものから消す・同一メッセージは集約",
+  "nfr": [],
   "languages_planned": [
    "html"
   ],
@@ -769,7 +663,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0049",
+  "id": "fe-0042",
   "category": "FE",
   "difficulty": "L3",
   "time_limit": 30,
@@ -786,83 +680,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0050",
-  "category": "FE",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "大規模フォームの入力遅延の改善",
-  "one_line": "300 項目のフォームで重い原因を突き止め、再描画範囲を絞る",
-  "nfr": [
-   "debounce"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0051",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "お気に入りの並べ替え（ボタン操作）",
-  "one_line": "上下ボタンで並べ替え、保存はまとめて 1 回",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0052",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "ログイン切れからの復帰",
-  "one_line": "401 で再ログインを促し、復帰後に元の操作をやり直す",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0053",
-  "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "画像アップロード前のプレビュー",
-  "one_line": "createObjectURL と revokeObjectURL、拡張子とサイズの事前チェック",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0054",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "キーボード操作できるドロップダウンメニュー",
-  "one_line": "矢印キーで移動・Esc と外側クリックで閉じる",
-  "nfr": [
-   "a11y"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0055",
+  "id": "fe-0043",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -878,82 +696,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0056",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "長時間処理の進捗のストリーム表示",
-  "one_line": "EventSource の再接続と、最後のイベント ID からの再開",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0057",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "プレースホルダ付きの画像遅延読込",
-  "one_line": "width/height でレイアウトシフトを防ぎ、読込失敗時は代替表示",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0058",
-  "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "トースト通知キュー",
-  "one_line": "同時表示 3 件まで・古いものから消す・同一メッセージは集約",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0059",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "アクセシブルなコンボボックス",
-  "one_line": "WAI-ARIA の combobox パターンと aria-activedescendant",
-  "nfr": [
-   "a11y"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0060",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "日付範囲ピッカー",
-  "one_line": "開始 ≤ 終了・未来日禁止を検証し、URL へ ISO 形式で保存",
-  "nfr": [
-   "validation",
-   "timezone"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0061",
+  "id": "fe-0044",
   "category": "FE",
   "difficulty": "L4",
   "time_limit": 45,
@@ -971,15 +714,15 @@
   "status": "seed"
  },
  {
-  "id": "fe-0062",
+  "id": "fe-0045",
   "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "ライトボックスでの前後移動",
-  "one_line": "隣の画像を先読みし、Esc で閉じてフォーカスを戻す",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "日付範囲ピッカー",
+  "one_line": "開始 ≤ 終了・未来日禁止を検証し、URL へ ISO 形式で保存",
   "nfr": [
-   "a11y",
-   "cache"
+   "validation",
+   "timezone"
   ],
   "languages_planned": [
    "html"
@@ -988,7 +731,37 @@
   "status": "seed"
  },
  {
-  "id": "fe-0063",
+  "id": "fe-0046",
+  "category": "FE",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "ログイン切れからの復帰",
+  "one_line": "401 で再ログインを促し、復帰後に元の操作をやり直す",
+  "nfr": [],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0047",
+  "category": "FE",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "フォーム入力の下書き自動保存",
+  "one_line": "入力を localStorage に debounce して保存し、送信成功で破棄",
+  "nfr": [
+   "debounce"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0048",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -1005,12 +778,12 @@
   "status": "seed"
  },
  {
-  "id": "fe-0064",
+  "id": "fe-0049",
   "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "ページ内目次の自動生成",
-  "one_line": "h2/h3 から目次を作り、見出しに一意な id を振る",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "アクセシブルなコンボボックス",
+  "one_line": "WAI-ARIA の combobox パターンと aria-activedescendant",
   "nfr": [
    "a11y"
   ],
@@ -1021,24 +794,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0065",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "IME 変換中に配慮した検索",
-  "one_line": "変換中は要求せず、確定してから debounce を始める",
-  "nfr": [
-   "i18n",
-   "debounce"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0066",
+  "id": "fe-0050",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -1054,136 +810,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0067",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "未保存変更の離脱警告",
-  "one_line": "beforeunload と画面内遷移の両方で確認し、保存後は警告しない",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0068",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "フォーム文言の多言語化",
-  "one_line": "文言を辞書で切替え、日付と数値の書式も切替える",
-  "nfr": [
-   "i18n"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0069",
-  "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "フォーム入力の下書き自動保存",
-  "one_line": "入力を localStorage に debounce して保存し、送信成功で破棄",
-  "nfr": [
-   "debounce"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0070",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "問い合わせフォームの二重送信防止",
-  "one_line": "送信中はボタンを無効化し、冪等キーを付けて送る",
-  "nfr": [
-   "idempotency",
-   "validation"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0071",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "フォロー一覧の差分更新",
-  "one_line": "全件を取り直さず変更分だけ取得してマージ",
-  "nfr": [
-   "pagination",
-   "cache"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0072",
-  "category": "FE",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "タイムラインの新着反映と既読位置",
-  "one_line": "新着でスクロール位置を保ち、「新着 N 件」で反映する",
-  "nfr": [
-   "pagination"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0073",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ジョブ完了待ちのポーリング",
-  "one_line": "完了・失敗で停止、最大待ち時間、画面を離れたら止める",
-  "nfr": [
-   "rate_limit",
-   "abort"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0074",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "API 応答の実行時型検証",
-  "one_line": "受け取った JSON を検証し、不正でも画面全体を壊さない",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0075",
+  "id": "fe-0051",
   "category": "FE",
   "difficulty": "L1",
   "time_limit": 20,
@@ -1200,109 +827,14 @@
   "status": "seed"
  },
  {
-  "id": "fe-0076",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "人気タグのクラウド表示",
-  "one_line": "件数に応じて文字サイズを段階化し、0 件のタグは出さない",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0077",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "作品詳細のホバー先読み",
-  "one_line": "先読みは同時 2 件まで、取得済みはキャッシュ",
-  "nfr": [
-   "cache",
-   "rate_limit"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0078",
+  "id": "fe-0052",
   "category": "FE",
   "difficulty": "L3",
   "time_limit": 30,
-  "title": "予約枠の同時押さえへの対応",
-  "one_line": "同じ枠を二人が押した時の 409 と再選択の導線",
+  "title": "IME 変換中に配慮した検索",
+  "one_line": "変換中は要求せず、確定してから debounce を始める",
   "nfr": [
-   "idempotency"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0079",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "チャット送信中の仮表示",
-  "one_line": "送信待ちメッセージを仮表示し、失敗時は再送ボタンを出す",
-  "nfr": [
-   "idempotency"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0080",
-  "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "星評価コンポーネント",
-  "one_line": "クリックと矢印キーで 1〜5 を選択し、radio グループとして読み上げさせる",
-  "nfr": [
-   "a11y"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0081",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "署名付き URL を使う多段アップロード",
-  "one_line": "URL 取得→PUT→完了通知の各段階の失敗と再開",
-  "nfr": [
-   "abort",
-   "idempotency"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0082",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ユーザー設定の自動保存",
-  "one_line": "トグルごとに保存せず 1 秒まとめて送信し、失敗したら元に戻す",
-  "nfr": [
+   "i18n",
    "debounce"
   ],
   "languages_planned": [
@@ -1312,29 +844,12 @@
   "status": "seed"
  },
  {
-  "id": "fe-0083",
+  "id": "fe-0053",
   "category": "FE",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "ファイル一括アップロードのキュー",
-  "one_line": "同時 3 件・失敗分だけ再試行・全体キャンセル・進捗の集計",
-  "nfr": [
-   "abort",
-   "rate_limit"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0084",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "編集の取り消しとやり直し",
-  "one_line": "操作履歴のスタックを持ち、連続入力は 1 単位にまとめる",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "未保存変更の離脱警告",
+  "one_line": "beforeunload と画面内遷移の両方で確認し、保存後は警告しない",
   "nfr": [],
   "languages_planned": [
    "html"
@@ -1343,14 +858,15 @@
   "status": "seed"
  },
  {
-  "id": "fe-0085",
+  "id": "fe-0054",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "CSV ダウンロードボタン",
-  "one_line": "Blob で生成し、BOM 付き UTF-8 で Excel の文字化けを防ぐ",
+  "title": "問い合わせフォームの二重送信防止",
+  "one_line": "送信中はボタンを無効化し、冪等キーを付けて送る",
   "nfr": [
-   "i18n"
+   "idempotency",
+   "validation"
   ],
   "languages_planned": [
    "html"
@@ -1359,7 +875,24 @@
   "status": "seed"
  },
  {
-  "id": "fe-0086",
+  "id": "fe-0055",
+  "category": "FE",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "フォロー一覧の差分更新",
+  "one_line": "全件を取り直さず変更分だけ取得してマージ",
+  "nfr": [
+   "pagination",
+   "cache"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0056",
   "category": "FE",
   "difficulty": "L1",
   "time_limit": 20,
@@ -1376,28 +909,15 @@
   "status": "seed"
  },
  {
-  "id": "fe-0087",
+  "id": "fe-0057",
   "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "ランキングの差分更新",
-  "one_line": "順位の変動を ▲▼ で示し、要素を作り直さずキーで再利用",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0088",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "横スクロールのカルーセル",
-  "one_line": "前後ボタン・端で無効化・現在位置をスクリーンリーダーに伝える",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "ファイル一括アップロードのキュー",
+  "one_line": "同時 3 件・失敗分だけ再試行・全体キャンセル・進捗の集計",
   "nfr": [
-   "a11y"
+   "abort",
+   "rate_limit"
   ],
   "languages_planned": [
    "html"
@@ -1406,13 +926,16 @@
   "status": "seed"
  },
  {
-  "id": "fe-0089",
+  "id": "fe-0058",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "入力済みフォームのリセット確認",
-  "one_line": "初期値と比べて変更がある時だけ確認する",
-  "nfr": [],
+  "title": "ジョブ完了待ちのポーリング",
+  "one_line": "完了・失敗で停止、最大待ち時間、画面を離れたら止める",
+  "nfr": [
+   "rate_limit",
+   "abort"
+  ],
   "languages_planned": [
    "html"
   ],
@@ -1420,13 +943,15 @@
   "status": "seed"
  },
  {
-  "id": "fe-0090",
+  "id": "fe-0059",
   "category": "FE",
   "difficulty": "L3",
   "time_limit": 30,
-  "title": "フィード内動画の自動再生制御",
-  "one_line": "画面内の 1 本だけ再生し、タブ非表示で停止、省データ設定を尊重",
-  "nfr": [],
+  "title": "API 応答の実行時型検証",
+  "one_line": "受け取った JSON を検証し、不正でも画面全体を壊さない",
+  "nfr": [
+   "validation"
+  ],
   "languages_planned": [
    "html"
   ],
@@ -1434,7 +959,40 @@
   "status": "seed"
  },
  {
-  "id": "fe-0091",
+  "id": "fe-0060",
+  "category": "FE",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "作品詳細のホバー先読み",
+  "one_line": "先読みは同時 2 件まで、取得済みはキャッシュ",
+  "nfr": [
+   "cache",
+   "rate_limit"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0061",
+  "category": "FE",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "予約枠の同時押さえへの対応",
+  "one_line": "同じ枠を二人が押した時の 409 と再選択の導線",
+  "nfr": [
+   "idempotency"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0062",
   "category": "FE",
   "difficulty": "L1",
   "time_limit": 20,
@@ -1450,7 +1008,56 @@
   "status": "seed"
  },
  {
-  "id": "fe-0092",
+  "id": "fe-0063",
+  "category": "FE",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "チャット送信中の仮表示",
+  "one_line": "送信待ちメッセージを仮表示し、失敗時は再送ボタンを出す",
+  "nfr": [
+   "idempotency"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0064",
+  "category": "FE",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "署名付き URL を使う多段アップロード",
+  "one_line": "URL 取得→PUT→完了通知の各段階の失敗と再開",
+  "nfr": [
+   "abort",
+   "idempotency"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0065",
+  "category": "FE",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "ユーザー設定の自動保存",
+  "one_line": "トグルごとに保存せず 1 秒まとめて送信し、失敗したら元に戻す",
+  "nfr": [
+   "debounce"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0066",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -1467,7 +1074,23 @@
   "status": "seed"
  },
  {
-  "id": "fe-0093",
+  "id": "fe-0067",
+  "category": "FE",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "モーダルダイアログ",
+  "one_line": "フォーカストラップ・Esc で閉じる・閉じたら元のボタンへフォーカスを戻す",
+  "nfr": [
+   "a11y"
+  ],
+  "languages_planned": [
+   "html"
+  ],
+  "company_style": "pixiv",
+  "status": "seed"
+ },
+ {
+  "id": "fe-0068",
   "category": "FE",
   "difficulty": "L3",
   "time_limit": 30,
@@ -1484,14 +1107,14 @@
   "status": "seed"
  },
  {
-  "id": "fe-0094",
+  "id": "fe-0069",
   "category": "FE",
   "difficulty": "L4",
   "time_limit": 45,
-  "title": "クライアント側ルーターの自作",
-  "one_line": "History API で遷移し、取得中の遷移では古い取得を中断",
+  "title": "問題だらけの画面のアクセシビリティ改善",
+  "one_line": "既存の画面から優先度の高い 5 点を選んで直す",
   "nfr": [
-   "abort"
+   "a11y"
   ],
   "languages_planned": [
    "html"
@@ -1500,7 +1123,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0095",
+  "id": "fe-0070",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -1517,7 +1140,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0096",
+  "id": "fe-0071",
   "category": "FE",
   "difficulty": "L3",
   "time_limit": 30,
@@ -1533,23 +1156,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0097",
-  "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "モーダルダイアログ",
-  "one_line": "フォーカストラップ・Esc で閉じる・閉じたら元のボタンへフォーカスを戻す",
-  "nfr": [
-   "a11y"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0098",
+  "id": "fe-0072",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -1566,55 +1173,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0099",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "いいねしたユーザー一覧のモーダル",
-  "one_line": "開くたびに取得せず 1 分キャッシュし、閉じたら取得を中断",
-  "nfr": [
-   "cache",
-   "abort"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0100",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "権限による UI の出し分け",
-  "one_line": "閲覧/編集/管理者でボタンを出し分け、サーバー側の検証が本体と明言",
-  "nfr": [],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0101",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "必須項目の表示と送信時のフォーカス",
-  "one_line": "必須マークと aria-required、送信時は最初のエラーへフォーカス",
-  "nfr": [
-   "a11y",
-   "validation"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0102",
+  "id": "fe-0073",
   "category": "FE",
   "difficulty": "L1",
   "time_limit": 20,
@@ -1631,55 +1190,7 @@
   "status": "seed"
  },
  {
-  "id": "fe-0103",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "電話番号の入力中整形",
-  "one_line": "ハイフン挿入でカーソル位置を壊さない",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0104",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ローカル検索履歴のサジェスト",
-  "one_line": "履歴 10 件・個別削除・入力値で前方一致に絞る",
-  "nfr": [
-   "cache"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0105",
-  "category": "FE",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "問題だらけの画面のアクセシビリティ改善",
-  "one_line": "既存の画面から優先度の高い 5 点を選んで直す",
-  "nfr": [
-   "a11y"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0106",
+  "id": "fe-0074",
   "category": "FE",
   "difficulty": "L3",
   "time_limit": 30,
@@ -1693,62 +1204,16 @@
   "status": "seed"
  },
  {
-  "id": "fe-0107",
+  "id": "fe-0075",
   "category": "FE",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "在庫残数の定期更新表示",
-  "one_line": "値が変わった時だけ再描画し、変化をスクリーンリーダーに通知",
+  "title": "いいねしたユーザー一覧のモーダル",
+  "one_line": "開くたびに取得せず 1 分キャッシュし、閉じたら取得を中断",
   "nfr": [
-   "rate_limit",
-   "a11y"
+   "cache",
+   "abort"
   ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0108",
-  "category": "FE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "パンくずリスト",
-  "one_line": "現在ページを aria-current で示し、深い階層は中間を省略表示",
-  "nfr": [
-   "a11y"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0109",
-  "category": "FE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "クリップボードからの画像貼り付け投稿",
-  "one_line": "paste で画像を受け取り、形式とサイズを検証してプレビュー",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "html"
-  ],
-  "company_style": "pixiv",
-  "status": "seed"
- },
- {
-  "id": "fe-0110",
-  "category": "FE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "送信完了メッセージの 1 回だけ表示",
-  "one_line": "遷移先で成功メッセージを 1 回だけ出し、リロードでは出さない",
-  "nfr": [],
   "languages_planned": [
    "html"
   ],
@@ -1917,12 +1382,12 @@
  {
   "id": "be-0010",
   "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "キャッシュの一斉失効対策",
-  "one_line": "期限切れの同時多発を single-flight と TTL のゆらぎで防ぐ",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "リクエスト ID の付与",
+  "one_line": "受け取った X-Request-Id を検証して引き継ぎ、無ければ生成する",
   "nfr": [
-   "cache"
+   "validation"
   ],
   "languages_planned": [
    "typescript",
@@ -1935,12 +1400,12 @@
  {
   "id": "be-0011",
   "category": "BE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "リクエスト ID の付与",
-  "one_line": "受け取った X-Request-Id を検証して引き継ぎ、無ければ生成する",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "キャッシュの一斉失効対策",
+  "one_line": "期限切れの同時多発を single-flight と TTL のゆらぎで防ぐ",
   "nfr": [
-   "validation"
+   "cache"
   ],
   "languages_planned": [
    "typescript",
@@ -1971,12 +1436,13 @@
  {
   "id": "be-0013",
   "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "決済 Webhook の順不同と重複",
-  "one_line": "順不同・重複で届くイベントから最終状態を決める",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "短縮 URL の発行 API",
+  "one_line": "衝突しない ID の生成、同じ URL の再発行方針、不正 URL の拒否",
   "nfr": [
-   "idempotency"
+   "idempotency",
+   "validation"
   ],
   "languages_planned": [
    "typescript",
@@ -1989,13 +1455,12 @@
  {
   "id": "be-0014",
   "category": "BE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "短縮 URL の発行 API",
-  "one_line": "衝突しない ID の生成、同じ URL の再発行方針、不正 URL の拒否",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "決済 Webhook の順不同と重複",
+  "one_line": "順不同・重複で届くイベントから最終状態を決める",
   "nfr": [
-   "idempotency",
-   "validation"
+   "idempotency"
   ],
   "languages_planned": [
    "typescript",
@@ -2133,6 +1598,22 @@
  {
   "id": "be-0022",
   "category": "BE",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "ジョブキューの再試行",
+  "one_line": "上限回数・指数バックオフ・失敗理由の記録とデッドレター",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python",
+   "go"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "be-0023",
+  "category": "BE",
   "difficulty": "L4",
   "time_limit": 45,
   "title": "イベント駆動の通知基盤",
@@ -2149,41 +1630,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0023",
-  "category": "BE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ジョブキューの再試行",
-  "one_line": "上限回数・指数バックオフ・失敗理由の記録とデッドレター",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
   "id": "be-0024",
-  "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "同値キーを含むカーソルの安定化",
-  "one_line": "同じ値が並んでも欠落・重複しないカーソル設計",
-  "nfr": [
-   "pagination"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0025",
   "category": "BE",
   "difficulty": "L1",
   "time_limit": 20,
@@ -2199,7 +1646,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0026",
+  "id": "be-0025",
   "category": "BE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -2217,14 +1664,32 @@
   "status": "seed"
  },
  {
-  "id": "be-0027",
+  "id": "be-0026",
   "category": "BE",
   "difficulty": "L3",
   "time_limit": 30,
-  "title": "非同期ジョブの進捗 API",
-  "one_line": "ジョブ ID・状態遷移・ポーリング間隔の指示",
+  "title": "同値キーを含むカーソルの安定化",
+  "one_line": "同じ値が並んでも欠落・重複しないカーソル設計",
   "nfr": [
-   "rate_limit"
+   "pagination"
+  ],
+  "languages_planned": [
+   "typescript",
+   "python",
+   "go"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "be-0027",
+  "category": "BE",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "ランキング集計 API",
+  "one_line": "期間ごとの上位 N を返し、同点の順位付けを定義する",
+  "nfr": [
+   "cache"
   ],
   "languages_planned": [
    "typescript",
@@ -2237,12 +1702,12 @@
  {
   "id": "be-0028",
   "category": "BE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ランキング集計 API",
-  "one_line": "期間ごとの上位 N を返し、同点の順位付けを定義する",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "非同期ジョブの進捗 API",
+  "one_line": "ジョブ ID・状態遷移・ポーリング間隔の指示",
   "nfr": [
-   "cache"
+   "rate_limit"
   ],
   "languages_planned": [
    "typescript",
@@ -2273,12 +1738,13 @@
  {
   "id": "be-0030",
   "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "通知の一括既読と未読数",
-  "one_line": "大量通知の一括既読と未読件数の整合",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "ページ番号の境界チェック",
+  "one_line": "page と per_page の上限と不正値を 400 にするか丸めるか決める",
   "nfr": [
-   "pagination"
+   "pagination",
+   "validation"
   ],
   "languages_planned": [
    "typescript",
@@ -2291,13 +1757,12 @@
  {
   "id": "be-0031",
   "category": "BE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "ページ番号の境界チェック",
-  "one_line": "page と per_page の上限と不正値を 400 にするか丸めるか決める",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "通知の一括既読と未読数",
+  "one_line": "大量通知の一括既読と未読件数の整合",
   "nfr": [
-   "pagination",
-   "validation"
+   "pagination"
   ],
   "languages_planned": [
    "typescript",
@@ -2383,24 +1848,6 @@
  {
   "id": "be-0036",
   "category": "BE",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "決済フローの状態機械",
-  "one_line": "状態遷移と冪等性、外部失敗時の補償処理",
-  "nfr": [
-   "idempotency"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0037",
-  "category": "BE",
   "difficulty": "L2",
   "time_limit": 20,
   "title": "一覧 API のソートとフィルタ",
@@ -2418,23 +1865,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0038",
-  "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "リフレッシュトークンのローテーション",
-  "one_line": "使い回しを検知したら系列ごと失効させる",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0039",
+  "id": "be-0037",
   "category": "BE",
   "difficulty": "L1",
   "time_limit": 20,
@@ -2450,7 +1881,25 @@
   "status": "seed"
  },
  {
-  "id": "be-0040",
+  "id": "be-0038",
+  "category": "BE",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "決済フローの状態機械",
+  "one_line": "状態遷移と冪等性、外部失敗時の補償処理",
+  "nfr": [
+   "idempotency"
+  ],
+  "languages_planned": [
+   "typescript",
+   "python",
+   "go"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "be-0039",
   "category": "BE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -2468,14 +1917,29 @@
   "status": "seed"
  },
  {
-  "id": "be-0041",
+  "id": "be-0040",
   "category": "BE",
   "difficulty": "L3",
   "time_limit": 30,
-  "title": "前方一致の候補 API",
-  "one_line": "前方一致インデックス、レート制御、キャッシュ",
+  "title": "リフレッシュトークンのローテーション",
+  "one_line": "使い回しを検知したら系列ごと失効させる",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python",
+   "go"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "be-0041",
+  "category": "BE",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "メール送信回数の制限",
+  "one_line": "ユーザーごとに 1 時間 5 通、超えたら次に送れる時刻を返す",
   "nfr": [
-   "cache",
    "rate_limit"
   ],
   "languages_planned": [
@@ -2489,11 +1953,12 @@
  {
   "id": "be-0042",
   "category": "BE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "メール送信回数の制限",
-  "one_line": "ユーザーごとに 1 時間 5 通、超えたら次に送れる時刻を返す",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "前方一致の候補 API",
+  "one_line": "前方一致インデックス、レート制御、キャッシュ",
   "nfr": [
+   "cache",
    "rate_limit"
   ],
   "languages_planned": [
@@ -2523,10 +1988,10 @@
  {
   "id": "be-0044",
   "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "イベント列からの残高再計算",
-  "one_line": "イベントから残高を再計算し、スナップショットで速くする",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "論理削除付きのリポジトリ",
+  "one_line": "deleted_at で論理削除し、一覧と詳細から除外する",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -2539,10 +2004,10 @@
  {
   "id": "be-0045",
   "category": "BE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "論理削除付きのリポジトリ",
-  "one_line": "deleted_at で論理削除し、一覧と詳細から除外する",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "イベント列からの残高再計算",
+  "one_line": "イベントから残高を再計算し、スナップショットで速くする",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -2608,43 +2073,6 @@
  {
   "id": "be-0049",
   "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "Webhook 配信キュー",
-  "one_line": "宛先ごとの順序保証と、失敗し続ける宛先の隔離",
-  "nfr": [
-   "rate_limit",
-   "idempotency"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0050",
-  "category": "BE",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "検索インデックス更新のパイプライン",
-  "one_line": "反映の遅れと整合性のトレードオフ",
-  "nfr": [
-   "cache"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0051",
-  "category": "BE",
   "difficulty": "L2",
   "time_limit": 20,
   "title": "id 配列での一括取得 API",
@@ -2659,25 +2087,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0052",
-  "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "リアルタイムのリーダーボード",
-  "one_line": "スコア更新と順位取得の計算量",
-  "nfr": [
-   "cache"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0053",
+  "id": "be-0050",
   "category": "BE",
   "difficulty": "L1",
   "time_limit": 20,
@@ -2695,29 +2105,16 @@
   "status": "seed"
  },
  {
-  "id": "be-0054",
-  "category": "BE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "Cookie によるセッション管理",
-  "one_line": "HttpOnly/Secure/SameSite の設定、ID の再生成とログアウト",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0055",
+  "id": "be-0051",
   "category": "BE",
   "difficulty": "L3",
   "time_limit": 30,
-  "title": "ソーシャルログインとアカウント連携",
-  "one_line": "既存メールとの衝突時の扱いと乗っ取り防止",
-  "nfr": [],
+  "title": "Webhook 配信キュー",
+  "one_line": "宛先ごとの順序保証と、失敗し続ける宛先の隔離",
+  "nfr": [
+   "rate_limit",
+   "idempotency"
+  ],
   "languages_planned": [
    "typescript",
    "python",
@@ -2727,23 +2124,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0056",
-  "category": "BE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "API のバージョニング",
-  "one_line": "ヘッダ方式とパス方式の比較と、旧版の廃止予告",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0057",
+  "id": "be-0052",
   "category": "BE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -2762,12 +2143,12 @@
   "status": "seed"
  },
  {
-  "id": "be-0058",
+  "id": "be-0053",
   "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "削除の連鎖と取り消し期間",
-  "one_line": "関連データを論理削除し、30 日後に物理削除する",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "レガシー API の段階的置き換え",
+  "one_line": "新旧を切り替えるルーティングを作り、移行の安全策を示す",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -2778,39 +2159,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0059",
-  "category": "BE",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "ステータスコードの使い分け",
-  "one_line": "作成・重複・権限なし・存在しない を適切なコードで返す",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0060",
-  "category": "BE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "簡易全文検索（転置インデックス）",
-  "one_line": "単語に分けて AND 検索し、更新時はインデックスを差分で直す",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0061",
+  "id": "be-0054",
   "category": "BE",
   "difficulty": "L3",
   "time_limit": 30,
@@ -2828,7 +2177,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0062",
+  "id": "be-0055",
   "category": "BE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -2846,57 +2195,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0063",
-  "category": "BE",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "グレースフルシャットダウン",
-  "one_line": "処理中の要求を完了させ、新規は受け付けない",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0064",
-  "category": "BE",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "レガシー API の段階的置き換え",
-  "one_line": "新旧を切り替えるルーティングを作り、移行の安全策を示す",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0065",
-  "category": "BE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "CSV エクスポートのストリーミング",
-  "one_line": "大量の行を一度に読み込まずに返す",
-  "nfr": [
-   "pagination"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0066",
+  "id": "be-0056",
   "category": "BE",
   "difficulty": "L3",
   "time_limit": 30,
@@ -2914,7 +2213,25 @@
   "status": "seed"
  },
  {
-  "id": "be-0067",
+  "id": "be-0057",
+  "category": "BE",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "CSV エクスポートのストリーミング",
+  "one_line": "大量の行を一度に読み込まずに返す",
+  "nfr": [
+   "pagination"
+  ],
+  "languages_planned": [
+   "typescript",
+   "python",
+   "go"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "be-0058",
   "category": "BE",
   "difficulty": "L1",
   "time_limit": 20,
@@ -2932,23 +2249,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0068",
-  "category": "BE",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "フィーチャーフラグの判定",
-  "one_line": "ユーザー ID のハッシュで段階的に公開する",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "be-0069",
+  "id": "be-0059",
   "category": "BE",
   "difficulty": "L3",
   "time_limit": 30,
@@ -2966,7 +2267,7 @@
   "status": "seed"
  },
  {
-  "id": "be-0070",
+  "id": "be-0060",
   "category": "BE",
   "difficulty": "L2",
   "time_limit": 20,
@@ -3158,10 +2459,10 @@
  {
   "id": "data-0011",
   "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "処方日数の上限チェック",
-  "one_line": "薬剤ごとの上限日数と例外ルールを表で管理する",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "施設をまたぐ患者 ID の突合",
+  "one_line": "施設ごとの ID と共通キーで対応表を作り、矛盾を報告する",
   "nfr": [
    "validation"
   ],
@@ -3175,10 +2476,10 @@
  {
   "id": "data-0012",
   "category": "DATA",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "施設をまたぐ患者 ID の突合",
-  "one_line": "施設ごとの ID と共通キーで対応表を作り、矛盾を報告する",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "処方日数の上限チェック",
+  "one_line": "薬剤ごとの上限日数と例外ルールを表で管理する",
   "nfr": [
    "validation"
   ],
@@ -3212,12 +2513,9 @@
   "category": "DATA",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "住所から都道府県を抽出",
-  "one_line": "住所文字列から都道府県を判定し、表記ゆれを吸収する",
-  "nfr": [
-   "i18n",
-   "validation"
-  ],
+  "title": "ロール別の列マスク付きレポート",
+  "one_line": "ロールごとに見せる列を変え、氏名を伏せる",
+  "nfr": [],
   "languages_planned": [
    "python",
    "typescript"
@@ -3245,85 +2543,6 @@
  {
   "id": "data-0016",
   "category": "DATA",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "名寄せの重み付きスコアリング",
-  "one_line": "項目ごとの一致度に重みを付け、閾値と人手確認の境界を決める",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0017",
-  "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "請求データの前月比較",
-  "one_line": "前月比が閾値を超えた項目を抽出する",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0018",
-  "category": "DATA",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "診療科コードの名称変換",
-  "one_line": "マスタに無いコードの扱いと警告",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0019",
-  "category": "DATA",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "日ごとの在院患者数",
-  "one_line": "入退院日から日ごとの人数を差分配列で求める",
-  "nfr": [
-   "timezone"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0020",
-  "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ロール別の列マスク付きレポート",
-  "one_line": "ロールごとに見せる列を変え、氏名を伏せる",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0021",
-  "category": "DATA",
   "difficulty": "L2",
   "time_limit": 20,
   "title": "和暦と西暦の相互変換",
@@ -3340,13 +2559,96 @@
   "status": "seed"
  },
  {
-  "id": "data-0022",
+  "id": "data-0017",
+  "category": "DATA",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "診療科コードの名称変換",
+  "one_line": "マスタに無いコードの扱いと警告",
+  "nfr": [
+   "validation"
+  ],
+  "languages_planned": [
+   "python",
+   "typescript"
+  ],
+  "company_style": "m3",
+  "status": "seed"
+ },
+ {
+  "id": "data-0018",
+  "category": "DATA",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "日ごとの在院患者数",
+  "one_line": "入退院日から日ごとの人数を差分配列で求める",
+  "nfr": [
+   "timezone"
+  ],
+  "languages_planned": [
+   "python",
+   "typescript"
+  ],
+  "company_style": "m3",
+  "status": "seed"
+ },
+ {
+  "id": "data-0019",
+  "category": "DATA",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "名寄せの重み付きスコアリング",
+  "one_line": "項目ごとの一致度に重みを付け、閾値と人手確認の境界を決める",
+  "nfr": [],
+  "languages_planned": [
+   "python",
+   "typescript"
+  ],
+  "company_style": "m3",
+  "status": "seed"
+ },
+ {
+  "id": "data-0020",
+  "category": "DATA",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "問診票 JSON の検証",
+  "one_line": "必須・選択肢・条件付き必須を検証し、エラー箇所を返す",
+  "nfr": [
+   "validation"
+  ],
+  "languages_planned": [
+   "python",
+   "typescript"
+  ],
+  "company_style": "m3",
+  "status": "seed"
+ },
+ {
+  "id": "data-0021",
   "category": "DATA",
   "difficulty": "L3",
   "time_limit": 30,
   "title": "部署階層からの閲覧権限解決",
   "one_line": "部署の継承と個別例外から最終的な権限を決める",
   "nfr": [],
+  "languages_planned": [
+   "python",
+   "typescript"
+  ],
+  "company_style": "m3",
+  "status": "seed"
+ },
+ {
+  "id": "data-0022",
+  "category": "DATA",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "ログイン履歴の不審アクセス抽出",
+  "one_line": "短時間の連続失敗と、普段と違う時間帯のアクセスを抽出",
+  "nfr": [
+   "timezone"
+  ],
   "languages_planned": [
    "python",
    "typescript"
@@ -3376,11 +2678,9 @@
   "category": "DATA",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "問診票 JSON の検証",
-  "one_line": "必須・選択肢・条件付き必須を検証し、エラー箇所を返す",
-  "nfr": [
-   "validation"
-  ],
+  "title": "医療機関マスタの差分抽出",
+  "one_line": "新旧 CSV を比べて追加・削除・変更を出す",
+  "nfr": [],
   "languages_planned": [
    "python",
    "typescript"
@@ -3406,11 +2706,13 @@
  {
   "id": "data-0026",
   "category": "DATA",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "小さいセルを秘匿する集計 API",
-  "one_line": "集計結果から個人が特定されないよう少数セルを隠す",
-  "nfr": [],
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "薬価改定の適用日判定",
+  "one_line": "適用開始日による価格の切替と、未来日付の扱い",
+  "nfr": [
+   "timezone"
+  ],
   "languages_planned": [
    "python",
    "typescript"
@@ -3421,10 +2723,10 @@
  {
   "id": "data-0027",
   "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ログイン履歴の不審アクセス抽出",
-  "one_line": "短時間の連続失敗と、普段と違う時間帯のアクセスを抽出",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "操作ログのセッション化",
+  "one_line": "30 分の無操作で区切り、日をまたぐ場合も扱う",
   "nfr": [
    "timezone"
   ],
@@ -3455,85 +2757,6 @@
  {
   "id": "data-0029",
   "category": "DATA",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "年齢・性別で変わる基準範囲判定",
-  "one_line": "基準範囲を表で持ち、H/L を付ける",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0030",
-  "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "医療機関マスタの差分抽出",
-  "one_line": "新旧 CSV を比べて追加・削除・変更を出す",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0031",
-  "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "薬価改定の適用日判定",
-  "one_line": "適用開始日による価格の切替と、未来日付の扱い",
-  "nfr": [
-   "timezone"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0032",
-  "category": "DATA",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "集計結果の再現性",
-  "one_line": "同じ入力で必ず同じ出力（並び順・丸め）になるよう定義する",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0033",
-  "category": "DATA",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "薬の残り日数計算",
-  "one_line": "残数と 1 日量から切れる日を出し、端数を切り上げる",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0034",
-  "category": "DATA",
   "difficulty": "L2",
   "time_limit": 20,
   "title": "欠損を含む検査値の統計",
@@ -3549,24 +2772,7 @@
   "status": "seed"
  },
  {
-  "id": "data-0035",
-  "category": "DATA",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "複数通貨の売上の円換算",
-  "one_line": "日ごとの為替レートで換算し、レートの無い日は前日値で補う",
-  "nfr": [
-   "timezone"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0036",
+  "id": "data-0030",
   "category": "DATA",
   "difficulty": "L4",
   "time_limit": 45,
@@ -3583,90 +2789,7 @@
   "status": "seed"
  },
  {
-  "id": "data-0037",
-  "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "曜日×時間帯の混雑度集計",
-  "one_line": "ヒートマップ用に曜日と時間のマトリクスを JST で作る",
-  "nfr": [
-   "timezone"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0038",
-  "category": "DATA",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "営業日の計算",
-  "one_line": "祝日表を受け取り、N 営業日後の日付を求める",
-  "nfr": [
-   "timezone"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0039",
-  "category": "DATA",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "操作ログのセッション化",
-  "one_line": "30 分の無操作で区切り、日をまたぐ場合も扱う",
-  "nfr": [
-   "timezone"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0040",
-  "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "メール配信リストの重複排除",
-  "one_line": "大文字小文字・+ エイリアスの正規化方針を決める",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0041",
-  "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "診療報酬点数の合計",
-  "one_line": "加算・減算ルールを表駆動で適用し、適用順を明示する",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0042",
+  "id": "data-0031",
   "category": "DATA",
   "difficulty": "L3",
   "time_limit": 30,
@@ -3683,12 +2806,12 @@
   "status": "seed"
  },
  {
-  "id": "data-0043",
+  "id": "data-0032",
   "category": "DATA",
-  "difficulty": "L1",
+  "difficulty": "L2",
   "time_limit": 20,
-  "title": "アンケート複数回答の集計",
-  "one_line": "カンマ区切りの複数選択を分解して件数を数える",
+  "title": "診療報酬点数の合計",
+  "one_line": "加算・減算ルールを表駆動で適用し、適用順を明示する",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -3698,12 +2821,12 @@
   "status": "seed"
  },
  {
-  "id": "data-0044",
+  "id": "data-0033",
   "category": "DATA",
-  "difficulty": "L2",
+  "difficulty": "L1",
   "time_limit": 20,
-  "title": "患者ごとの最終来院日",
-  "one_line": "複数施設のログから最新日を求め、未来日付は除外",
+  "title": "営業日の計算",
+  "one_line": "祝日表を受け取り、N 営業日後の日付を求める",
   "nfr": [
    "timezone"
   ],
@@ -3715,7 +2838,7 @@
   "status": "seed"
  },
  {
-  "id": "data-0045",
+  "id": "data-0034",
   "category": "DATA",
   "difficulty": "L3",
   "time_limit": 30,
@@ -3732,24 +2855,7 @@
   "status": "seed"
  },
  {
-  "id": "data-0046",
-  "category": "DATA",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "移行前後の集計差異の説明",
-  "one_line": "旧システムと新システムの集計差を説明できる形で出す",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0047",
+  "id": "data-0035",
   "category": "DATA",
   "difficulty": "L2",
   "time_limit": 20,
@@ -3757,57 +2863,6 @@
   "one_line": "桁数ではなくバイト数で切り出す",
   "nfr": [
    "i18n"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0048",
-  "category": "DATA",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "BMI の計算と区分",
-  "one_line": "cm と kg の入力ゆれと、区分の境界値",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0049",
-  "category": "DATA",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "データ品質レポート",
-  "one_line": "列ごとの欠損率・型違反・外れ値を一覧にする",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript"
-  ],
-  "company_style": "m3",
-  "status": "seed"
- },
- {
-  "id": "data-0050",
-  "category": "DATA",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "受付 QR コードの検証",
-  "one_line": "チェックディジットと有効期限を検証する",
-  "nfr": [
-   "validation"
   ],
   "languages_planned": [
    "python",
@@ -3834,7 +2889,7 @@
    "typescript",
    "php"
   ],
-  "company_style": "generic",
+  "company_style": "atcoder",
   "status": "core"
  },
  {
@@ -3952,8 +3007,8 @@
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "最長増加部分列 O(N log N)",
-  "one_line": "二分探索による DP の改良と復元",
+  "title": "Trie による前方一致検索",
+  "one_line": "挿入・検索・上位候補の取得",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -3965,6 +3020,24 @@
  },
  {
   "id": "alg-0010",
+  "category": "ALG",
+  "difficulty": "L4",
+  "time_limit": 30,
+  "title": "重み付き Trie の上位候補",
+  "one_line": "各ノードに上位 K を持つ場合の更新コスト",
+  "nfr": [
+   "cache"
+  ],
+  "languages_planned": [
+   "python",
+   "typescript",
+   "go"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "alg-0011",
   "category": "ALG",
   "difficulty": "L1",
   "time_limit": 15,
@@ -3980,31 +3053,13 @@
   "status": "seed"
  },
  {
-  "id": "alg-0011",
+  "id": "alg-0012",
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "Trie による前方一致検索",
-  "one_line": "挿入・検索・上位候補の取得",
+  "title": "KMP による文字列検索",
+  "one_line": "失敗関数の構築",
   "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0012",
-  "category": "ALG",
-  "difficulty": "L4",
-  "time_limit": 30,
-  "title": "重み付き Trie の上位候補",
-  "one_line": "各ノードに上位 K を持つ場合の更新コスト",
-  "nfr": [
-   "cache"
-  ],
   "languages_planned": [
    "python",
    "typescript",
@@ -4034,8 +3089,8 @@
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "強連結成分分解",
-  "one_line": "依存関係の循環グループを検出する",
+  "title": "必要な会議室の数",
+  "one_line": "イベントをソートして同時最大数を求める",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4064,6 +3119,22 @@
  {
   "id": "alg-0016",
   "category": "ALG",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "K 番目に大きい要素",
+  "one_line": "ヒープと選択アルゴリズムの比較",
+  "nfr": [],
+  "languages_planned": [
+   "python",
+   "typescript",
+   "go"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "alg-0017",
+  "category": "ALG",
   "difficulty": "L1",
   "time_limit": 15,
   "title": "ルール表による FizzBuzz",
@@ -4078,28 +3149,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0017",
+  "id": "alg-0018",
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "二部グラフ判定",
-  "one_line": "色塗りと奇閉路",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0018",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "タスク依存のトポロジカルソート",
-  "one_line": "循環の検出と、複数解のときの辞書順最小",
+  "title": "スカイライン問題",
+  "one_line": "ヒープと座標圧縮",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4114,8 +3169,8 @@
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "島の数（連結成分）",
-  "one_line": "DFS と BFS、再帰の深さ制限",
+  "title": "ヒストグラム中の最大長方形",
+  "one_line": "単調スタック",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4146,9 +3201,11 @@
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "0-1 BFS による最小コスト経路",
-  "one_line": "両端キューの使い方",
-  "nfr": [],
+  "title": "LFU キャッシュ",
+  "one_line": "頻度ごとのリストで O(1)",
+  "nfr": [
+   "cache"
+  ],
   "languages_planned": [
    "python",
    "typescript",
@@ -4162,8 +3219,8 @@
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "K 番目に大きい要素",
-  "one_line": "ヒープと選択アルゴリズムの比較",
+  "title": "次に大きい要素",
+  "one_line": "単調スタックで O(N)",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4175,102 +3232,6 @@
  },
  {
   "id": "alg-0023",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "アナグラムのグループ化",
-  "one_line": "ソート済み文字列か文字数カウントをキーにする",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0024",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "KMP による文字列検索",
-  "one_line": "失敗関数の構築",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0025",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "区間スケジューリング",
-  "one_line": "終了時刻でソートする貪欲法の正しさ",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0026",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "最大連続部分和",
-  "one_line": "累積の考え方と、すべて負の場合",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0027",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "編集距離",
-  "one_line": "DP 表と、空間 O(min(N,M)) への削減",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0028",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "必要な会議室の数",
-  "one_line": "イベントをソートして同時最大数を求める",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0029",
   "category": "ALG",
   "difficulty": "L4",
   "time_limit": 30,
@@ -4286,12 +3247,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0030",
+  "id": "alg-0024",
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "最長共通部分列",
-  "one_line": "DP と復元",
+  "title": "最小ウィンドウ部分文字列",
+  "one_line": "必要な文字の数え上げとウィンドウの縮小",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4302,12 +3263,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0031",
+  "id": "alg-0025",
   "category": "ALG",
   "difficulty": "L1",
   "time_limit": 15,
-  "title": "ランレングス圧縮",
-  "one_line": "aaabb を a3b2 にし、長くなるなら元を返す",
+  "title": "アナグラムのグループ化",
+  "one_line": "ソート済み文字列か文字数カウントをキーにする",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4318,121 +3279,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0032",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "スカイライン問題",
-  "one_line": "ヒープと座標圧縮",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0033",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "部分和（ナップサック）",
-  "one_line": "DP の状態定義と計算量",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0034",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "2 つのソート済み配列のマージ",
-  "one_line": "二つのポインタで O(N+M)",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0035",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "LFU キャッシュ",
-  "one_line": "頻度ごとのリストで O(1)",
-  "nfr": [
-   "cache"
-  ],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0036",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "乗換案内の最短時間（ダイクストラ）",
-  "one_line": "優先度付きキューと、負の辺が無い前提",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0037",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "グループの統合（Union-Find）",
-  "one_line": "経路圧縮とランク",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0038",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "単語の出現回数",
-  "one_line": "大文字小文字と句読点の扱いを決めて数える",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0039",
+  "id": "alg-0026",
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
@@ -4448,12 +3295,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0040",
+  "id": "alg-0027",
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "二次元累積和の範囲合計",
-  "one_line": "前計算と包除原理",
+  "title": "ストリームの中央値",
+  "one_line": "二つのヒープで挿入と中央値",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4464,12 +3311,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0041",
+  "id": "alg-0028",
   "category": "ALG",
   "difficulty": "L1",
   "time_limit": 15,
-  "title": "階段の登り方の数",
-  "one_line": "再帰から DP へ、大きな N では剰余",
+  "title": "ランレングス圧縮",
+  "one_line": "aaabb を a3b2 にし、長くなるなら元を返す",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4480,7 +3327,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0042",
+  "id": "alg-0029",
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
@@ -4498,375 +3345,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0043",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "和が K の部分配列の数",
-  "one_line": "累積和とハッシュマップ",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0044",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "二分探索による存在判定",
-  "one_line": "閉区間と半開区間の境界条件",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0045",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "回転したソート配列の探索",
-  "one_line": "二分探索の分岐条件",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0046",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "迷路の最短経路の復元",
-  "one_line": "前のマスを記録して経路を出力する",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0047",
-  "category": "ALG",
-  "difficulty": "L4",
-  "time_limit": 30,
-  "title": "平方分割による区間クエリ",
-  "one_line": "実装量と計算量のトレードオフ",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0048",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "正しい括弧列の生成",
-  "one_line": "バックトラッキングと枝刈り",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0049",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "行列の 90 度回転",
-  "one_line": "インデックス変換で回転する",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0050",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "半分全列挙による部分和",
-  "one_line": "N=40 程度の部分和",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0051",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "重複要素を含む順列の列挙",
-  "one_line": "重複を除く条件",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0052",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "最初の重複しない文字",
-  "one_line": "2 パスで数えてから探す",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0053",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "ビット DP（小規模な巡回セールスマン）",
-  "one_line": "状態数の見積もり",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0054",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "最小全域木（クラスカル法）",
-  "one_line": "辺のソートと Union-Find",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0055",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ヒストグラム中の最大長方形",
-  "one_line": "単調スタック",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0056",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "素数の列挙",
-  "one_line": "試し割りと篩の計算量の比較",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0057",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "最長回文部分文字列",
-  "one_line": "中心展開と Manacher の比較",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0058",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "次に大きい要素",
-  "one_line": "単調スタックで O(N)",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0059",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "単語単位の逆順",
-  "one_line": "空白の連続を正規化してから逆順にする",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0060",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "座標圧縮と BIT による転倒数",
-  "one_line": "Fenwick 木の実装",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0061",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "最小ウィンドウ部分文字列",
-  "one_line": "必要な文字の数え上げとウィンドウの縮小",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0062",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "配列の回転",
-  "one_line": "k を長さで割った余りにし、3 回の反転で O(1) メモリ",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0063",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ストリームの中央値",
-  "one_line": "二つのヒープで挿入と中央値",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0064",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "グラフの橋と関節点",
-  "one_line": "lowlink",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0065",
-  "category": "ALG",
-  "difficulty": "L4",
-  "time_limit": 30,
-  "title": "辺追加時の最短経路の差分更新",
-  "one_line": "全再計算との比較",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0066",
+  "id": "alg-0030",
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -4882,39 +3361,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0067",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "最小値と最大値の同時計算",
-  "one_line": "比較回数を減らす工夫",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0068",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "2 配列の和の K 番目",
-  "one_line": "ヒープで候補を管理する",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0069",
+  "id": "alg-0031",
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -4930,12 +3377,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0070",
+  "id": "alg-0032",
   "category": "ALG",
   "difficulty": "L1",
   "time_limit": 15,
-  "title": "各桁の和",
-  "one_line": "文字列化と剰余の比較、負数の扱い",
+  "title": "単語の出現回数",
+  "one_line": "大文字小文字と句読点の扱いを決めて数える",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4946,12 +3393,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0071",
+  "id": "alg-0033",
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "区間の和集合の長さ",
-  "one_line": "ソートとスイープ",
+  "title": "最長回文部分文字列",
+  "one_line": "中心展開と Manacher の比較",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -4962,7 +3409,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0072",
+  "id": "alg-0034",
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -4978,28 +3425,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0073",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "障害物のあるグリッドの経路数",
-  "one_line": "DP と剰余",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0074",
+  "id": "alg-0035",
   "category": "ALG",
   "difficulty": "L1",
   "time_limit": 15,
-  "title": "二つの文字列の共通文字",
-  "one_line": "多重集合としての共通部分",
+  "title": "最初の重複しない文字",
+  "one_line": "2 パスで数えてから探す",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -5010,12 +3441,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0075",
+  "id": "alg-0036",
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "簡易正規表現マッチ（. と *）",
-  "one_line": "DP の状態遷移",
+  "title": "2 配列の和の K 番目",
+  "one_line": "ヒープで候補を管理する",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -5026,55 +3457,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0076",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "硬貨の最小枚数",
-  "one_line": "DP と、貪欲法が失敗する例",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0077",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "ソート済み配列の平方",
-  "one_line": "負数を含む配列の平方を二つのポインタで昇順に",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0078",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "ダブリングによる祖先クエリ",
-  "one_line": "LCA の前計算",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0079",
+  "id": "alg-0037",
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -5090,55 +3473,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0080",
-  "category": "ALG",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "山型配列の判定",
-  "one_line": "単調増加のあと単調減少になっているか",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0081",
-  "category": "ALG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "重み付き区間の最大和",
-  "one_line": "ソートと二分探索を組み合わせた DP",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0082",
-  "category": "ALG",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "小規模な割当の最大流",
-  "one_line": "増加路の考え方",
-  "nfr": [],
-  "languages_planned": [
-   "python",
-   "typescript",
-   "go"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "alg-0083",
+  "id": "alg-0038",
   "category": "ALG",
   "difficulty": "L4",
   "time_limit": 30,
@@ -5154,7 +3489,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0084",
+  "id": "alg-0039",
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -5170,12 +3505,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0085",
+  "id": "alg-0040",
   "category": "ALG",
   "difficulty": "L1",
   "time_limit": 15,
-  "title": "ゼロを末尾へ移動",
-  "one_line": "安定に、追加メモリ無しで",
+  "title": "単語単位の逆順",
+  "one_line": "空白の連続を正規化してから逆順にする",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -5186,12 +3521,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0086",
+  "id": "alg-0041",
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "単語はしご（最短変換）",
-  "one_line": "BFS と隣接候補の効率的な生成",
+  "title": "簡易正規表現マッチ（. と *）",
+  "one_line": "DP の状態遷移",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -5202,7 +3537,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0087",
+  "id": "alg-0042",
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -5218,7 +3553,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0088",
+  "id": "alg-0043",
   "category": "ALG",
   "difficulty": "L1",
   "time_limit": 15,
@@ -5234,12 +3569,12 @@
   "status": "seed"
  },
  {
-  "id": "alg-0089",
+  "id": "alg-0044",
   "category": "ALG",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "期限付きタスクの最大利益",
-  "one_line": "貪欲とヒープ",
+  "title": "単語はしご（最短変換）",
+  "one_line": "BFS と隣接候補の効率的な生成",
   "nfr": [],
   "languages_planned": [
    "python",
@@ -5250,7 +3585,7 @@
   "status": "seed"
  },
  {
-  "id": "alg-0090",
+  "id": "alg-0045",
   "category": "ALG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -5263,6 +3598,2900 @@
    "go"
   ],
   "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0001",
+  "slug": "receipt-coupon",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 15,
+  "title": "レシートの合計とクーポン",
+  "one_line": "品目の合計に「X 円以上で Y 円引き」を適用し、税 10% を切り捨てで加える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0002",
+  "slug": "warehouse-robot-commands",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "倉庫ロボットの命令列",
+  "one_line": "F/L/R の命令で動くロボットの最終位置と、訪れたマスの数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0003",
+  "slug": "bookshelf-min-width",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "本棚 K 段の最小の棚幅",
+  "one_line": "順番を保って K 段に分けるとき、最も広い段の幅を最小化する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0004",
+  "slug": "banned-word-mask",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "掲示板の禁止語マスク",
+  "one_line": "本文中の禁止語を同じ長さの * に置き換える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0005",
+  "slug": "sales-excluding-holidays",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "休業日を除いた期間売上",
+  "one_line": "期間ごとに、営業日の売上合計と営業日数を答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0006",
+  "slug": "club-merge-roster",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "サークル合併の名簿",
+  "one_line": "合併・人数照会・同一判定の操作を順に処理する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0007",
+  "slug": "elevator-no-zero-floor",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 15,
+  "title": "0 階の無いエレベーター",
+  "one_line": "B3〜99 の停止階の列から総移動階数を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0008",
+  "slug": "keyed-shift-cipher",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "鍵付きシフト暗号の復号",
+  "one_line": "英字だけを鍵の文字ぶん戻し、大文字と記号はそのまま保つ",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0009",
+  "slug": "lottery-combinations",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "くじ引きの組合せ数",
+  "one_line": "Q 個の nCr を mod 998244353 で答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0010",
+  "slug": "nearest-station",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "最寄り駅までの距離",
+  "one_line": "各家から最も近い駅までの距離を答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0011",
+  "slug": "theater-consecutive-seats",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "映画館の連続空席",
+  "one_line": "前の列から、K 席並んで空いている最初の位置を探す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0012",
+  "slug": "moss-spread",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "苔の広がり",
+  "one_line": "規則で T 回更新した後の盤面を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0013",
+  "slug": "cheapest-menu-bits",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "栄養を満たす最安の献立",
+  "one_line": "M 種の栄養をすべて含む料理の組で、合計が最安のもの",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0014",
+  "slug": "next-departure",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "次の発車時刻",
+  "one_line": "照会時刻のあとに乗れる最初の便と待ち時間（日付をまたぐ）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0015",
+  "slug": "library-custom-sort",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "図書の並べ替え",
+  "one_line": "指定したジャンル順 → 年の降順 → 書名の昇順に並べる",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0016",
+  "slug": "charging-maze",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 45,
+  "title": "充電スタンド付きの迷路",
+  "one_line": "電池 B 歩のロボットが、充電マスで満充電しながら G へ行く最短手数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0017",
+  "slug": "average-truncate",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 15,
+  "title": "平均点の切り捨て表示",
+  "one_line": "平均を小数第 1 位まで（以下切り捨て）出し、平均以上の人を並べる",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0018",
+  "slug": "parking-free-areas",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "駐車場の空き区画のまとまり",
+  "one_line": "空き区画の連結成分の数と、最大の面積",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0019",
+  "slug": "prime-count-queries",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "抽選番号の素数クエリ",
+  "one_line": "[L,R] に含まれる素数の個数を答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0020",
+  "slug": "studio-booking-cleanup",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "片付け時間つきスタジオ予約",
+  "one_line": "予約の間に片付け C 分が必要なとき、受けられる最大件数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0021",
+  "slug": "stamp-rally-top3",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "スタンプラリー上位 3 名",
+  "one_line": "ログを名前ごとに合計し、点の降順・名前の昇順で上位 3 名を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0022",
+  "slug": "venue-peak-occupancy",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "入退場ログの最大滞在人数",
+  "one_line": "同時に会場にいた最大人数、それが最初に起きた秒、その総秒数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0023",
+  "slug": "delivery-route-perm",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "配達ルートの最短巡回",
+  "one_line": "拠点から N 地点を回って戻る最短距離（ユークリッド）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0024",
+  "slug": "password-strength",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "パスワード強度チェック",
+  "one_line": "規則を順に判定し、OK か最初に破った規則の番号を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0025",
+  "slug": "flowerbed-kxk",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "花壇の K×K 区画",
+  "one_line": "合計が最大になる K×K 区画とその左上（同点は上・左を優先）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0026",
+  "slug": "road-network-deadline",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 45,
+  "title": "道路網と配達の締め切り",
+  "one_line": "拠点 1 からの最短時間で、締め切り T までに届く拠点数と拠点 N までの時間を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0027",
+  "slug": "commuter-pass-expiry",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "定期券の有効期限",
+  "one_line": "開始日の k か月後の同じ日の前日まで（無い日は月末まで）を答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0028",
+  "slug": "ad-slot-peak",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "広告枠の最大同時掲載額",
+  "one_line": "期間と金額を持つ広告の、任意時点の合計の最大と最初の時刻",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0029",
+  "slug": "nested-repeat-expand",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "入れ子の繰り返し記法の展開",
+  "one_line": "2(ab3(c))d のような記法を展開する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0030",
+  "slug": "sale-cooldown-dp",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "クールダウン付きのタイムセール",
+  "one_line": "買ったら次の D−1 店は買えないとき、割引額の合計の最大",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0031",
+  "slug": "stamp-overlay",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "スタンプの重ね押し",
+  "one_line": "文字入りのスタンプを順に押した後のキャンバス（はみ出しは切る）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0032",
+  "slug": "counter-assignment",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "窓口の割り当て",
+  "one_line": "最も早く空く窓口（同時なら番号が小さい方）に客を割り当てる",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0033",
+  "slug": "course-plan-semesters",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 45,
+  "title": "履修計画の最短学期数",
+  "one_line": "前提科目の関係から、全科目の修了に必要な最短学期数（閉路なら -1）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0034",
+  "slug": "sugoroku-warp-bounce",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "すごろくのワープと跳ね返り",
+  "one_line": "ゴールを越えたら跳ね返り、ワープは 1 回だけ適用する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0035",
+  "slug": "tournament-wins",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "トーナメントの勝ち数",
+  "one_line": "2^K 人の勝ち抜き戦を組み合わせ順に行い、各人の勝利数を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0036",
+  "slug": "cold-cargo-knapsack",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 45,
+  "title": "冷蔵品つきの積み込み",
+  "one_line": "重さの上限 W、冷蔵品は C 個まで、価値の最大",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0037",
+  "slug": "budget-longest-span",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "予算内の最長連続日程",
+  "one_line": "費用の合計が B 以下の連続区間の最長と、その最初の開始日",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0038",
+  "slug": "sorter-cycle-sum",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 45,
+  "title": "仕分け機の K 回後の合計",
+  "one_line": "次の行き先が決まった仕分け機を K 回進むときの、値の合計 mod p",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "core"
+ },
+ {
+  "id": "cp-0039",
+  "slug": "pair-sum-multiple",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "和が M の倍数になるペア",
+  "one_line": "(A_i+A_j) mod M = 0 となる組 i<j の数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0040",
+  "slug": "nearest-shelter-bfs",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "最寄りの避難所",
+  "one_line": "各マスから最も近い避難所までの距離の最大と、どこにも着けないマスの数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "core"
+ },
+ {
+  "id": "cp-0041",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "依存関係の循環グループ",
+  "one_line": "強連結成分分解で循環しているグループと、グループ間の順序を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0042",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "40 個の重りの組合せ",
+  "one_line": "N≤40 の重りから合計 S 以下で最大の合計を作る（半分全列挙）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0043",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "配達先 16 か所の最短巡回",
+  "one_line": "bit DP で全地点を回って戻る最短距離（巡回セールスマン）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0044",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "壊れると分断される道路",
+  "one_line": "グラフの橋と関節点を lowlink で列挙する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0045",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "自販機のおつり枚数",
+  "one_line": "500/100/50/10 円玉で、おつりを最少枚数にしたときの内訳を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0046",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "体育館の靴箱番号",
+  "one_line": "番号順に靴箱を割り当てたとき、指定した人の段と列を答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0047",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "組織図の K 代前の上司",
+  "one_line": "ダブリングで K 代前の祖先と、2 人の共通の上司（LCA）を答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0048",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "落ちものパズルの行消去",
+  "one_line": "石を列に落とし、横一列がそろった行を消して詰める操作の後の盤面",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0049",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "会員ランクの判定",
+  "one_line": "年間購入額と来店回数の 2 条件から会員ランクを判定する（以上/未満の境界）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0050",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "挟んだ石の裏返し",
+  "one_line": "石を置いたときに 8 方向で挟んだ石を裏返した後の盤面と石の数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0051",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "気温ログの真夏日カウント",
+  "one_line": "日ごとの最高気温から真夏日・猛暑日の日数と最長の連続日数を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0052",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "上がり続ける株価の最長の選び方",
+  "one_line": "部分列として選べる狭義増加列の最長の長さを O(N log N) で求める",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0053",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "右手法で進む巡回ロボット",
+  "one_line": "右手を壁に付けて進むロボットが出口に着く歩数（同じ状態に戻ったら -1）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0054",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "駐輪場の料金計算",
+  "one_line": "入庫と出庫の時刻から、最初の 2 時間無料・以後 1 時間ごと・1 日の上限ありの料金を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0055",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "2 チームへの振り分け",
+  "one_line": "仲の悪い組を別チームにできるか判定し、できるなら片方の人数の最小を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0056",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "面接枠と候補者の割り当て",
+  "one_line": "希望できる面接枠の二部マッチングの最大数（増加路）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0057",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "清掃ロボットの通過マス",
+  "one_line": "命令列で動いた軌跡のマス数と、2 回以上通ったマスの数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0058",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "名簿の姓と名の入れ替え",
+  "one_line": "「姓 名」の行を「名 姓」に直し、ミドルネーム付きの行も扱う",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0059",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "壁を壊す最少回数",
+  "one_line": "通路は 0、壁を壊すと 1 のコストで G へ行く最少破壊回数（0-1 BFS）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0060",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "倉庫の入出庫ログ",
+  "one_line": "入庫・出庫・照会を順に処理し、在庫が足りない出庫は拒否して記録する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0061",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "電光掲示板のスクロール",
+  "one_line": "メッセージを幅 W の窓で 1 文字ずつ流したときの各時刻の表示",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0062",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "最短経路の道順の出力",
+  "one_line": "BFS で最短手数と、その中で辞書順最小の道順（UDLR）を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0063",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "単語の頭文字の略語",
+  "one_line": "空白区切りの各単語の頭文字を大文字でつなげる（指定した前置詞は除く）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0064",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "段階料金とクーポンの適用順",
+  "one_line": "購入数による段階料金に複数のクーポンを使うとき、最安になる適用順を求める",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0065",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "隣接交換の最少回数",
+  "one_line": "隣同士の交換で昇順にするのに必要な回数（転倒数）を BIT で求める",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0066",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "中央値の最大化",
+  "one_line": "長さ K 以上の連続区間の中央値の最大値（答えで二分探索と累積和）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0067",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "体重記録の最長増加日数",
+  "one_line": "前日より増えた日が続く最長の日数と、その開始日を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0068",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "壁の塗り重ね",
+  "one_line": "N 個の区間を塗ったとき、ちょうど K 回塗られた部分の長さ（いもす法）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0069",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "工事区間の総延長",
+  "one_line": "重なりを含む区間の和集合の長さと、工事の無い最長の区間",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0070",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "座席表の空席集計",
+  "one_line": "座席表の各行の空席数を数え、空席が最も多い行（同数は前の行）を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0071",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "敷物の重なり",
+  "one_line": "長方形の敷物を敷いたとき、最も多く重なった枚数とその面積（2 次元いもす法）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0072",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "締め切りつきアルバイトの選択",
+  "one_line": "1 日 1 件、締め切りまでに終える仕事を選ぶときの報酬の合計の最大",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0073",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "回文になる日付",
+  "one_line": "期間内で YYYYMMDD が回文になる日付を数える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0074",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "売上がちょうど目標になる期間",
+  "one_line": "連続する日の売上の和がちょうど K になる区間の数（負の値あり）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0075",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 45,
+  "title": "乗り換えに時間のかかる経路",
+  "one_line": "路線ごとの所要時間と乗り換え時間がある路線図の最短時間（状態付き Dijkstra）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0076",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "価値の小さいナップサック",
+  "one_line": "重さが 10^9 まで、価値の合計が 10^5 以下の 0/1 ナップサック（価値で DP）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0077",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "切手の最少枚数",
+  "one_line": "額面の組からちょうど X 円にする最少枚数（貪欲では失敗する額面）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0078",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "桁の並べ替えの最大と最小",
+  "one_line": "整数の桁を並べ替えてできる最大値と最小値（先頭 0 不可）を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0079",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "送電網の最小敷設費用",
+  "one_line": "すべての町をつなぐ送電線の費用の最小（クラスカル法）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0080",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "通学路の最短経路の数",
+  "one_line": "通れない交差点を避けて左上から右下へ行く最短経路の数 mod 10^9+7",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0081",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "深夜割増つきの給与計算",
+  "one_line": "出勤・退勤時刻から、22 時以降を 1.25 倍（切り捨て）とした給与を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0082",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "報酬つき予約の選択",
+  "one_line": "重ならない予約を選ぶときの報酬の合計の最大（ソートと二分探索の DP）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0083",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "括弧列の深さと修復",
+  "one_line": "括弧列の最大の深さと、正しい括弧列にするために足す括弧の最少数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0084",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "成績の 5 段階評価",
+  "one_line": "点数の区切り表で評価を付け、評価ごとの人数を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0085",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "2 本の作業ログの共通手順",
+  "one_line": "2 つの文字列の最長共通部分列の長さと、その 1 つを出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0086",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "空き地の最大の長方形",
+  "one_line": "グリッドの空きマスだけでできる最大の長方形の面積（行ごとのヒストグラム）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0087",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "文字カードの並べ方の列挙",
+  "one_line": "重複を含む文字カードの並べ方を、辞書順にすべて出力する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0088",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "ゴミ収集の曜日表",
+  "one_line": "曜日ごとの品目表から指定日の品目を答える（第 n 曜日の規則を含む）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0089",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "最短経路の本数",
+  "one_line": "重み付きの道路網で、最短経路の本数を mod 10^9+7 で数える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0090",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "回転した昇順列の検索",
+  "one_line": "ある位置で回転した昇順列から、Q 個の値の位置を二分探索で答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0091",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "打ち間違いの修正回数",
+  "one_line": "2 つの単語の編集距離（挿入・削除・置換）を DP で求める",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0092",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "荷物の重さでぴったり積む",
+  "one_line": "N 個の荷物から合計 S ちょうどを作れるかと、必要な最少個数",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0093",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "数を言い合うゲームの判定",
+  "one_line": "交互に数を言い、合計が M を超えた方が負けとなる記録から勝者と手番を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0094",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "合計が目標を超える最短の日数",
+  "one_line": "和が S 以上になる最短の連続区間の長さ（尺取り法）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0095",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "運賃表と区間照会",
+  "one_line": "駅間距離の累積和と距離帯の運賃表から、Q 個の区間の運賃を答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0096",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "区間ごとの種類数",
+  "one_line": "Q 個の区間に含まれる値の種類数（オフライン処理と BIT）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0097",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "メールアドレスの形式チェック",
+  "one_line": "簡略化した規則で、各行のアドレスが有効かを判定する",
+  "nfr": [
+   "validation"
+  ],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0098",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "点数の順位照会",
+  "one_line": "Q 人の点数がそれぞれ何位か（同点は同順位）を二分探索で答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0099",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "直近 K 日の最高気温",
+  "one_line": "長さ K のすべての窓の最大値を両端キューで O(N) に求める",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0100",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "図書館の延滞料",
+  "one_line": "貸出日と返却日から延滞日数と延滞料を出す（月末とうるう年をまたぐ）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0101",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "ブラウザの戻ると進む",
+  "one_line": "戻る・進む・新しいページを開く操作列から各時点のページを出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0102",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "繰り返しでできた文字列の周期",
+  "one_line": "文字列を何かの繰り返しで書くときの最短の周期（接頭辞関数）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0103",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "横書きから縦書きへの組み替え",
+  "one_line": "複数行の文字列を、右の列から読む縦書きに並べ替えて出力する（短い行は空白で埋める）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0104",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "レジ待ち行列のシミュレーション",
+  "one_line": "到着時刻と処理時間から各客の待ち時間と行列の最大の長さを出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0105",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "回文に並べ替えられる区間",
+  "one_line": "文字の個数の偶奇をビットで持ち、回文に並べ替えられる区間の数を数える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0106",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "平方分割の区間クエリ",
+  "one_line": "区間加算と区間和を平方分割で処理し、BIT との実装量を比べる",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0107",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "圧縮文字列の位置照会",
+  "one_line": "a3b12 のような圧縮文字列で、展開後の k 文字目を展開せずに答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0108",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "九九表の部分出力",
+  "one_line": "行と列の範囲を指定して、桁をそろえた掛け算表を出力する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0109",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "道路の閉鎖と連結成分",
+  "one_line": "道路を順に閉鎖するときの各時点の連結成分の数（逆順の Union-Find）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0110",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "引用符つき CSV 1 行の分解",
+  "one_line": "二重引用符で囲まれたカンマや \"\" を含む 1 行を列に分解する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0111",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "数字の 7 を数える",
+  "one_line": "1 から N までに数字の 7 が現れる回数を数える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0112",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "作業手順の辞書順最小",
+  "one_line": "前後関係を満たす作業順のうち辞書順最小のもの（閉路なら -1）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0113",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "N 日後の日付",
+  "one_line": "日付に N 日（最大 10^6）を足した日付を、月の日数とうるう年を考えて求める",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0114",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "交互の並びへの最少変更",
+  "one_line": "2 種類の文字を交互に並べるのに必要な最少の書き換え数を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0115",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "区間の最大公約数の照会",
+  "one_line": "Q 個の区間の最大公約数をスパーステーブルで答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0116",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "道路を追加したときの最短距離",
+  "one_line": "辺を 1 本ずつ追加しながら全点対最短距離を差分で更新する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0117",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "信号がそろう時刻",
+  "one_line": "周期と青の時間が違う複数の信号が、すべて青になる最初の時刻",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0118",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "商品コードのチェックディジット",
+  "one_line": "13 桁コードのチェックディジットを計算し、読み取り値が正しいか判定する",
+  "nfr": [
+   "validation"
+  ],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0119",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 45,
+  "title": "観光地を結ぶ最短距離の表",
+  "one_line": "N≤300 の全点対最短距離と、道路を 1 本ずつ追加したときの距離の総和",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0120",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "約数の個数が最大の数",
+  "one_line": "1〜N の中で約数の個数が最大の数（同数は最小）を篩で求める",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0121",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "画像の反転と拡大",
+  "one_line": "白黒画像を左右反転し、各画素を K×K に拡大して出力する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0122",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "最小素因数表による素因数分解",
+  "one_line": "10^6 以下の Q 個の数を最小素因数の表で素因数分解する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0123",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "雨量の 3 日移動平均",
+  "one_line": "日ごとの雨量から直近 3 日の平均（切り捨て）を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0124",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "コンベアの荷物の合流",
+  "one_line": "2 本のコンベアの荷物を到着時刻順に合流させ、同時刻の衝突回数を数える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0125",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "倍数になる組の数",
+  "one_line": "A_i が A_j の倍数になる組 (i≠j) の数を、値の上限までの調和級数で数える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0126",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "遅延セグメント木の区間代入",
+  "one_line": "区間代入と区間最小を遅延評価のセグメント木で処理する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0127",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "盤面の 90 度回転表示",
+  "one_line": "H×W の文字の表を時計回りに 90 度回して出力する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0128",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "開票速報の首位交代",
+  "one_line": "投票ログを順に集計し、首位が入れ替わった回数と最終結果を出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0129",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "照明で通路を照らす最少個数",
+  "one_line": "区間被覆の貪欲で、通路全体を照らすのに必要な照明の最少数（不可能なら -1）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0130",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "騰落額の最大の連続区間",
+  "one_line": "日ごとの騰落額から、和が最大になる連続区間の和を出す（全部負のときに注意）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0131",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "マラソン大会の順位表",
+  "one_line": "記録の昇順・同記録は年齢の若い順で並べ、同記録には同順位を付ける",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0132",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 45,
+  "title": "迷路の鍵と扉",
+  "one_line": "鍵を拾うと同じ色の扉を通れる迷路の最短手数（鍵の持ち方をビットで持つ BFS）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0133",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "五十音順名簿の統合",
+  "one_line": "並んだ 2 つの名簿を 1 つにまとめ、重複を除いて順に出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0134",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "区間の平均気温照会",
+  "one_line": "Q 個の区間の平均（小数第 1 位で切り捨て）を累積和で答える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0135",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "ビルの見通し",
+  "one_line": "各ビルから右を見て、最初に見える自分より高いビルまでの距離（単調スタック）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0136",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "木の各頂点からの最遠距離",
+  "one_line": "各頂点から最も遠い頂点までの距離（直径の両端からの BFS）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0137",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "硬貨での支払い方の数",
+  "one_line": "手持ちの硬貨で X 円ちょうどを払う組合せの数を全探索で数える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0138",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "整理券番号の素数判定",
+  "one_line": "各番号が素数かを判定する（1 と 2、大きな番号の試し割り）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0139",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "お菓子の詰め合わせの数",
+  "one_line": "N 個を 1〜K 個ずつの袋に分ける方法の数 mod 998244353（分割数の DP）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0140",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "外とつながらない池",
+  "one_line": "壁で囲まれて盤面の外につながらない空きマスの領域の数と合計面積",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0141",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "各桁の和で割り切れる数",
+  "one_line": "各番号が自分の各桁の和で割り切れるかを判定する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0142",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "宝集めの最大経路",
+  "one_line": "右か下へ進んで拾う宝の価値の和の最大と、その経路を 1 つ出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0143",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "テンプレートの差し込み",
+  "one_line": "{name} のような差し込み記号を辞書の値で置き換え、未定義の記号はそのまま残す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0144",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "登山道の山型判定",
+  "one_line": "標高の列が上ってから下る 1 つの山になっているかを判定する",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0145",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "回転して同じ盤面のまとめ",
+  "one_line": "回転と反転で一致する盤面を同じとみなし、異なる盤面の数を数える",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0146",
+  "category": "CP",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "期限と罰金のある作業順",
+  "one_line": "所要時間と期限から罰金の合計を最小にする作業順（交換論法と DP）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0147",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "トランプの役判定",
+  "one_line": "5 枚の手札の役を判定する（A を 1 にも 14 にも使うストレート）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0148",
+  "category": "CP",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "棚の空き詰め",
+  "one_line": "0 を空きとみなし、商品の順番を保ったまま左へ詰めた並びを出す",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0149",
+  "category": "CP",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "ナンバープレートの禁止パターン",
+  "one_line": "禁止された部分文字列を含まない長さ N の数字列の数（状態 DP）",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "atcoder",
+  "status": "seed"
+ },
+ {
+  "id": "cp-0150",
+  "category": "CP",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "第 n 何曜日の日付",
+  "one_line": "「Y 年 M 月の第 n W 曜日」の日付を答え、存在しなければ -1",
+  "nfr": [],
+  "languages_planned": [
+   "c",
+   "rust",
+   "python",
+   "go",
+   "typescript",
+   "php"
+  ],
+  "company_style": "paiza",
   "status": "seed"
  },
  {
@@ -5398,10 +6627,10 @@
  {
   "id": "sql-0010",
   "category": "SQL",
-  "difficulty": "L2",
+  "difficulty": "L1",
   "time_limit": 15,
-  "title": "複数タグをすべて持つ作品の検索",
-  "one_line": "中間テーブルの JOIN と AND 条件",
+  "title": "重複メールアドレスの検出",
+  "one_line": "GROUP BY と HAVING",
   "nfr": [],
   "languages_planned": [
    "sql"
@@ -5412,10 +6641,10 @@
  {
   "id": "sql-0011",
   "category": "SQL",
-  "difficulty": "L1",
+  "difficulty": "L2",
   "time_limit": 15,
-  "title": "重複メールアドレスの検出",
-  "one_line": "GROUP BY と HAVING",
+  "title": "複数タグをすべて持つ作品の検索",
+  "one_line": "中間テーブルの JOIN と AND 条件",
   "nfr": [],
   "languages_planned": [
    "sql"
@@ -5470,9 +6699,11 @@
   "category": "SQL",
   "difficulty": "L2",
   "time_limit": 15,
-  "title": "フォロワー数の順位",
-  "one_line": "集計結果の JOIN と RANK による同率順位",
-  "nfr": [],
+  "title": "連続ログイン日数",
+  "one_line": "日付の差を使ったグループ化（gaps and islands）",
+  "nfr": [
+   "timezone"
+  ],
   "languages_planned": [
    "sql"
   ],
@@ -5496,13 +6727,11 @@
  {
   "id": "sql-0017",
   "category": "SQL",
-  "difficulty": "L2",
+  "difficulty": "L1",
   "time_limit": 15,
-  "title": "連続ログイン日数",
-  "one_line": "日付の差を使ったグループ化（gaps and islands）",
-  "nfr": [
-   "timezone"
-  ],
+  "title": "人気作品の上位 5 件",
+  "one_line": "ORDER BY と LIMIT、同点の扱い",
+  "nfr": [],
   "languages_planned": [
    "sql"
   ],
@@ -5512,11 +6741,13 @@
  {
   "id": "sql-0018",
   "category": "SQL",
-  "difficulty": "L1",
+  "difficulty": "L2",
   "time_limit": 15,
-  "title": "人気作品の上位 5 件",
-  "one_line": "ORDER BY と LIMIT、同点の扱い",
-  "nfr": [],
+  "title": "OFFSET とキーセットのページング",
+  "one_line": "深いページでの性能差",
+  "nfr": [
+   "pagination"
+  ],
   "languages_planned": [
    "sql"
   ],
@@ -5542,10 +6773,10 @@
   "category": "SQL",
   "difficulty": "L2",
   "time_limit": 15,
-  "title": "OFFSET とキーセットのページング",
-  "one_line": "深いページでの性能差",
+  "title": "在庫引当の条件付き UPDATE",
+  "one_line": "負の在庫を防ぐ更新",
   "nfr": [
-   "pagination"
+   "idempotency"
   ],
   "languages_planned": [
    "sql"
@@ -5556,13 +6787,11 @@
  {
   "id": "sql-0021",
   "category": "SQL",
-  "difficulty": "L4",
-  "time_limit": 30,
-  "title": "事前集計テーブルの設計",
-  "one_line": "マテリアライズドビューと更新頻度",
-  "nfr": [
-   "cache"
-  ],
+  "difficulty": "L1",
+  "time_limit": 15,
+  "title": "未購入ユーザーの抽出",
+  "one_line": "NOT EXISTS と LEFT JOIN ... IS NULL の比較",
+  "nfr": [],
   "languages_planned": [
    "sql"
   ],
@@ -5588,10 +6817,10 @@
  {
   "id": "sql-0023",
   "category": "SQL",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "未購入ユーザーの抽出",
-  "one_line": "NOT EXISTS と LEFT JOIN ... IS NULL の比較",
+  "difficulty": "L4",
+  "time_limit": 30,
+  "title": "遅いクエリの総合改善",
+  "one_line": "複数の問題を含むクエリを優先順位を付けて直す",
   "nfr": [],
   "languages_planned": [
    "sql"
@@ -5601,108 +6830,6 @@
  },
  {
   "id": "sql-0024",
-  "category": "SQL",
-  "difficulty": "L2",
-  "time_limit": 15,
-  "title": "在庫引当の条件付き UPDATE",
-  "one_line": "負の在庫を防ぐ更新",
-  "nfr": [
-   "idempotency"
-  ],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0025",
-  "category": "SQL",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "重複行を 1 件残して削除",
-  "one_line": "ROW_NUMBER で残す行を決める",
-  "nfr": [],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0026",
-  "category": "SQL",
-  "difficulty": "L2",
-  "time_limit": 15,
-  "title": "予約の重なりを SQL で検出",
-  "one_line": "区間の重なり条件",
-  "nfr": [],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0027",
-  "category": "SQL",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "月別売上",
-  "one_line": "日付の切り捨てと、売上の無い月の扱い",
-  "nfr": [
-   "timezone"
-  ],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0028",
-  "category": "SQL",
-  "difficulty": "L2",
-  "time_limit": 15,
-  "title": "カテゴリ別の中央値",
-  "one_line": "ウィンドウ関数またはパーセンタイル関数",
-  "nfr": [],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0029",
-  "category": "SQL",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "前日比の順位変動",
-  "one_line": "2 日分の順位を突き合わせる",
-  "nfr": [],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0030",
-  "category": "SQL",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "LIKE 検索とインデックス",
-  "one_line": "前方一致と部分一致でのインデックスの効き方",
-  "nfr": [],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0031",
   "category": "SQL",
   "difficulty": "L2",
   "time_limit": 15,
@@ -5718,12 +6845,28 @@
   "status": "seed"
  },
  {
-  "id": "sql-0032",
+  "id": "sql-0025",
+  "category": "SQL",
+  "difficulty": "L1",
+  "time_limit": 15,
+  "title": "月別売上",
+  "one_line": "日付の切り捨てと、売上の無い月の扱い",
+  "nfr": [
+   "timezone"
+  ],
+  "languages_planned": [
+   "sql"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sql-0026",
   "category": "SQL",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "分離レベルとファントムリード",
-  "one_line": "起きる例と対策",
+  "title": "重複行を 1 件残して削除",
+  "one_line": "ROW_NUMBER で残す行を決める",
   "nfr": [],
   "languages_planned": [
    "sql"
@@ -5732,7 +6875,7 @@
   "status": "seed"
  },
  {
-  "id": "sql-0033",
+  "id": "sql-0027",
   "category": "SQL",
   "difficulty": "L2",
   "time_limit": 15,
@@ -5746,26 +6889,12 @@
   "status": "seed"
  },
  {
-  "id": "sql-0034",
-  "category": "SQL",
-  "difficulty": "L4",
-  "time_limit": 30,
-  "title": "遅いクエリの総合改善",
-  "one_line": "複数の問題を含むクエリを優先順位を付けて直す",
-  "nfr": [],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0035",
+  "id": "sql-0028",
   "category": "SQL",
   "difficulty": "L1",
   "time_limit": 15,
-  "title": "CASE 式による年代別集計",
-  "one_line": "年代ごとの人数を 1 クエリで出す",
+  "title": "LIKE 検索とインデックス",
+  "one_line": "前方一致と部分一致でのインデックスの効き方",
   "nfr": [],
   "languages_planned": [
    "sql"
@@ -5774,12 +6903,12 @@
   "status": "seed"
  },
  {
-  "id": "sql-0036",
+  "id": "sql-0029",
   "category": "SQL",
   "difficulty": "L3",
   "time_limit": 20,
-  "title": "JSON 列の検索と式インデックス",
-  "one_line": "JSON 演算子とインデックス",
+  "title": "分離レベルとファントムリード",
+  "one_line": "起きる例と対策",
   "nfr": [],
   "languages_planned": [
    "sql"
@@ -5788,49 +6917,7 @@
   "status": "seed"
  },
  {
-  "id": "sql-0037",
-  "category": "SQL",
-  "difficulty": "L2",
-  "time_limit": 15,
-  "title": "論理削除を考慮した一意制約",
-  "one_line": "部分インデックス",
-  "nfr": [],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0038",
-  "category": "SQL",
-  "difficulty": "L1",
-  "time_limit": 15,
-  "title": "ユニークユーザー数の数え方",
-  "one_line": "DISTINCT と GROUP BY の使い分け",
-  "nfr": [],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0039",
-  "category": "SQL",
-  "difficulty": "L3",
-  "time_limit": 20,
-  "title": "LIKE と全文検索インデックスの使い分け",
-  "one_line": "性能と精度の比較",
-  "nfr": [],
-  "languages_planned": [
-   "sql"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sql-0040",
+  "id": "sql-0030",
   "category": "SQL",
   "difficulty": "L2",
   "time_limit": 15,
@@ -5996,6 +7083,23 @@
  {
   "id": "sec-0010",
   "category": "SEC",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "安全な逆シリアライズ",
+  "one_line": "型の許可リストと署名",
+  "nfr": [
+   "validation"
+  ],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sec-0011",
+  "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
   "title": "CSRF トークンの発行と検証",
@@ -6009,12 +7113,12 @@
   "status": "seed"
  },
  {
-  "id": "sec-0011",
+  "id": "sec-0012",
   "category": "SEC",
   "difficulty": "L3",
   "time_limit": 30,
-  "title": "XML 外部実体（XXE）対策",
-  "one_line": "パーサ設定と入力形式の制限",
+  "title": "テナント条件漏れの検出",
+  "one_line": "全クエリへのテナント条件をテストで担保する",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -6024,7 +7128,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0012",
+  "id": "sec-0013",
   "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
@@ -6041,29 +7145,12 @@
   "status": "seed"
  },
  {
-  "id": "sec-0013",
-  "category": "SEC",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "安全な逆シリアライズ",
-  "one_line": "型の許可リストと署名",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
   "id": "sec-0014",
   "category": "SEC",
   "difficulty": "L1",
   "time_limit": 20,
-  "title": "Cookie 属性の選び方",
-  "one_line": "HttpOnly/Secure/SameSite の意味と選択",
+  "title": "安全な乱数によるトークン生成",
+  "one_line": "Math.random を使わない理由と長さの根拠",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -6075,12 +7162,12 @@
  {
   "id": "sec-0015",
   "category": "SEC",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "SSRF を防ぐ URL 取得",
-  "one_line": "プライベート IP・リダイレクト・DNS の再束縛に対処する",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "レート制限の回避への耐性",
+  "one_line": "IP を変えてくる攻撃とアカウント単位の制限",
   "nfr": [
-   "validation"
+   "rate_limit"
   ],
   "languages_planned": [
    "typescript",
@@ -6092,11 +7179,13 @@
  {
   "id": "sec-0016",
   "category": "SEC",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "テナント条件漏れの検出",
-  "one_line": "全クエリへのテナント条件をテストで担保する",
-  "nfr": [],
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "SSRF を防ぐ URL 取得",
+  "one_line": "プライベート IP・リダイレクト・DNS の再束縛に対処する",
+  "nfr": [
+   "validation"
+  ],
   "languages_planned": [
    "typescript",
    "python"
@@ -6122,6 +7211,23 @@
  {
   "id": "sec-0018",
   "category": "SEC",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "TOTP の検証",
+  "one_line": "時刻ずれの許容幅と、同じコードの再利用防止",
+  "nfr": [
+   "timezone"
+  ],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sec-0019",
+  "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
   "title": "ログイン試行回数の制限",
@@ -6137,29 +7243,12 @@
   "status": "seed"
  },
  {
-  "id": "sec-0019",
-  "category": "SEC",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "レート制限の回避への耐性",
-  "one_line": "IP を変えてくる攻撃とアカウント単位の制限",
-  "nfr": [
-   "rate_limit"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
   "id": "sec-0020",
   "category": "SEC",
   "difficulty": "L1",
   "time_limit": 20,
-  "title": "安全な乱数によるトークン生成",
-  "one_line": "Math.random を使わない理由と長さの根拠",
+  "title": "ログ出力時の秘密情報マスク",
+  "one_line": "パスワードやトークンを含むキーを伏せる",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -6170,6 +7259,21 @@
  },
  {
   "id": "sec-0021",
+  "category": "SEC",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "秘密鍵のローテーション",
+  "one_line": "新旧の鍵の併用期間と検証順序",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sec-0022",
   "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
@@ -6186,84 +7290,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0022",
-  "category": "SEC",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "TOTP の検証",
-  "one_line": "時刻ずれの許容幅と、同じコードの再利用防止",
-  "nfr": [
-   "timezone"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
   "id": "sec-0023",
-  "category": "SEC",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "Markdown の安全なレンダリング",
-  "one_line": "許可リスト方式のサニタイズとリンクのスキーム制限",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0024",
-  "category": "SEC",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "秘密鍵のローテーション",
-  "one_line": "新旧の鍵の併用期間と検証順序",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0025",
-  "category": "SEC",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "ログ出力時の秘密情報マスク",
-  "one_line": "パスワードやトークンを含むキーを伏せる",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0026",
-  "category": "SEC",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "パスワードリセットトークン",
-  "one_line": "一回限り・期限付き・ハッシュで保存する",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0027",
   "category": "SEC",
   "difficulty": "L3",
   "time_limit": 30,
@@ -6278,26 +7305,12 @@
   "status": "seed"
  },
  {
-  "id": "sec-0028",
-  "category": "SEC",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "C の文字列処理の安全化",
-  "one_line": "バッファ長の検証と snprintf、整数オーバーフロー",
-  "nfr": [],
-  "languages_planned": [
-   "c"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0029",
+  "id": "sec-0024",
   "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "メールアドレス変更の確認フロー",
-  "one_line": "旧アドレスへの通知と確認リンク",
+  "title": "Markdown の安全なレンダリング",
+  "one_line": "許可リスト方式のサニタイズとリンクのスキーム制限",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -6307,7 +7320,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0030",
+  "id": "sec-0025",
   "category": "SEC",
   "difficulty": "L3",
   "time_limit": 30,
@@ -6322,7 +7335,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0031",
+  "id": "sec-0026",
   "category": "SEC",
   "difficulty": "L1",
   "time_limit": 20,
@@ -6339,12 +7352,12 @@
   "status": "seed"
  },
  {
-  "id": "sec-0032",
+  "id": "sec-0027",
   "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "他人のリソース ID 指定（IDOR）",
-  "one_line": "所有者の検証と 404/403 の使い分け",
+  "title": "パスワードリセットトークン",
+  "one_line": "一回限り・期限付き・ハッシュで保存する",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -6354,7 +7367,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0033",
+  "id": "sec-0028",
   "category": "SEC",
   "difficulty": "L3",
   "time_limit": 30,
@@ -6369,7 +7382,66 @@
   "status": "seed"
  },
  {
-  "id": "sec-0034",
+  "id": "sec-0029",
+  "category": "SEC",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "C の文字列処理の安全化",
+  "one_line": "バッファ長の検証と snprintf、整数オーバーフロー",
+  "nfr": [],
+  "languages_planned": [
+   "c"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sec-0030",
+  "category": "SEC",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "他人のリソース ID 指定（IDOR）",
+  "one_line": "所有者の検証と 404/403 の使い分け",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sec-0031",
+  "category": "SEC",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "監査ログの改ざん検知",
+  "one_line": "ハッシュチェーン",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sec-0032",
+  "category": "SEC",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "トークンの定数時間比較",
+  "one_line": "タイミング攻撃と比較関数",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sec-0033",
   "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
@@ -6386,52 +7458,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0035",
-  "category": "SEC",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "監査ログの改ざん検知",
-  "one_line": "ハッシュチェーン",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0036",
-  "category": "SEC",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "トークンの定数時間比較",
-  "one_line": "タイミング攻撃と比較関数",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0037",
-  "category": "SEC",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "文脈に応じたエスケープ",
-  "one_line": "属性・URL・JS の文脈ごとのエスケープ",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0038",
+  "id": "sec-0034",
   "category": "SEC",
   "difficulty": "L3",
   "time_limit": 30,
@@ -6446,26 +7473,12 @@
   "status": "seed"
  },
  {
-  "id": "sec-0039",
-  "category": "SEC",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "Rust による安全なパーサ",
-  "one_line": "信頼できない入力をパースし、panic しない設計",
-  "nfr": [],
-  "languages_planned": [
-   "rust"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0040",
+  "id": "sec-0035",
   "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "クリックジャッキング対策",
-  "one_line": "frame-ancestors と X-Frame-Options",
+  "title": "文脈に応じたエスケープ",
+  "one_line": "属性・URL・JS の文脈ごとのエスケープ",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -6475,7 +7488,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0041",
+  "id": "sec-0036",
   "category": "SEC",
   "difficulty": "L3",
   "time_limit": 30,
@@ -6492,29 +7505,12 @@
   "status": "seed"
  },
  {
-  "id": "sec-0042",
+  "id": "sec-0037",
   "category": "SEC",
   "difficulty": "L1",
   "time_limit": 20,
-  "title": "入力サイズの上限",
-  "one_line": "DoS を防ぐ入力サイズ制限をどこに置くか",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0043",
-  "category": "SEC",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "API キーの保存と照合",
-  "one_line": "ハッシュで保存し、接頭辞でキーを特定する",
+  "title": "セキュリティヘッダの付与",
+  "one_line": "CSP・X-Content-Type-Options・Referrer-Policy の最小構成",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -6524,7 +7520,22 @@
   "status": "seed"
  },
  {
-  "id": "sec-0044",
+  "id": "sec-0038",
+  "category": "SEC",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "CSV インジェクション対策",
+  "one_line": "= + - @ で始まるセルを無害化する",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sec-0039",
   "category": "SEC",
   "difficulty": "L3",
   "time_limit": 30,
@@ -6541,54 +7552,21 @@
   "status": "seed"
  },
  {
-  "id": "sec-0045",
+  "id": "sec-0040",
   "category": "SEC",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "CSV インジェクション対策",
-  "one_line": "= + - @ で始まるセルを無害化する",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "Rust による安全なパーサ",
+  "one_line": "信頼できない入力をパースし、panic しない設計",
   "nfr": [],
   "languages_planned": [
-   "typescript",
-   "python"
+   "rust"
   ],
   "company_style": "generic",
   "status": "seed"
  },
  {
-  "id": "sec-0046",
-  "category": "SEC",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "外部コマンド呼び出しの引数注入対策",
-  "one_line": "画像変換コマンドに渡す引数の扱い",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0047",
-  "category": "SEC",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "セキュリティヘッダの付与",
-  "one_line": "CSP・X-Content-Type-Options・Referrer-Policy の最小構成",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0048",
+  "id": "sec-0041",
   "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
@@ -6606,13 +7584,15 @@
   "status": "seed"
  },
  {
-  "id": "sec-0049",
+  "id": "sec-0042",
   "category": "SEC",
   "difficulty": "L3",
   "time_limit": 30,
-  "title": "マジックリンクによるログイン",
-  "one_line": "一回限りのトークンと端末の紐付け",
-  "nfr": [],
+  "title": "外部コマンド呼び出しの引数注入対策",
+  "one_line": "画像変換コマンドに渡す引数の扱い",
+  "nfr": [
+   "validation"
+  ],
   "languages_planned": [
    "typescript",
    "python"
@@ -6621,52 +7601,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0050",
-  "category": "SEC",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "依存パッケージのサプライチェーン対策",
-  "one_line": "ロックファイル・署名検証・依存の最小化",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0051",
-  "category": "SEC",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "署名付き Cookie",
-  "one_line": "改ざん検出と鍵のローテーション",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0052",
-  "category": "SEC",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "CORS の Origin 反射の修正",
-  "one_line": "反射の危険と許可リスト",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sec-0053",
+  "id": "sec-0043",
   "category": "SEC",
   "difficulty": "L1",
   "time_limit": 20,
@@ -6681,7 +7616,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0054",
+  "id": "sec-0044",
   "category": "SEC",
   "difficulty": "L2",
   "time_limit": 20,
@@ -6696,7 +7631,7 @@
   "status": "seed"
  },
  {
-  "id": "sec-0055",
+  "id": "sec-0045",
   "category": "SEC",
   "difficulty": "L3",
   "time_limit": 30,
@@ -6830,21 +7765,6 @@
  {
   "id": "dbg-0008",
   "category": "DBG",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "テストの無いレガシーコードの改善",
-  "one_line": "特性テストを書きながら段階的に直す",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0009",
-  "category": "DBG",
   "difficulty": "L2",
   "time_limit": 20,
   "title": "イベントリスナーの多重登録",
@@ -6853,6 +7773,21 @@
   "languages_planned": [
    "typescript",
    "javascript"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "dbg-0009",
+  "category": "DBG",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "テストの無いレガシーコードの改善",
+  "one_line": "特性テストを書きながら段階的に直す",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python"
   ],
   "company_style": "generic",
   "status": "seed"
@@ -6939,11 +7874,9 @@
   "category": "DBG",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "文字コードの取り違え",
-  "one_line": "Shift_JIS の CSV を UTF-8 として読んで文字化けする",
-  "nfr": [
-   "i18n"
-  ],
+  "title": "ソートの安定性に依存したバグ",
+  "one_line": "同点の並びが実行ごとに変わる",
+  "nfr": [],
   "languages_planned": [
    "typescript",
    "python"
@@ -6970,9 +7903,11 @@
   "category": "DBG",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "ソートの安定性に依存したバグ",
-  "one_line": "同点の並びが実行ごとに変わる",
-  "nfr": [],
+  "title": "冪等でないリトライ",
+  "one_line": "タイムアウト後の再送で二重に課金される",
+  "nfr": [
+   "idempotency"
+  ],
   "languages_planned": [
    "typescript",
    "python"
@@ -7000,10 +7935,10 @@
   "category": "DBG",
   "difficulty": "L2",
   "time_limit": 20,
-  "title": "冪等でないリトライ",
-  "one_line": "タイムアウト後の再送で二重に課金される",
+  "title": "上限の無いキャッシュによるメモリ増加",
+  "one_line": "Map が増え続ける",
   "nfr": [
-   "idempotency"
+   "cache"
   ],
   "languages_planned": [
    "typescript",
@@ -7030,11 +7965,13 @@
  {
   "id": "dbg-0021",
   "category": "DBG",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "ロック取得順序の不一致",
-  "one_line": "二つのロックによるデッドロックを特定する",
-  "nfr": [],
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "以上と超の取り違え",
+  "one_line": "料金区分の境界で区分が変わらない",
+  "nfr": [
+   "validation"
+  ],
   "languages_planned": [
    "typescript",
    "python"
@@ -7044,53 +7981,6 @@
  },
  {
   "id": "dbg-0022",
-  "category": "DBG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "上限の無いキャッシュによるメモリ増加",
-  "one_line": "Map が増え続ける",
-  "nfr": [
-   "cache"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0023",
-  "category": "DBG",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "ログからの障害原因調査",
-  "one_line": "ログとメトリクスから原因を絞り、暫定対処と恒久対処を分ける",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0024",
-  "category": "DBG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "再帰の終了条件の誤り",
-  "one_line": "木の走査で葉の判定が漏れる",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0025",
   "category": "DBG",
   "difficulty": "L3",
   "time_limit": 30,
@@ -7107,39 +7997,7 @@
   "status": "seed"
  },
  {
-  "id": "dbg-0026",
-  "category": "DBG",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "整数除算と丸めの誤り",
-  "one_line": "平均点の切り捨てで端数が消える",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0027",
-  "category": "DBG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "以上と超の取り違え",
-  "one_line": "料金区分の境界で区分が変わらない",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0028",
+  "id": "dbg-0023",
   "category": "DBG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -7156,28 +8014,12 @@
   "status": "seed"
  },
  {
-  "id": "dbg-0029",
-  "category": "DBG",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "PHP の緩い比較",
-  "one_line": "== で \"0e123\" と \"0e456\" が等しくなる",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "php"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0030",
+  "id": "dbg-0024",
   "category": "DBG",
   "difficulty": "L1",
   "time_limit": 20,
-  "title": "ループ途中の return による処理漏れ",
-  "one_line": "2 件目以降が処理されない",
+  "title": "整数除算と丸めの誤り",
+  "one_line": "平均点の切り捨てで端数が消える",
   "nfr": [],
   "languages_planned": [
    "typescript",
@@ -7187,7 +8029,7 @@
   "status": "seed"
  },
  {
-  "id": "dbg-0031",
+  "id": "dbg-0025",
   "category": "DBG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -7204,7 +8046,68 @@
   "status": "seed"
  },
  {
-  "id": "dbg-0032",
+  "id": "dbg-0026",
+  "category": "DBG",
+  "difficulty": "L3",
+  "time_limit": 30,
+  "title": "PHP の緩い比較",
+  "one_line": "== で \"0e123\" と \"0e456\" が等しくなる",
+  "nfr": [
+   "validation"
+  ],
+  "languages_planned": [
+   "php"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "dbg-0027",
+  "category": "DBG",
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "ログからの障害原因調査",
+  "one_line": "ログとメトリクスから原因を絞り、暫定対処と恒久対処を分ける",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "dbg-0028",
+  "category": "DBG",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "例外時のリソース解放漏れ",
+  "one_line": "ファイルやロックが解放されない",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "dbg-0029",
+  "category": "DBG",
+  "difficulty": "L1",
+  "time_limit": 20,
+  "title": "ループ途中の return による処理漏れ",
+  "one_line": "2 件目以降が処理されない",
+  "nfr": [],
+  "languages_planned": [
+   "typescript",
+   "python"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "dbg-0030",
   "category": "DBG",
   "difficulty": "L3",
   "time_limit": 30,
@@ -7221,69 +8124,7 @@
   "status": "seed"
  },
  {
-  "id": "dbg-0033",
-  "category": "DBG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "例外時のリソース解放漏れ",
-  "one_line": "ファイルやロックが解放されない",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0034",
-  "category": "DBG",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "大文字小文字を区別した重複判定",
-  "one_line": "メールアドレスの重複が見逃される",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0035",
-  "category": "DBG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "完了順で push して崩れる結果順",
-  "one_line": "並列処理の結果の順序が入力と合わない",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0036",
-  "category": "DBG",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "ログから N+1 を見つけて直す",
-  "one_line": "遅い箇所を特定して一括取得にする",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0037",
+  "id": "dbg-0031",
   "category": "DBG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -7298,37 +8139,7 @@
   "status": "seed"
  },
  {
-  "id": "dbg-0038",
-  "category": "DBG",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "プロファイル結果からの性能改善",
-  "one_line": "ボトルネックを直し、効果を数値で示す",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0039",
-  "category": "DBG",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "例外の握りつぶし",
-  "one_line": "except: pass で失敗が見えなくなる",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0040",
+  "id": "dbg-0032",
   "category": "DBG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -7345,37 +8156,7 @@
   "status": "seed"
  },
  {
-  "id": "dbg-0041",
-  "category": "DBG",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "食い違う複数の状態",
-  "one_line": "フロントの状態が二重管理になり表示が壊れる",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "javascript"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0042",
-  "category": "DBG",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "ループ内の同期ログ出力による遅延",
-  "one_line": "ログの出し過ぎで処理が遅くなる",
-  "nfr": [],
-  "languages_planned": [
-   "typescript",
-   "python"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "dbg-0043",
+  "id": "dbg-0033",
   "category": "DBG",
   "difficulty": "L1",
   "time_limit": 20,
@@ -7390,7 +8171,7 @@
   "status": "seed"
  },
  {
-  "id": "dbg-0044",
+  "id": "dbg-0034",
   "category": "DBG",
   "difficulty": "L3",
   "time_limit": 30,
@@ -7407,7 +8188,7 @@
   "status": "seed"
  },
  {
-  "id": "dbg-0045",
+  "id": "dbg-0035",
   "category": "DBG",
   "difficulty": "L2",
   "time_limit": 20,
@@ -7518,6 +8299,22 @@
  {
   "id": "sys-0007",
   "category": "SYS",
+  "difficulty": "L2",
+  "time_limit": 30,
+  "title": "アプリ内通知",
+  "one_line": "保存・未読数・既読化",
+  "nfr": [
+   "pagination"
+  ],
+  "languages_planned": [
+   "markdown"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "sys-0008",
+  "category": "SYS",
   "difficulty": "L3",
   "time_limit": 45,
   "title": "病院の予約システム",
@@ -7532,29 +8329,13 @@
   "status": "seed"
  },
  {
-  "id": "sys-0008",
+  "id": "sys-0009",
   "category": "SYS",
   "difficulty": "L4",
   "time_limit": 45,
   "title": "マルチリージョン構成",
   "one_line": "データ整合性とフェイルオーバー",
   "nfr": [],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0009",
-  "category": "SYS",
-  "difficulty": "L2",
-  "time_limit": 30,
-  "title": "アプリ内通知",
-  "one_line": "保存・未読数・既読化",
-  "nfr": [
-   "pagination"
-  ],
   "languages_planned": [
    "markdown"
   ],
@@ -7628,22 +8409,6 @@
  {
   "id": "sys-0014",
   "category": "SYS",
-  "difficulty": "L3",
-  "time_limit": 45,
-  "title": "イラストのタグ検索",
-  "one_line": "タグの正規化と人気タグの集計",
-  "nfr": [
-   "cache"
-  ],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0015",
-  "category": "SYS",
   "difficulty": "L2",
   "time_limit": 30,
   "title": "API ゲートウェイのレートリミッタ",
@@ -7658,147 +8423,13 @@
   "status": "seed"
  },
  {
-  "id": "sys-0016",
-  "category": "SYS",
-  "difficulty": "L3",
-  "time_limit": 45,
-  "title": "監査ログ基盤",
-  "one_line": "改ざん耐性と保存期間",
-  "nfr": [],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0017",
-  "category": "SYS",
-  "difficulty": "L2",
-  "time_limit": 30,
-  "title": "ファイルアップロード基盤",
-  "one_line": "署名付き URL と後処理",
-  "nfr": [],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0018",
-  "category": "SYS",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "電子カルテとの外部連携",
-  "one_line": "非同期連携と再送",
-  "nfr": [
-   "idempotency"
-  ],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0019",
+  "id": "sys-0015",
   "category": "SYS",
   "difficulty": "L3",
   "time_limit": 45,
   "title": "医療データのアクセス制御",
   "one_line": "ロール・属性・同意に基づく制御",
   "nfr": [],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0020",
-  "category": "SYS",
-  "difficulty": "L3",
-  "time_limit": 45,
-  "title": "動画のアップロードと変換",
-  "one_line": "非同期ジョブと進捗通知",
-  "nfr": [],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0021",
-  "category": "SYS",
-  "difficulty": "L2",
-  "time_limit": 30,
-  "title": "セッションストア",
-  "one_line": "スティッキーセッションと共有ストア",
-  "nfr": [],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0022",
-  "category": "SYS",
-  "difficulty": "L3",
-  "time_limit": 45,
-  "title": "フィーチャーフラグ基盤",
-  "one_line": "配信と評価のレイテンシ",
-  "nfr": [
-   "cache"
-  ],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0023",
-  "category": "SYS",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "ログ分析基盤",
-  "one_line": "収集・保存・集計の段階とコスト",
-  "nfr": [],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0024",
-  "category": "SYS",
-  "difficulty": "L2",
-  "time_limit": 30,
-  "title": "問い合わせフォームの受付基盤",
-  "one_line": "スパム対策と担当者への通知",
-  "nfr": [
-   "rate_limit"
-  ],
-  "languages_planned": [
-   "markdown"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "sys-0025",
-  "category": "SYS",
-  "difficulty": "L3",
-  "time_limit": 45,
-  "title": "ジョブスケジューラ",
-  "one_line": "重複実行の防止と失敗時の再実行",
-  "nfr": [
-   "idempotency"
-  ],
   "languages_planned": [
    "markdown"
   ],
@@ -7871,11 +8502,10 @@
   "category": "LOW",
   "difficulty": "L3",
   "time_limit": 30,
-  "title": "参照カウント付きオブジェクト",
-  "one_line": "循環参照の問題と弱参照",
+  "title": "Mutex と Condvar による有界キュー",
+  "one_line": "待機と通知の正しい使い方",
   "nfr": [],
   "languages_planned": [
-   "c",
    "rust"
   ],
   "company_style": "generic",
@@ -7884,15 +8514,12 @@
  {
   "id": "low-0006",
   "category": "LOW",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "長い行に対応した行読み込み",
-  "one_line": "バッファの伸長と上限",
-  "nfr": [
-   "validation"
-  ],
+  "difficulty": "L4",
+  "time_limit": 45,
+  "title": "アリーナアロケータとインデックス参照",
+  "one_line": "Rust のアリーナとライフタイム",
+  "nfr": [],
   "languages_planned": [
-   "c",
    "rust"
   ],
   "company_style": "generic",
@@ -7900,6 +8527,20 @@
  },
  {
   "id": "low-0007",
+  "category": "LOW",
+  "difficulty": "L2",
+  "time_limit": 20,
+  "title": "所有権を活かしたスタック API",
+  "one_line": "借用と所有の受け渡し",
+  "nfr": [],
+  "languages_planned": [
+   "rust"
+  ],
+  "company_style": "generic",
+  "status": "seed"
+ },
+ {
+  "id": "low-0008",
   "category": "LOW",
   "difficulty": "L1",
   "time_limit": 20,
@@ -7914,98 +8555,7 @@
   "status": "seed"
  },
  {
-  "id": "low-0008",
-  "category": "LOW",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "Mutex と Condvar による有界キュー",
-  "one_line": "待機と通知の正しい使い方",
-  "nfr": [],
-  "languages_planned": [
-   "rust"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
   "id": "low-0009",
-  "category": "LOW",
-  "difficulty": "L4",
-  "time_limit": 45,
-  "title": "アリーナアロケータとインデックス参照",
-  "one_line": "Rust のアリーナとライフタイム",
-  "nfr": [],
-  "languages_planned": [
-   "rust"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "low-0010",
-  "category": "LOW",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "所有権を活かしたスタック API",
-  "one_line": "借用と所有の受け渡し",
-  "nfr": [],
-  "languages_planned": [
-   "rust"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "low-0011",
-  "category": "LOW",
-  "difficulty": "L3",
-  "time_limit": 30,
-  "title": "HTTP リクエスト行のパーサ",
-  "one_line": "メソッド・パス・ヘッダの長さ制限",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "c",
-   "rust"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "low-0012",
-  "category": "LOW",
-  "difficulty": "L2",
-  "time_limit": 20,
-  "title": "TLV パーサ",
-  "one_line": "長さが改ざんされた入力への耐性",
-  "nfr": [
-   "validation"
-  ],
-  "languages_planned": [
-   "c",
-   "rust"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "low-0013",
-  "category": "LOW",
-  "difficulty": "L1",
-  "time_limit": 20,
-  "title": "権限ビットフラグの操作",
-  "one_line": "ビットの設定・解除・判定",
-  "nfr": [],
-  "languages_planned": [
-   "c",
-   "rust"
-  ],
-  "company_style": "generic",
-  "status": "seed"
- },
- {
-  "id": "low-0014",
   "category": "LOW",
   "difficulty": "L3",
   "time_limit": 30,
@@ -8019,7 +8569,7 @@
   "status": "seed"
  },
  {
-  "id": "low-0015",
+  "id": "low-0010",
   "category": "LOW",
   "difficulty": "L2",
   "time_limit": 20,

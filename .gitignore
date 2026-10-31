@@ -9,3 +9,7 @@ data/
 .DS_Store
 coverage/
 apps/web/public/monaco/
+
+# gen/brute.py の import で作られる
+__pycache__/
+*.pyc

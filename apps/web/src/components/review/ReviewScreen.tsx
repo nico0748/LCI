@@ -12,6 +12,7 @@ import { TimelineTable } from "./TimelineTable";
 import { ReviewSummary } from "./ReviewSummary";
 import { ReviewDetails } from "./ReviewDetails";
 import { ReviewNotes } from "./ReviewNotes";
+import { DemoCard } from "@/components/demo/DemoCard";
 import { clamp, fmtTFine, sessionDuration } from "./time";
 import { eventPins as toEventPins, feedbackPins, nextPin, normalizeEvalTimes, prevPin } from "./pins";
 import { metricTime, numberFeedback } from "./review-model";
@@ -499,6 +500,7 @@ export function ReviewScreen({
         onSeek={outside.seek}
       />
 
+      {problem && <DemoCard problemId={problem.id} language={session.problem.language} metrics={metrics} startedAt={session.started_at_wall} />}
       {problem && <ReviewNotes problemId={problem.id} language={session.problem.language} />}
 
       <TimelineTable open={tableOpen} onOpenChange={setTableOpen} pins={pins} eventPins={evPins} metrics={metrics} onSelectPin={selectPinById} onSeek={seek} />

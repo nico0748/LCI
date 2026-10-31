@@ -1,67 +1,74 @@
 {
-  "$comment": "04_problems_ux.md §2.2 の目標問題数表。合計 500。難易度分布は L1/L2/L3/L4。problems:stats がこの表と現状を比較する。",
+  "$comment": "04_problems_ux.md §2.2 の目標問題数表（2026-10-25 に 05_cp_problems.md §2.3 で CP を新設して再配分）。合計 500。難易度分布は L1/L2/L3/L4。problems:stats がこの表と現状を比較する。",
   "total": 500,
   "categories": {
     "FE": {
       "label": "フロント小機能実装（Pixiv 型）",
-      "total": 110,
-      "by_difficulty": { "L1": 20, "L2": 45, "L3": 35, "L4": 10 },
+      "total": 75,
+      "by_difficulty": { "L1": 14, "L2": 31, "L3": 24, "L4": 6 },
       "time_limits": [20, 30],
       "languages": ["html", "typescript"]
     },
     "BE": {
       "label": "バックエンド小機能・API 実装",
-      "total": 70,
-      "by_difficulty": { "L1": 10, "L2": 30, "L3": 25, "L4": 5 },
+      "total": 60,
+      "by_difficulty": { "L1": 9, "L2": 26, "L3": 21, "L4": 4 },
       "time_limits": [20, 30],
       "languages": ["typescript", "go", "python", "php", "rust"]
     },
     "DATA": {
       "label": "業務データ処理（M3 型・仮定）",
-      "total": 50,
-      "by_difficulty": { "L1": 10, "L2": 20, "L3": 15, "L4": 5 },
+      "total": 35,
+      "by_difficulty": { "L1": 7, "L2": 14, "L3": 11, "L4": 3 },
       "time_limits": [20, 30],
       "languages": ["python", "go", "typescript", "php"]
     },
     "ALG": {
       "label": "アルゴリズム・データ構造",
-      "total": 90,
-      "by_difficulty": { "L1": 25, "L2": 35, "L3": 25, "L4": 5 },
+      "total": 45,
+      "by_difficulty": { "L1": 12, "L2": 18, "L3": 12, "L4": 3 },
       "time_limits": [15, 20],
       "languages": ["c", "rust", "python", "go", "typescript", "javascript", "php"]
     },
+    "CP": {
+      "label": "競技プログラミング形式（paiza C〜A・AtCoder ABC-C 相当）",
+      "total": 150,
+      "by_difficulty": { "L1": 40, "L2": 50, "L3": 45, "L4": 15 },
+      "time_limits": [20, 30, 45],
+      "languages": ["c", "rust", "python", "go", "typescript", "php"]
+    },
     "SQL": {
       "label": "SQL",
-      "total": 40,
-      "by_difficulty": { "L1": 10, "L2": 15, "L3": 12, "L4": 3 },
+      "total": 30,
+      "by_difficulty": { "L1": 8, "L2": 11, "L3": 9, "L4": 2 },
       "time_limits": [15, 20],
       "languages": ["sql"]
     },
     "SEC": {
       "label": "セキュリティ意識実装",
-      "total": 55,
-      "by_difficulty": { "L1": 10, "L2": 20, "L3": 20, "L4": 5 },
+      "total": 45,
+      "by_difficulty": { "L1": 8, "L2": 16, "L3": 17, "L4": 4 },
       "time_limits": [20, 30],
       "languages": ["typescript", "python", "go", "php", "c", "rust"]
     },
     "DBG": {
       "label": "デバッグ・リファクタリング",
-      "total": 45,
-      "by_difficulty": { "L1": 10, "L2": 20, "L3": 12, "L4": 3 },
+      "total": 35,
+      "by_difficulty": { "L1": 8, "L2": 16, "L3": 9, "L4": 2 },
       "time_limits": [20, 30],
       "languages": ["typescript", "python", "go", "php", "c"]
     },
     "SYS": {
       "label": "システム設計スケッチ",
-      "total": 25,
-      "by_difficulty": { "L1": 0, "L2": 8, "L3": 12, "L4": 5 },
+      "total": 15,
+      "by_difficulty": { "L1": 0, "L2": 5, "L3": 7, "L4": 3 },
       "time_limits": [30, 45],
       "languages": ["markdown"]
     },
     "LOW": {
       "label": "低レイヤ・メモリ安全",
-      "total": 15,
-      "by_difficulty": { "L1": 3, "L2": 6, "L3": 5, "L4": 1 },
+      "total": 10,
+      "by_difficulty": { "L1": 2, "L2": 4, "L3": 3, "L4": 1 },
       "time_limits": [20, 30],
       "languages": ["c", "rust"]
     }

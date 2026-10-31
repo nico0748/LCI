@@ -179,7 +179,7 @@ export async function runOnce(backend: Backend, req: RunRequest): Promise<RunRes
     if (c && !c.ok) {
       return { ...base, verdict: "CE", duration_ms: Date.now() - started };
     }
-    const r = await ws.exec(runCommand(lang, entry, limits.memoryMb), { stdin: req.stdin ?? "", limits: execLimits(limits), applyMemLimit: usesVirtualMemLimit(lang) });
+    const r = await ws.exec(runCommand(lang, entry, limits.memoryMb, "run"), { stdin: req.stdin ?? "", limits: execLimits(limits), applyMemLimit: usesVirtualMemLimit(lang) });
     const verdict = classifyExec(r, lang, limits.timeMs);
     if (verdict === "TLE" || verdict === "MLE" || verdict === "OLE" || verdict === "IE") ws.taint();
     if (verdict === "IE") return { ...base, verdict, duration_ms: Date.now() - started, stderr: r.error };
@@ -274,7 +274,7 @@ async function judgeStdio(backend: Backend, problem: Problem, tests: StdioTests,
     for (let i = 0; i < selected.length; i++) {
       const tc = selected[i]!;
       const limits = mergeLimits(lang, tests.limits, tc.limits);
-      const r = await ws.exec(runCommand(lang, entry, limits.memoryMb), { stdin: inputs[i]!.stdin, limits: execLimits(limits), applyMemLimit: usesVirtualMemLimit(lang) });
+      const r = await ws.exec(runCommand(lang, entry, limits.memoryMb, "judge"), { stdin: inputs[i]!.stdin, limits: execLimits(limits), applyMemLimit: usesVirtualMemLimit(lang) });
       let verdict: Verdict = classifyExec(r, lang, limits.timeMs);
       let message: string | undefined;
       if (verdict === "IE") {

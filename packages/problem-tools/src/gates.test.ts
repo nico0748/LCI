@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { validateProblems, type Issue } from "./gates.ts";
+import { fencedBlocks, validateProblems, type Issue } from "./gates.ts";
+import { scaffoldProblem } from "./scaffold.ts";
 
 /** 最小限の有効な unit 問題（python のみ）を書く。opts で部分的に壊して各ゲートを検証する */
 async function writeFixture(
@@ -213,4 +214,100 @@ test("TESTS: python -I と -m unittest <module> の組合せは警告", async ()
   await writeFixture(root, { pythonCommand: "python3 -I -m unittest -v test_rate_limiter" });
   const r = await validateProblems(root);
   assert.ok(r.entries[0]!.issues.some((i) => i.gate === "TESTS" && i.level === "warn" && /discover/.test(i.message)));
+});
+
+// ---- CP（05_cp_problems.md §8 T5） ---------------------------------------------------
+
+/** 雛形から作った CP 問題に、sample 2 件・hidden 10 件（hidden-max 2 件）と問題文の入出力例を入れる */
+async function writeCpFixture(root: string): Promise<string> {
+  const { dir } = await scaffoldProblem(root, "CP", "pair-sum", { id: "cp-0001" });
+  const cases: { name: string; visibility: "sample" | "hidden"; stdinFile: string; expectedFile: string }[] = [];
+  const put = async (no: number, name: string, stdin: string, out: string) => {
+    const stem = `tests/${String(no).padStart(2, "0")}`;
+    await fs.writeFile(path.join(dir, `${stem}.in`), stdin);
+    await fs.writeFile(path.join(dir, `${stem}.out`), out);
+    cases.push({ name, visibility: name.startsWith("sample") ? "sample" : "hidden", stdinFile: `${stem}.in`, expectedFile: `${stem}.out` });
+  };
+  await put(1, "sample-1", "3\n1 2 3\n", "6\n");
+  await put(2, "sample-2", "1\n-5\n", "-5\n");
+  for (let i = 0; i < 8; i++) await put(11 + i, `hidden-rand-${i + 1}`, `1\n${i}\n`, `${i}\n`);
+  await put(19, "hidden-max-1", "2\n1 1\n", "2\n");
+  await put(20, "hidden-max-2", "2\n2 2\n", "4\n");
+  const tj = JSON.parse(await fs.readFile(path.join(dir, "tests.json"), "utf8"));
+  await fs.writeFile(path.join(dir, "tests.json"), JSON.stringify({ ...tj, cases }, null, 2));
+  let md = await fs.readFile(path.join(dir, "problem.md"), "utf8");
+  // 入力例 1 はブロック、出力例 1 はインライン、入力例 2・出力例 2 はブロック（リスト内の字下げ付き）で書く
+  md = md.replace(/入力例 1:[\s\S]*?出力例 2:\n\n```\nTODO\n```/, "入力例 1:\n\n```\n3\n1 2 3\n```\n\n出力例 1: `6`\n\n- 入力例 2:\n\n  ```\n  1\n  -5\n  ```\n\n- 出力例 2:\n\n  ```\n  -5\n  ```");
+  await fs.writeFile(path.join(dir, "problem.md"), md);
+  return dir;
+}
+
+const cpErrors = async (root: string) => {
+  const r = await validateProblems(root);
+  return r.entries.flatMap((e) => e.issues).filter((i) => i.gate === "CP");
+};
+
+test("CP: 6 言語・starter・sample と問題文の一致・hidden 10 件と hidden-max・gen.py が揃えば CP ゲートは通る", async () => {
+  const root = await tmpRoot();
+  await writeCpFixture(root);
+  assert.deepEqual(await cpErrors(root), []);
+});
+
+test("CP: 言語の欠け・sample の不一致・hidden 不足・hidden-max 無し・gen.py 無しを検出", async () => {
+  const root = await tmpRoot();
+  const dir = await writeCpFixture(root);
+  let md = await fs.readFile(path.join(dir, "problem.md"), "utf8");
+  md = md.replace("languages: [c, rust, python, go, typescript, php]", "languages: [c, rust, python, go, typescript]").replace(/\n  php: solutions\/php\/main\.php/, "");
+  md = md.replace("出力例 1: `6`", "出力例 1: `7`").replace("```\n3\n1 2 3\n```", "```\n3\n1 2  3\n```");
+  await fs.writeFile(path.join(dir, "problem.md"), md);
+  const tj = JSON.parse(await fs.readFile(path.join(dir, "tests.json"), "utf8"));
+  tj.cases = tj.cases.filter((c: { name: string }) => !c.name.startsWith("hidden-max"));
+  await fs.writeFile(path.join(dir, "tests.json"), JSON.stringify(tj));
+  await fs.rm(path.join(dir, "gen", "gen.py"));
+  const msgs = (await cpErrors(root)).filter((i) => i.level === "error").map((i) => i.message);
+  for (const re of [/languages に php が無い/, /sample-1 の入力が/, /sample-1 の期待出力が/, /hidden が 8 件/, /hidden-max-\* のケースが無い/, /gen\/gen\.py が無い/]) {
+    assert.ok(msgs.some((m) => re.test(m)), `${re} が見つからない:\n${msgs.join("\n")}`);
+  }
+  // sample-2（字下げしたリスト内のブロック）は一致している
+  assert.ok(!msgs.some((m) => /sample-2/.test(m)), msgs.join("\n"));
+});
+
+test("CP: サイズ上限（tests/ 合計・L1・.in/.out）と outputKb を検出", async () => {
+  const root = await tmpRoot();
+  const dir = await writeCpFixture(root);
+  // 雛形は L2（種なし）。.in 2.6MB ×3 で合計も超える
+  const big = "1\n" + "9".repeat(2_600_000) + "\n";
+  for (const no of [11, 12, 13]) await fs.writeFile(path.join(dir, `tests/${no}.in`), big);
+  await fs.writeFile(path.join(dir, "tests/14.out"), "8".repeat(1_100_000) + "\n");
+  const msgs = (await cpErrors(root)).map((i) => i.message);
+  assert.ok(msgs.some((m) => /tests\/ が .* KB（上限 6,000 KB）/.test(m)), msgs.join("\n"));
+  assert.ok(msgs.some((m) => /tests\/11\.in が .*\.in の上限 2,500 KB/.test(m)));
+  assert.ok(msgs.some((m) => /tests\/14\.out が .*\.out の上限 1,000 KB/.test(m)));
+  assert.ok(msgs.some((m) => /hidden-rand-4: 期待出力 .* limits\.outputKb 1024 が小さい/.test(m)));
+
+  // L1 は 200KB まで
+  const root2 = await tmpRoot();
+  const dir2 = await writeCpFixture(root2);
+  const md = (await fs.readFile(path.join(dir2, "problem.md"), "utf8")).replace("difficulty: L2", "difficulty: L1");
+  await fs.writeFile(path.join(dir2, "problem.md"), md);
+  await fs.writeFile(path.join(dir2, "tests/11.in"), "1\n" + "1".repeat(250_000) + "\n");
+  assert.ok((await cpErrors(root2)).some((i) => /L1 の tests\/ が/.test(i.message)));
+});
+
+test("CP: hidden-max が 1 件だけなら警告、CP 以外のカテゴリには CP ゲートを掛けない", async () => {
+  const root = await tmpRoot();
+  const dir = await writeCpFixture(root);
+  const tj = JSON.parse(await fs.readFile(path.join(dir, "tests.json"), "utf8"));
+  tj.cases = tj.cases.map((c: { name: string }) => (c.name === "hidden-max-2" ? { ...c, name: "hidden-rand-9" } : c));
+  await fs.writeFile(path.join(dir, "tests.json"), JSON.stringify(tj));
+  const issues = await cpErrors(root);
+  assert.deepEqual(issues.map((i) => [i.level, /1 件だけ/.test(i.message)]), [["warn", true]]);
+
+  const root2 = await tmpRoot();
+  await writeFixture(root2);
+  assert.deepEqual(await cpErrors(root2), []);
+});
+
+test("fencedBlocks: 字下げしたフェンスは字下げを外して中身を返す", () => {
+  assert.deepEqual(fencedBlocks("a\n```\n1 2\n3\n```\n- x\n  ```text\n  4\n   5\n  ```\n"), ["1 2\n3", "4\n 5"]);
 });

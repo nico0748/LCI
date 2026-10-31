@@ -2,7 +2,8 @@
 
 LCI の練習セッションを Claude Desktop / Claude Code から読んで評価し、結果をアプリに保存する **stdio MCP サーバ**（サーバ名 `lci`）。
 アプリ内評価（`@lci/evaluator` の `evaluateSession`）と **同じルーブリック・同じ出力スキーマ** を使う（要件書 03 §4, FR-E-07）。
-依存は `@lci/core` と `@lci/evaluator` だけで、Next.js が起動していなくても動く（同じ `data/` を読む）。
+依存は `@lci/core`・`@lci/evaluator`・`@lci/demo` だけで、Next.js が起動していなくても動く（同じ `data/` を読む）。
+模範解答デモの台本（ナレーション＋ライブコーディング）を書いて保存するツールもある（下の「模範解答デモ」）。
 
 ## 起動
 
@@ -18,6 +19,11 @@ node packages/mcp-server/bin/lci-mcp.mjs     # bin（Claude Desktop 設定では
 | `LCI_DATA_ROOT` | `<repo>/data` | セッションデータ（`sessions/<id>/…`） |
 | `LCI_PROBLEMS_ROOT` | `<repo>/problems` | 問題バンク |
 | `LCI_MCP_ALLOW_CAMERA` | 未設定 | `1` のときだけ `get_video_frames(source:"camera")` を許可（既定はカメラ映像を渡さない） |
+| `LCI_TTS_ENGINE` | `auto` | デモの音声: `auto`（say があれば使う）/ `say` / `fake`（テスト用のビープ）/ `none` |
+| `LCI_TTS_VOICE` / `LCI_TTS_RATE` | `Kyoko` / `0` | say の声と速さ（`say -v '?'` で日本語の声を確認。`pnpm --filter @lci/demo voices`） |
+| `LCI_DEMO_SPAWN_AUDIO` | 未設定 | `0` のとき save_demo_script の後に音声合成を起動しない |
+| `LCI_APP_URL` | `http://localhost:3000` | save_demo_script が返す `open_url` の起点 |
+| `LCI_RUNNER` / `LCI_DEMO_ALLOW_FAKE` | 未設定 | デモの検証は Docker で実行する。`LCI_RUNNER=fake` はテスト用で、`LCI_DEMO_ALLOW_FAKE=1` が無いと拒否する |
 
 stdout は JSON-RPC 専用。ログは stderr に出る。
 
@@ -88,9 +94,26 @@ claude mcp add lci --scope user \
 
 - `evaluate_session(session_id, include_video?)` — `packages/evaluator/src/prompt.ts` の system prompt と同一のルーブリック・証拠ルール・反フラッタリング指示に、ツール取得手順と `save_evaluation` での保存指示を足したもの。
 
+## 模範解答デモ（docs/requirements/demo/）
+
+Claude が「どの順で、何を話しながら書くか」の台本を書き、アプリが検証して再生する（動画ではない）。手順はプロンプト `author_demo(problem_id, language, target_minutes?, focus?)` に入っている。
+Claude Desktop なら「+」→ `author_demo`、Claude Code なら `/mcp__lci__author_demo alg-0001 python`。
+
+| tool | 入力 | 出力 |
+|---|---|---|
+| `list_problems` | `category?, judge_kind?, language?, has_demo?` | 問題の一覧と `demo_supported`（web 問題は v1.1 まで不可）・既存のデモ |
+| `get_problem_for_demo` | `problem_id, language` | 問題文・制約・requirements・talking_points・red_flags（rf1…）・採点ヒント・判定の種類とサンプル・編集するファイル（生テキスト）・参照解（生テキスト）・上限値・オーサリングガイド |
+| `validate_demo_script` | `problem_id, language, draft` | 保存せずに検証（操作の適用 → Docker で各 run と最終コードを実行・判定 → タイミング → デモ自身の指標 → 網羅 → ナレーション lint）。`{ok, errors[{code, step_id, path, message, hint, context}], warnings, estimate, runs, judge}`。失敗しても isError にしない |
+| `save_demo_script` | `problem_id, language, draft, demo_id?, note?, model?` | 同じ検証に通れば `data/demos/<problem>/<lang>/<demo_id>/` に新しい版として保存（最新 10 版）。`{demo_id, revision, url, open_url, audio, warnings}`。通らなければ isError |
+| `list_demos` / `get_demo_script` / `delete_demo` | | 一覧 / 保存済みの draft と版 / 削除（版だけ・丸ごと） |
+
+- Resources: `lci://guides/demo-authoring`（ガイド全文）、`lci://demos/{demo_id}/script.json`
+- 音声: 保存後に切り離した子プロセス（`packages/demo/src/cli.ts synth`）が macOS の `say` → ffmpeg（AAC 32 kbps モノラル）で区間ごとに作る。MCP の応答は待たせない。say や ffmpeg が無ければ字幕だけで再生できる。作り直しは `LCI_DATA_ROOT=… pnpm --filter @lci/demo tts <demo_id> [--force]`
+- 録画中（status=recording のセッションがある間）は検証・保存しない（`E_BUSY_RECORDING`）
+
 ## テスト
 
 ```sh
-pnpm --filter @lci/mcp-server test       # SDK クライアントで stdio 起動して list_sessions 〜 save_evaluation を叩くスモークテスト
+pnpm --filter @lci/mcp-server test       # SDK クライアントで stdio 起動して list_sessions 〜 save_evaluation、デモの get → validate → save → 音声 → delete を叩く
 pnpm --filter @lci/mcp-server typecheck
 ```
